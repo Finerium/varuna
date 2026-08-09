@@ -23,11 +23,13 @@ SCENES_DIR = WORK / "scenes"
 REPO_URL = "https://github.com/DIUx-xView/xView3_first_place"
 JIT_URL = f"{REPO_URL}/releases/download/1.1/traced_ensemble.jit"
 
-# ---- diisi dari checkpoint metadata (manifests/e1-metadata.json) ----
-METADATA_CHANNELS = None        # mis. ["vv","vh"]
-METADATA_NORMALIZATION = None   # dict config albumentations dari checkpoint
-METADATA_CODER = None           # kwargs MultilabelCircleNetCoder dari checkpoint
-# ---------------------------------------------------------------------
+# ---- metadata dari checkpoint b4_fold0 (manifests/e1-metadata.json) ----
+META = json.load(open(pathlib.Path(__file__).parent / "e1-metadata.json"))
+METADATA_CHANNELS = META["channels"]            # ['vh', 'vv']
+METADATA_NORMALIZATION = META["normalization"]  # SigmoidNormalization per kanal
+METADATA_BOX_CODER = META["box_coder"]          # target hydra + kwargs
+OUTPUT_STRIDE = 2  # slug b4_unet_s2; strides[0]=4 // head LateShuffle upsample 2
+# ------------------------------------------------------------------------
 
 THRESHOLDS = {"objectness": 0.300, "vessel": 0.338, "fishing": 0.350}
 TILE_SIZE, TILE_STEP = 2048, 1536
@@ -60,7 +62,7 @@ def setup():
     if not WEIGHTS.exists() or WEIGHTS.stat().st_size < 1_200_000_000:
         print("unduh traced_ensemble.jit ...", flush=True)
         fetch(JIT_URL, WEIGHTS)
-    sh("pip install -q rasterio tifffile omegaconf fire pytorch-toolbelt albumentations opencv-python-headless")
+    sh("pip install -q hydra-core rasterio tifffile omegaconf fire pytorch-toolbelt albumentations opencv-python-headless")
     sys.path.insert(0, str(REPO))
 
 
@@ -68,13 +70,13 @@ def build_runtime():
     import albumentations  # noqa
     import torch
     from xview3.factory import build_normalization
-    from xview3.centernet.bboxer.multilabel_circle_coder import MultilabelCircleNetCoder
     from omegaconf import OmegaConf
 
-    assert METADATA_CHANNELS and METADATA_NORMALIZATION and METADATA_CODER, \
-        "isi METADATA_* dari manifests/e1-metadata.json dulu"
+    from hydra.utils import instantiate
     normalization = build_normalization(OmegaConf.create(METADATA_NORMALIZATION))
-    box_coder = MultilabelCircleNetCoder(image_size=(TILE_SIZE, TILE_SIZE), **METADATA_CODER)
+    coder_cfg = OmegaConf.create(METADATA_BOX_CODER)
+    box_coder = instantiate(coder_cfg, output_stride=OUTPUT_STRIDE)
+    box_coder = box_coder.box_coder_for_image_size((TILE_SIZE, TILE_SIZE))
     model = torch.jit.load(str(WEIGHTS), map_location="cuda")
     model.eval()
     return model, box_coder, normalization

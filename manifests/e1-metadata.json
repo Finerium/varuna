@@ -1,0 +1,78 @@
+{
+ "sumber": "b4_fold0 checkpoint (release 1.0) checkpoint_data.config",
+ "channels": [
+  "vh",
+  "vv"
+ ],
+ "num_channels": 2,
+ "normalization": {
+  "slug": "fixed",
+  "channels": {
+   "vv": {
+    "_target_": "xview3.SigmoidNormalization",
+    "midpoint": -20.0,
+    "temperature": 0.18
+   },
+   "vh": {
+    "_target_": "xview3.SigmoidNormalization",
+    "midpoint": -20.0,
+    "temperature": 0.18
+   },
+   "diff(vv,vh)": {
+    "_target_": "xview3.SigmoidNormalization",
+    "midpoint": -5.0,
+    "temperature": 0.18
+   },
+   "mean(vv,vh)": {
+    "_target_": "xview3.SigmoidNormalization",
+    "midpoint": -20,
+    "temperature": 0.18
+   },
+   "bathymetry": {
+    "_target_": "xview3.CubicRootNormalization"
+   },
+   "wind_direction": null,
+   "wind_speed": null,
+   "mask": null
+  }
+ },
+ "box_coder": {
+  "_target_": "xview3.centernet.MultilabelCircleNetCoder",
+  "image_size": [
+   1024,
+   1024
+  ],
+  "max_objects": 512,
+  "heatmap_encoding": "umich",
+  "labels_encoding": "circle",
+  "ignore_value": {
+   "_target_": "xview3.ignore_value"
+  },
+  "fixed_radius": 3,
+  "labels_radius": 1,
+  "ignore_low_confidence_detections": true
+ },
+ "head": {
+  "_target_": "xview3.centernet.models.heads.DecoupledHeadGroupNormLateShuffle",
+  "classifier_dim": 128,
+  "objectness_dim": 128,
+  "size_dim": 64,
+  "offset_dim": 16,
+  "dropout_rate": 0.1,
+  "activation": "silu",
+  "num_blocks": 3
+ },
+ "encoder_target": "pytorch_toolbelt.modules.encoders.TimmB4Encoder",
+ "catatan_stride": "output_stride = encoder.strides[0] // (head.upsample_factor * input_upsample_factor); slug b4_unet_s2 (stride 2)",
+ "thresholds_rilis": {
+  "objectness": 0.3,
+  "vessel": 0.338,
+  "fishing": 0.35
+ },
+ "tile": {
+  "size": 2048,
+  "step": 1536
+ },
+ "fp16": true,
+ "tta": "fliplr (tertanam di traced graph)"
+}
