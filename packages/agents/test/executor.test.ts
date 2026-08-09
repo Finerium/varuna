@@ -8,7 +8,7 @@ import {
   type HasilLangkah,
   type PeristiwaAgen,
 } from "../src/executor";
-import { SEED, TTL_DETIK, kunciJejak, kunciKeluaran, kunciState } from "../src/mesin";
+import { SEED, TTL_DETIK, kunciDariRef, kunciJejak, kunciKeluaran, kunciState } from "../src/mesin";
 import {
   ART,
   INVESTIGASI_UJI,
@@ -215,9 +215,11 @@ describe("resume_token — penjaga batas kepercayaan", () => {
   };
 
   it("menolak token kedaluwarsa (ttl 900 detik)", async () => {
+    // Jam dimajukan, token utuh: tanda tangan tetap sah, yang gugur murni TTL.
     const { r, token } = await tokenSah();
-    const lewat = { ...token, expires_at: "2026-08-09T05:00:00.000Z" };
-    await expect(lanjutkanReplay(r.mesin, lewat, () => {})).rejects.toMatchObject({
+    (r.mesin as { sekarang: () => string }).sekarang = () =>
+      new Date(Date.parse(token.expires_at) + 1000).toISOString();
+    await expect(lanjutkanReplay(r.mesin, token, () => {})).rejects.toMatchObject({
       sebab: "kedaluwarsa",
     });
   });
@@ -264,6 +266,26 @@ describe("determinisme seed 20260809", () => {
     const posisi = ART_TERURUT.map((id) => masukan.indexOf(id));
     expect(posisi.every((p) => p >= 0)).toBe(true);
     expect([...posisi].sort((a, b) => a - b)).toEqual(posisi);
+  });
+
+  it("menolak resume_token yang tanda tangannya dirusak", async () => {
+    const r = siapkan(naskahStandar());
+    const awal = await mulaiReplay(r.mesin, INV_ID, () => {});
+    const rusak = {
+      ...(awal.resume_token as Record<string, unknown>),
+      state_ref: "blob://runtime/lain/state.jsonl",
+    };
+    await expect(lanjutkanReplay(r.mesin, rusak, () => {})).rejects.toMatchObject({
+      sebab: "token",
+    });
+  });
+
+  it("menolak state_ref traversal path meski tanda tangan dibuat ulang", async () => {
+    // kunciDariRef adalah gerbangnya: ".." tidak pernah jadi kunci store.
+    expect(kunciDariRef("blob://../../etc/passwd")).toBeNull();
+    expect(kunciDariRef("blob:///etc/passwd")).toBeNull();
+    expect(kunciDariRef("blob://runtime/inv/..%2F")).toBeNull();
+    expect(kunciDariRef("blob://runtime/inv-x/state.jsonl")).toBe("runtime/inv-x/state.jsonl");
   });
 
   it("menulis jejak dan state di bawah run_id yang sama", async () => {

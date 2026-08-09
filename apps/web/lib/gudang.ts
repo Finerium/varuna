@@ -11,7 +11,7 @@
 // empat pembaca di bawah ini dihapus dan diganti pemanggilan core lagi.
 
 import { access, appendFile, mkdir, readFile, readdir } from "node:fs/promises";
-import { dirname, join } from "node:path";
+import { dirname, join, resolve, sep } from "node:path";
 
 import { periksaBerkas, resolverGrounding } from "@varuna/core/grounding";
 import type { RuntimeStore } from "@varuna/core/store";
@@ -255,7 +255,16 @@ const dirRuntime = (): string =>
  *  append-only JSONL. packages/core/src/store.ts sengaja menyerahkan
  *  implementasinya ke jalur produk ini ("blobRuntimeStore: diisi di apps/web"). */
 export function gudangRuntime(): RuntimeStore {
-  const path = (kunci: string) => join(/* turbopackIgnore: true */ dirRuntime(), kunci);
+  // Containment: kunci apa pun (termasuk dari resume_token) tidak boleh
+  // menembus keluar direktori runtime.
+  const path = (kunci: string) => {
+    const dasar = resolve(dirRuntime());
+    const p = resolve(/* turbopackIgnore: true */ dasar, kunci);
+    if (p !== dasar && !p.startsWith(dasar + sep)) {
+      throw new Error(`kunci runtime di luar direktori: ${kunci}`);
+    }
+    return p;
+  };
   return {
     async append(kunci, rekaman) {
       const p = path(kunci);

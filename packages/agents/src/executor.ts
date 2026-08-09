@@ -12,6 +12,8 @@
 // Yang TIDAK dilakukan agen mana pun di berkas ini: menghitung status. PASHA
 // dipanggil executor (server) dari artefak yang dikutip replay, sesuai Bagian 4.
 
+import { createHmac, timingSafeEqual } from "node:crypto";
+
 import {
   ModelBehaviorError,
   RunState,
@@ -81,8 +83,32 @@ export const ResumeTokenSchema = z.object({
   ttl_s: z.literal(TTL_DETIK),
   run_id: z.string().regex(/^[a-z0-9]{6,32}$/),
   expires_at: z.iso.datetime({ offset: true }),
+  sig: z.string().regex(/^[0-9a-f]{64}$/),
 });
 export type ResumeToken = z.infer<typeof ResumeTokenSchema>;
+
+/** Token adalah bearer yang bolak-balik lewat klien; tanpa tanda tangan, field
+ *  mana pun (terutama state_ref) bisa diganti. HMAC atas JSON kanonis tujuh
+ *  field non-sig; rahasia dari env, fallback nilai dev yang sama konvensinya
+ *  dengan garam MMSI. */
+const rahasiaToken = (): string =>
+  process.env.RESUME_TOKEN_SECRET ?? process.env.MMSI_HASH_SALT ?? "varuna-dev-salt-2026";
+
+const tandaTanganToken = (t: Omit<ResumeToken, "sig">): string =>
+  createHmac("sha256", rahasiaToken())
+    .update(
+      JSON.stringify(
+        Object.fromEntries(Object.entries(t).sort(([a], [b]) => (a < b ? -1 : 1))),
+      ),
+    )
+    .digest("hex");
+
+const sigCocok = (t: ResumeToken): boolean => {
+  const { sig, ...tanpa } = t;
+  const a = Buffer.from(tandaTanganToken(tanpa), "hex");
+  const b = Buffer.from(sig, "hex");
+  return a.length === b.length && timingSafeEqual(a, b);
+};
 
 // ---------------------------------------------------------------------------
 // Peristiwa SSE (Bagian 3, event `agent_step`)
@@ -456,17 +482,18 @@ async function jeda(
   });
 
   const nama = namaTertunda(tertunda[0] as RunToolApprovalItem);
+  const tanpaSig: Omit<ResumeToken, "sig"> = {
+    inv_id: ktx.inv.inv_id,
+    step_idx: berikut,
+    state_ref: refState(kunci),
+    seed: SEED,
+    ttl_s: TTL_DETIK,
+    run_id: ktx.run_id,
+    expires_at: new Date(Date.parse(m.sekarang()) + TTL_DETIK * 1000).toISOString(),
+  };
   return {
     selesai: false,
-    resume_token: {
-      inv_id: ktx.inv.inv_id,
-      step_idx: berikut,
-      state_ref: refState(kunci),
-      seed: SEED,
-      ttl_s: TTL_DETIK,
-      run_id: ktx.run_id,
-      expires_at: new Date(Date.parse(m.sekarang()) + TTL_DETIK * 1000).toISOString(),
-    },
+    resume_token: { ...tanpaSig, sig: tandaTanganToken(tanpaSig) },
     agen_berikut: nama === undefined ? null : idDariNamaAlat(nama),
     trace_ref: ktx.trace_ref,
     run_id: ktx.run_id,
@@ -514,6 +541,9 @@ export async function lanjutkanReplay(
   const token = ResumeTokenSchema.safeParse(tokenMentah);
   if (!token.success) {
     throw new GalatReplay("token", "resume_token tidak sah atau bukan milik protokol replay ini.");
+  }
+  if (!sigCocok(token.data)) {
+    throw new GalatReplay("token", "tanda tangan resume_token tidak cocok; token diubah atau berasal dari server lain.");
   }
   if (Date.parse(token.data.expires_at) <= Date.parse(m.sekarang())) {
     throw new GalatReplay(

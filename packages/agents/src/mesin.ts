@@ -69,8 +69,15 @@ export const kunciJejak = (inv_id: string, run_id: string): string =>
  *  Vercel Blob atau filesystem dev. */
 export const refState = (kunci: string): string => `blob://${kunci}`;
 
-export const kunciDariRef = (ref: string): string | null =>
-  ref.startsWith("blob://") ? ref.slice("blob://".length) : null;
+/** Kunci datang dari resume_token (input tak tepercaya di route publik):
+ *  hanya segmen [a-z0-9._-] dipisah "/", tanpa "..", tanpa awalan "/". */
+const POLA_KUNCI = /^[a-z0-9][a-z0-9._-]*(\/[a-z0-9][a-z0-9._-]*)*$/i;
+export const kunciDariRef = (ref: string): string | null => {
+  if (!ref.startsWith("blob://")) return null;
+  const kunci = ref.slice("blob://".length);
+  if (!POLA_KUNCI.test(kunci) || kunci.split("/").includes("..")) return null;
+  return kunci;
+};
 
 // ---------------------------------------------------------------------------
 // Katalog bukti
