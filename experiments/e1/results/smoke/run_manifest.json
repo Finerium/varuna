@@ -1,0 +1,21 @@
+{
+ "scenes": [
+  {
+   "scene": "05bc615a9b0e1159t",
+   "n_det": 111,
+   "t_unduh_s": 49.8,
+   "t_infer_s": 1909.7
+  }
+ ],
+ "config": {
+  "tile": 2048,
+  "step": 1536,
+  "fp16": true,
+  "tta": "fliplr(traced)",
+  "thresholds": {
+   "objectness": 0.3,
+   "vessel": 0.338,
+   "fishing": 0.35
+  }
+ }
+}
