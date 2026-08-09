@@ -8,21 +8,53 @@ OUT = pathlib.Path.home() / "Documents/Datathon/varuna/data/raw/natuna"
 MAN = pathlib.Path.home() / "Documents/Datathon/varuna/manifests"
 UA = {"User-Agent": "Mozilla/5.0"}
 
+ACC_CACHE = TOK.parent / "cdse-access-token.cache"
+LOCK = TOK.parent / "cdse-token.lock"
+
 def access_token():
-    data = urllib.parse.urlencode({
-        "grant_type": "refresh_token",
-        "refresh_token": TOK.read_text().strip(),
-        "client_id": "cdse-public",
-    }).encode()
-    req = urllib.request.Request(
-        "https://identity.dataspace.copernicus.eu/auth/realms/CDSE/protocol/openid-connect/token",
-        data=data, headers=UA)
-    with urllib.request.urlopen(req, timeout=30) as f:
-        j = json.load(f)
-    # refresh token dirotasi: simpan yang baru
-    if j.get("refresh_token"):
-        TOK.write_text(j["refresh_token"])
-    return j["access_token"]
+    """Serialisasi via lockfile; cache access token ~8 menit; tulis refresh atomik."""
+    import os, time as _t
+    # cache masih hangat?
+    try:
+        raw = ACC_CACHE.read_text().split("\n", 1)
+        if float(raw[0]) > _t.time():
+            return raw[1].strip()
+    except Exception:
+        pass
+    # lock sederhana antar-proses
+    for _ in range(120):
+        try:
+            fd = os.open(LOCK, os.O_CREAT | os.O_EXCL | os.O_WRONLY)
+            os.close(fd); break
+        except FileExistsError:
+            _t.sleep(1)
+    try:
+        # re-cek cache setelah dapat lock (proses lain mungkin baru refresh)
+        try:
+            raw = ACC_CACHE.read_text().split("\n", 1)
+            if float(raw[0]) > _t.time():
+                return raw[1].strip()
+        except Exception:
+            pass
+        data = urllib.parse.urlencode({
+            "grant_type": "refresh_token",
+            "refresh_token": TOK.read_text().strip(),
+            "client_id": "cdse-public",
+        }).encode()
+        req = urllib.request.Request(
+            "https://identity.dataspace.copernicus.eu/auth/realms/CDSE/protocol/openid-connect/token",
+            data=data, headers=UA)
+        with urllib.request.urlopen(req, timeout=30) as f:
+            j = json.load(f)
+        if j.get("refresh_token"):
+            tmp = TOK.with_suffix(".tmp")
+            tmp.write_text(j["refresh_token"]); tmp.replace(TOK)
+        exp = _t.time() + min(480, int(j.get("expires_in", 600)) - 60)
+        ACC_CACHE.write_text(f"{exp}\n{j['access_token']}")
+        return j["access_token"]
+    finally:
+        try: os.unlink(LOCK)
+        except FileNotFoundError: pass
 
 AOI = {
     "natuna":  "POLYGON((108 4,110 4,110 6,108 6,108 4))",
