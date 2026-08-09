@@ -1,0 +1,20 @@
+{
+ "art_id": "a-dk-01-g02",
+ "inv_id": "inv-dk-01",
+ "type": "ais_gap",
+ "source": {
+  "dataset": "dma-aisdk",
+  "ref": "264d5cee7c05ec63",
+  "provenance": "Celah AIS terdeteksi pada aisdk-2026-08-05 (data/processed/dma/gap_candidates.csv); posisi sinyal terakhir 54.620713,7.329888 berada DI DALAM footprint gx:LatLonQuad preview/map-overlay.kml (4.834043,54.743980)-(8.876246,55.161621)-(9.268373,53.667686)-(5.368205,53.253666); jendela celah memuat waktu akuisisi scene S1C_IW_GRDH_1SDV_20260805T171634_20260805T171659_008863_01194A_E663 (2026-08-05T17:16:34.886564Z); posisi muncul kembali 54.520692,7.435395."
+ },
+ "sintetis": false,
+ "payload": {
+  "mmsi_hash": "264d5cee7c05ec63",
+  "t_start": "2026-08-05T07:29:10Z",
+  "t_end": "2026-08-05T21:54:22Z",
+  "durasi_jam": 14.42,
+  "sog_sebelum": 6.1
+ },
+ "created_at": "2026-08-09T10:16:39Z",
+ "hash_sha256": "9735aa751821e90e37b9448458ff48077f335897fc6de3a144c39e214d2f5652"
+}

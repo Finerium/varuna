@@ -1,0 +1,22 @@
+{
+ "art_id": "a-dk-01-k02",
+ "inv_id": "inv-dk-01",
+ "type": "kinematic_feasibility",
+ "source": {
+  "dataset": "dma-aisdk",
+  "ref": "264d5cee7c05ec63",
+  "provenance": "Geometri celah NYATA (a-dk-01-g02, dma-aisdk) terhadap target PLACEHOLDER a-dk-01-d02 (sintetis, menunggu inferensi scene Denmark). jarak_km = haversine R=6371.0088 km dari posisi sinyal-terakhir 54.620713,7.329888 ke target; dt_jam = selisih t_start celah ke waktu akuisisi scene 2026-08-05T17:16:34.886564Z; sog_implied = (jarak_km/1.852)/dt_jam knot; ambang 50 kn. Artefak ditandai sintetis karena sisi targetnya placeholder."
+ },
+ "sintetis": true,
+ "payload": {
+  "gap_art_id": "a-dk-01-g02",
+  "det_art_id": "a-dk-01-d02",
+  "jarak_km": 6.518,
+  "dt_jam": 9.79,
+  "sog_implied": 0.359,
+  "ambang_kn": 50.0,
+  "lolos": true
+ },
+ "created_at": "2026-08-09T10:16:39Z",
+ "hash_sha256": "6c34ce1e96964b7d7c197620b6b6b64d41c9478f44e752ec41d5d344ed3975a5"
+}

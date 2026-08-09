@@ -1,0 +1,20 @@
+{
+ "art_id": "a-natuna-20260805-01-06",
+ "inv_id": "inv-natuna-20260805-01",
+ "type": "zone_rule",
+ "source": {
+  "dataset": "gfw-events",
+  "ref": "32bb0231d18c4abf803ca29cf664721d",
+  "provenance": "Titik nyata GFW loitering event 32bb0231d18c4abf803ca29cf664721d (public-global-loitering-events:latest, tarikan bbox 108-110BT/4-6LU, 2026-05-01..2026-08-08) pada 5.8683LU/109.9642BT, mulai 2026-05-03T16:05:58.000Z, durasi 2.0 jam, bendera CHN, tipe kapal GFW 'fishing'. Posisi diuji scripts/zona_util.py terhadap data/processed/zona/natuna_eez.geojson (Marine Regions World EEZ v12 mrgid 8492, dipotong bbox 107-111BT/3-7LU) -> outside; sepakat dengan tag independen GFW regions.eez=['8483'] (75/75 titik sepakat pada seluruh tarikan). WPP-711-proxy = geometri ZEE-ID terpotong bbox Natuna sebagai pengganti batas resmi WPP-RI 711 yang tidak tersedia di repo; didukung tag GFW regions.fao=['71'] (FAO Major Fishing Area 71) ADA pada event ini. violation=False karena di luar zona. ASUMSI DEMO (T4-ZEE-INSIDE-UNLICENSED): status izin tidak dapat diverifikasi dari data terbuka; kapal ikan berbendera asing di dalam ZEE-ID diperlakukan tanpa izin untuk keperluan demo, kapal berbendera lokal tidak. Bukan penilaian hukum."
+ },
+ "sintetis": false,
+ "payload": {
+  "zona": "WPP-711-proxy",
+  "posisi": "outside",
+  "violation": false,
+  "basis_aturan": "T4-ZEE-INSIDE-UNLICENSED",
+  "geometri_ref": "data/processed/zona/natuna_eez.geojson#features[0]"
+ },
+ "created_at": "2026-08-09T10:12:27Z",
+ "hash_sha256": "515e60ef88a62ee3fc2619e8d05c7e15b10b1f74c0956a39b16fd8a2c508b543"
+}

@@ -1,0 +1,12 @@
+{
+ "art_ids": [
+  "a-x3-3bc01ebc-01-001",
+  "a-x3-3bc01ebc-01-002",
+  "a-x3-3bc01ebc-01-003"
+ ],
+ "hash": {
+  "a-x3-3bc01ebc-01-003": "231dd7a37bfdb88a5c950f6499143bda3a68d6c42ed94f4b50aa826a294f91b7",
+  "a-x3-3bc01ebc-01-002": "29eb336e82620634bcd8f9505f0d21c44680039ffdfc6e5ff600424531b6f2b0",
+  "a-x3-3bc01ebc-01-001": "68317bc83f6719e565badc5f56e9645c67fa22c2938ed162cab9072633711e1b"
+ }
+}

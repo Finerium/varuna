@@ -1,0 +1,32 @@
+{
+ "art_id": "a-dk-01-n02",
+ "inv_id": "inv-dk-01",
+ "type": "ais_anomaly",
+ "source": {
+  "dataset": "dma-aisdk",
+  "ref": "264d5cee7c05ec63",
+  "provenance": "Celah AIS nyata dari data/processed/dma/gap_candidates.csv (DMA AIS Denmark 2026-08-05, kelas A, 129 kandidat celah >6 jam): MMSI dipseudonimkan, celah 2026-08-05 07:29:10..2026-08-05 21:54:22 (14.420 jam), SOG sebelum celah 6.1 kn. Skor = predict_proba kelas positif dari experiments/e2/model_gap12.pkl (HistGradientBoosting, seed 20260809) atas baris fitur MMSI ini di experiments/e2/out/fitur_clean.parquet (17 fitur, dihitung experiments/e2/fitur.py). Memberi skor model pada artefak a-dk-01-g02 milik kasus ini. MMSI berada di SPLIT LATIH E2 (70/30 by MMSI, seed 20260809) - skor pada kapal split latih, JANGAN dibaca sebagai kinerja held-out. Skor pendamping model_gap6=1.0000, model_gap12=1.0000. PLAFON DINYATAKAN - KEBOCORAN LABEL: label gap E2 diturunkan dari durasi celah, sedangkan durasi celah itu sendiri ADA di dalam fitur (dt_max_s), sehingga model nyaris tautologis: aturan ambang tunggal dt_max_s>12 jam sudah sepakat 96.8% dengan label gap12, dan keluaran model praktis biner (positif >=0.999, negatif <=0.0001). Skor 0.999999 karena itu HARUS dibaca sebagai 'durasi celah melewati ambang', BUKAN sebagai keyakinan model yang informatif; pembanding deterministik durasi/ambang = 1.0000 disertakan di detail. Skor bukan probabilitas niat menyembunyikan diri."
+ },
+ "sintetis": false,
+ "payload": {
+  "jenis": "gap",
+  "skor": 0.999999,
+  "model_ref": "experiments/e2/model_gap12.pkl",
+  "detail": {
+   "mmsi_hash": "264d5cee7c05ec63",
+   "t_start": "2026-08-05T07:29:10Z",
+   "t_end": "2026-08-05T21:54:22Z",
+   "durasi_jam": 14.42,
+   "sog_sebelum": 6.1,
+   "ambang_jam": 12.0,
+   "skor_gap6": 0.999969,
+   "skor_gap12": 0.999999,
+   "skor_deterministik_durasi_per_ambang": 1.0,
+   "kebocoran_label_setuju": 0.9681,
+   "gap_art_id": "a-dk-01-g02",
+   "split_e2": "latih"
+  }
+ },
+ "created_at": "2026-08-09T10:19:10Z",
+ "hash_sha256": "0099d53adb93bcbbed4cd2e55cc6eebb25efa2898b188992d1bbcaaf6a7cea25"
+}

@@ -1,0 +1,25 @@
+{
+ "art_id": "a-x3-860e65f9-01-001",
+ "inv_id": "inv-x3-860e65f9-01",
+ "type": "sar_detection",
+ "source": {
+  "dataset": "xview3-public",
+  "ref": "860e65f9f3191ffdp",
+  "provenance": "Deteksi E1 nyata dari inferensi batch xView3 (experiments/e1/results/batch/860e65f9f3191ffdp.csv, baris 43, ambang objectness 0.3, tile 2048/step 1536, fp16, TTA fliplr); peran kurasi 'panjang_maksimum'. Georeferensi memakai CRS dan affine GeoTIFF scene itu sendiri (EPSG:32632 -> EPSG:4326), RMSE terhadap 883 label public.csv = 7.0 m. Metode affine cocok-label yang diminta (least squares row/col->lat/lon atas 883 label scene ini) dipakai sebagai uji-silang independen, bukan sumber koordinat: RMSE terhadap georeferensi GeoTIFF = 706.7 m, selisih pada deteksi ini 865.4 m; affine datar dalam (lat,lon) tidak dapat mewakili lengkung UTM->WGS84 sepanjang scene ~300 km. Chip 256x256 px band VH_dB dibaca per-window (rasterio), regangan kontras persentil 2-98 pada [-34.84,-25.20] dB, kontras inti-vs-latar 34.4 dB. confidence_calibrated = objectness_p apa adanya; kalibrasi E1b belum diterapkan dan akan menggantikan nilai ini."
+ },
+ "sintetis": false,
+ "payload": {
+  "lat": 56.908633,
+  "lon": 7.502319,
+  "row": 3230,
+  "col": 22240,
+  "length_m_est": 156.79,
+  "objectness_p": 0.664798,
+  "vessel_p": 0.834823,
+  "fishing_p": 0.049397,
+  "confidence_calibrated": 0.664798,
+  "scene_id": "860e65f9f3191ffdp"
+ },
+ "created_at": "2026-08-09T10:11:10Z",
+ "hash_sha256": "e7e060a89d62290d2e78e9be48b34366f6169853cca2cdf520875f8a770f08c2"
+}

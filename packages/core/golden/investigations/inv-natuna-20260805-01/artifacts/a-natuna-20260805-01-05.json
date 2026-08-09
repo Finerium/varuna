@@ -1,0 +1,20 @@
+{
+ "art_id": "a-natuna-20260805-01-05",
+ "inv_id": "inv-natuna-20260805-01",
+ "type": "zone_rule",
+ "source": {
+  "dataset": "gfw-events",
+  "ref": "9d99a5befd8c3a0b94921cb85fb090be",
+  "provenance": "Titik nyata GFW loitering event 9d99a5befd8c3a0b94921cb85fb090be (public-global-loitering-events:latest, tarikan bbox 108-110BT/4-6LU, 2026-05-01..2026-08-08) pada 5.2317LU/108.0225BT, mulai 2026-05-12T13:44:15.000Z, durasi 22.5 jam, bendera IDN, tipe kapal GFW 'other'. Posisi diuji scripts/zona_util.py terhadap data/processed/zona/natuna_eez.geojson (Marine Regions World EEZ v12 mrgid 8492, dipotong bbox 107-111BT/3-7LU) -> inside; sepakat dengan tag independen GFW regions.eez=['8492'] (75/75 titik sepakat pada seluruh tarikan). violation=False karena berbendera lokal IDN. ASUMSI DEMO (T4-ZEE-INSIDE-UNLICENSED): status izin tidak dapat diverifikasi dari data terbuka; kapal ikan berbendera asing di dalam ZEE-ID diperlakukan tanpa izin untuk keperluan demo, kapal berbendera lokal tidak. Bukan penilaian hukum."
+ },
+ "sintetis": false,
+ "payload": {
+  "zona": "ZEE-ID",
+  "posisi": "inside",
+  "violation": false,
+  "basis_aturan": "T4-ZEE-INSIDE-UNLICENSED",
+  "geometri_ref": "data/processed/zona/natuna_eez.geojson#features[0]"
+ },
+ "created_at": "2026-08-09T10:12:27Z",
+ "hash_sha256": "c6b511dacbea1d39c1583d8498bdd8444c624a7a2ccc6113d2d82b2e31a2d1a0"
+}

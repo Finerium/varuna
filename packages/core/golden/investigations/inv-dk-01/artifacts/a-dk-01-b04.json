@@ -1,0 +1,18 @@
+{
+ "art_id": "a-dk-01-b04",
+ "inv_id": "inv-dk-01",
+ "type": "behavior_class",
+ "source": {
+  "dataset": "dma-aisdk",
+  "ref": "6608a41f109ec34b",
+  "provenance": "Segmen 6 jam NYATA dari data/processed/dma/trajectories.parquet (DMA AIS Denmark 2026-08-05) untuk kapal yang sama dengan artefak a-dk-01-t04 pada kasus ini: MMSI dipseudonimkan, blok jam UTC 12-18, 260 fix, rentang 4.74 jam, awal 53.6509LU/8.4031BT, akhir 54.3279LU/7.2552BT, sog_mean 12.82 kn, frac_stat 0.000, straightness 1.450. Fitur dihitung ulang dengan build_segments() dari experiments/e3/train_behavior.py; model dilatih ulang identik (seed 20260809, HistGradientBoosting, split BY MMSI 70/30) karena E3 tidak menyimpan .pkl -> experiments/e3/model_behavior.pkl, konkordansi uji 0.8754 pada 1340 segmen uji. Segmen ini ada di SPLIT UJI. PLAFON DINYATAKAN (manifests/e3-hasil.json): label latih = tipe kapal terdaftar DMA (Fishing vs Cargo/Tanker/Passenger), jadi skor = KONKORDANSI dengan tipe terdaftar, BUKAN observasi perilaku; tipe terdaftar segmen ini 'Cargo'. CACAT FITUR TERCATAT: straightness = jarak lurus/panjang lintasan seharusnya <=1, tetapi segmen ini bernilai 1.450 karena build_segments() hanya menjumlahkan langkah dengan dt<=600 s ke path_km sementara jarak lurus memakai fix pertama-terakhir, sehingga lintasan berlubang dihitung terlalu pendek. Bias ini 3,7x lebih sering pada kapal ber-celah AIS (35,8% segmen) dibanding kapal lain (9,7%) - yakni justru pada populasi going-dark. Skor kelas ini ikut terpengaruh."
+ },
+ "sintetis": false,
+ "payload": {
+  "kelas": "transit",
+  "skor": 0.003357,
+  "model_ref": "experiments/e3/model_behavior.pkl"
+ },
+ "created_at": "2026-08-09T10:20:30Z",
+ "hash_sha256": "e8596fde29f35285e80cbe51bf20c82e5a5f97cc6f89e920275c341e211e5db5"
+}

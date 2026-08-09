@@ -1,0 +1,25 @@
+{
+ "art_id": "a-dk-01-d01",
+ "inv_id": "inv-dk-01",
+ "type": "sar_detection",
+ "source": {
+  "dataset": "cdse-denmark",
+  "ref": "S1C_IW_GRDH_1SDV_20260805T171634_20260805T171659_008863_01194A_E663",
+  "provenance": "PLACEHOLDER-TARGET, BUKAN deteksi SAR: inferensi scene Denmark belum dijalankan, artefak ini menunggu inferensi scene Denmark. Koordinat diturunkan dari data AIS nyata sebagai titik tengah lingkaran-besar antara posisi sinyal-terakhir dan posisi muncul-kembali kapal pada celah a-dk-01-g01, dan diverifikasi berada di dalam footprint gx:LatLonQuad preview/map-overlay.kml (4.834043,54.743980)-(8.876246,55.161621)-(9.268373,53.667686)-(5.368205,53.253666). Seluruh field perseptual (row, col, length_m_est, objectness_p, vessel_p, fishing_p, confidence_calibrated) sengaja null: tidak ada angka yang dikarang."
+ },
+ "sintetis": true,
+ "payload": {
+  "lat": 54.583759,
+  "lon": 5.953153,
+  "row": null,
+  "col": null,
+  "length_m_est": null,
+  "objectness_p": null,
+  "vessel_p": null,
+  "fishing_p": null,
+  "confidence_calibrated": null,
+  "scene_id": "S1C_IW_GRDH_1SDV_20260805T171634_20260805T171659_008863_01194A_E663"
+ },
+ "created_at": "2026-08-09T10:16:39Z",
+ "hash_sha256": "4d9dfc70b19839b8a7066a3d0bee3e75619a56e48706de80d3362a21b58cdcd7"
+}

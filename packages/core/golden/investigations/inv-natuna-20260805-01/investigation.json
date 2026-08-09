@@ -1,0 +1,114 @@
+{
+ "inv_id": "inv-natuna-20260805-01",
+ "seed": 20260809,
+ "aoi": "natuna",
+ "zona": "ZEE-ID",
+ "t_acquisition": "2026-08-03T00:00:00Z",
+ "t_observasi_terakhir": "2026-08-05T20:37:00Z",
+ "split": "demo",
+ "sintetis": false,
+ "kasus": {
+  "label": "going-dark",
+  "peran_demo": "Menyediakan kaki ZONA untuk demo going-dark Natuna: tujuh titik loitering nyata GFW diuji terhadap geometri ZEE-ID, tiga di antaranya kapal ikan berbendera asing di dalam zona (violation) dan empat kontra-kasus (bendera lokal, bukan kapal ikan, atau di luar zona). candidate.length_m_est=0 dan confidence_calibrated=0 berarti TIDAK TERSEDIA dari GFW loitering, bukan hasil estimasi; belum ada artefak SAR/AIS pada AOI ini sehingga status server jatuh ke ABSTAIN kurang_cakupan."
+ },
+ "candidate": {
+  "lat": 4.6435,
+  "lon": 109.4027,
+  "length_m_est": 0,
+  "confidence_calibrated": 0
+ },
+ "artifacts": [
+  "a-natuna-20260805-01-01",
+  "a-natuna-20260805-01-02",
+  "a-natuna-20260805-01-03",
+  "a-natuna-20260805-01-04",
+  "a-natuna-20260805-01-05",
+  "a-natuna-20260805-01-06",
+  "a-natuna-20260805-01-07"
+ ],
+ "status_server": {
+  "status": "abstain",
+  "computed_at": "2026-08-09T10:20:30Z",
+  "hash": "e7a1d58ec742563a24acf905434e9a7aadf3292abcee5f83bdc9cd30f9f2126b",
+  "sensors_independent": 0,
+  "zone_violation": true,
+  "evidence_age_h": 85.73,
+  "decay_applied": false,
+  "conflicting_art_ids": [],
+  "missing_coverage": [
+   "SAR",
+   "AIS"
+  ],
+  "reasons": [
+   {
+    "rule": "dua_sensor",
+    "passed": false,
+    "art_ids": []
+   },
+   {
+    "rule": "zona",
+    "passed": true,
+    "art_ids": [
+     "a-natuna-20260805-01-01",
+     "a-natuna-20260805-01-02",
+     "a-natuna-20260805-01-03",
+     "a-natuna-20260805-01-04",
+     "a-natuna-20260805-01-05",
+     "a-natuna-20260805-01-06",
+     "a-natuna-20260805-01-07"
+    ]
+   },
+   {
+    "rule": "konflik",
+    "passed": true,
+    "art_ids": []
+   },
+   {
+    "rule": "cakupan",
+    "passed": false,
+    "art_ids": []
+   }
+  ],
+  "abstain_reason": "kurang_cakupan",
+  "display_state": []
+ },
+ "agent_proposal": null,
+ "berkas": {
+  "sections": [
+   {
+    "claim": "Tiga dari tujuh titik loitering yang diperiksa berada di dalam ZEE Indonesia dan berasal dari kapal ikan berbendera asing, memenuhi basis aturan T4-ZEE-INSIDE-UNLICENSED di bawah asumsi demo perizinan.",
+    "art_ids": [
+     "a-natuna-20260805-01-01",
+     "a-natuna-20260805-01-02",
+     "a-natuna-20260805-01-03"
+    ]
+   },
+   {
+    "claim": "Empat titik pembanding tidak memenuhi aturan yang sama: dua berada di luar geometri zona, satu berbendera Indonesia, satu bukan kapal ikan.",
+    "art_ids": [
+     "a-natuna-20260805-01-04",
+     "a-natuna-20260805-01-05",
+     "a-natuna-20260805-01-06",
+     "a-natuna-20260805-01-07"
+    ]
+   },
+   {
+    "claim": "Uji posisi memakai geometri Marine Regions EEZ v12 dan sepakat dengan penandaan zona independen milik Global Fishing Watch pada seluruh 75 titik tarikan.",
+    "art_ids": [
+     "a-natuna-20260805-01-01",
+     "a-natuna-20260805-01-02",
+     "a-natuna-20260805-01-03",
+     "a-natuna-20260805-01-04",
+     "a-natuna-20260805-01-05",
+     "a-natuna-20260805-01-06",
+     "a-natuna-20260805-01-07"
+    ]
+   }
+  ],
+  "diksi_ok": true
+ },
+ "patrol": {
+  "package_id": null,
+  "result": null
+ }
+}
