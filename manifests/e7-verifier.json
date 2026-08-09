@@ -1,0 +1,593 @@
+{
+  "run_id": "e7-verifier-01",
+  "commit": null,
+  "seed": 20260809,
+  "now_frame": "2026-08-09T11:00:00Z",
+  "model": "gpt-4o-mini",
+  "base_url_host": "api.openai.com",
+  "metode": "LLM-judge konten klaim-vs-artefak; INDEPENDEN dari grounding.ts (cek struktural). grounding.json dibaca langsung sebagai indeks.",
+  "kunci_definisi": "didukung iff >=1 art_id dirujuk DAN semua ada di grounding.json; selainnya tidak.",
+  "n_klaim": 50,
+  "presisi_judge_vs_kunci": 1.0,
+  "agreement_vs_kunci": 0.7,
+  "distribusi_putusan": {
+    "didukung": 6,
+    "tidak": 44,
+    "ambigu": 0
+  },
+  "distribusi_per_kunci": {
+    "didukung|didukung": 6,
+    "didukung|tidak": 15,
+    "didukung|ambigu": 0,
+    "tidak|didukung": 0,
+    "tidak|tidak": 29,
+    "tidak|ambigu": 0
+  },
+  "presisi_detail": {
+    "pembilang_TP": 6,
+    "penyebut_TP_plus_FP": 6
+  },
+  "total_klaim_golden_tersedia": 511,
+  "distribusi_kunci_semua_klaim": {
+    "didukung": 222,
+    "tidak": 289
+  },
+  "inv_terwakili": 38,
+  "usage_tokens": {
+    "prompt": 22668,
+    "completion": 1562
+  },
+  "batas": [
+    "Kunci jawaban KALIBRASI = proksi heuristik struktural (art_id dirujuk resolvable di grounding.json). BUKAN audit manusia penuh; protocol E7 mensyaratkan audit manusia 50 klaim — di sini digantikan proksi dan dinyatakan terbuka.",
+    "Konvensi kunci: klaim TANPA art_id dirujuk dinilai kunci='tidak' (tak ada artefak penopang).",
+    "n dibatasi 50 klaim (<= batas 60 protocol E7-C) untuk kendali biaya API; dipilih deterministik seed 20260809 dari 511 klaim golden.",
+    "Plafon proksi: klaim berkesimpulan-negatif (mis. 'tidak ada konflik', 'bukan going-dark', 'tidak memenuhi dua sensor') sukar disubstansiasi satu artefak (membuktikan ketiadaan). Divergensi juri-vs-proksi di sini kerap berarti juri LEBIH ketat dari proksi, bukan juri salah.",
+    "Juri = gpt-4o-mini, suhu 0; lapis LLM tidak diklaim deterministik (protocol §0.7). parse_fail_json=0.",
+    "BACA presisi bersama agreement: presisi='didukung' bisa 1.0 karena juri nol-endorse-palsu (tak pernah menyokong klaim tanpa artefak resolvable), TETAPI juri menolak sebagian klaim berkunci-didukung yang berkesimpulan negatif / berartefak sintetis — divergensi = plafon proksi (juri lebih ketat), bukan galat juri. Lihat distribusi_per_kunci."
+  ],
+  "putusan_per_klaim": [
+    {
+      "claim_id": "inv-e5-6ed43019-02::kinematik_gap",
+      "inv_id": "inv-e5-6ed43019-02",
+      "rule": "kinematik_gap",
+      "key": "didukung",
+      "putusan": "tidak",
+      "alasan": "Artefak menunjukkan deteksi SAR yang valid, bertentangan dengan klaim bahwa pola going-dark tidak terpenuhi.",
+      "cited_art_ids": [
+        "a-e5-6ed43019-02-001"
+      ],
+      "parse_ok": true
+    },
+    {
+      "claim_id": "inv-e5-f77492d9-02::cakupan",
+      "inv_id": "inv-e5-f77492d9-02",
+      "rule": "cakupan",
+      "key": "tidak",
+      "putusan": "tidak",
+      "alasan": "Tidak ada artefak yang dirujuk, sehingga klaim tidak dapat ditegakkan.",
+      "cited_art_ids": [],
+      "parse_ok": true
+    },
+    {
+      "claim_id": "inv-e5-sint-03::status",
+      "inv_id": "inv-e5-sint-03",
+      "rule": "status",
+      "key": "didukung",
+      "putusan": "tidak",
+      "alasan": "Artefak bersifat sintetis dan tidak dapat dijadikan dasar klaim akurasi atau kecukupan evidensial.",
+      "cited_art_ids": [
+        "a-e5-sint-03-001",
+        "a-e5-sint-03-002"
+      ],
+      "parse_ok": true
+    },
+    {
+      "claim_id": "inv-e5-f9db277f-02::usia",
+      "inv_id": "inv-e5-f9db277f-02",
+      "rule": "usia",
+      "key": "tidak",
+      "putusan": "tidak",
+      "alasan": "Tidak ada artefak yang dirujuk, sehingga klaim tidak dapat ditegakkan.",
+      "cited_art_ids": [],
+      "parse_ok": true
+    },
+    {
+      "claim_id": "inv-e5-ebbbee77-01::konflik",
+      "inv_id": "inv-e5-ebbbee77-01",
+      "rule": "konflik",
+      "key": "tidak",
+      "putusan": "tidak",
+      "alasan": "Tidak ada artefak yang dirujuk, sehingga klaim tidak dapat ditegakkan.",
+      "cited_art_ids": [],
+      "parse_ok": true
+    },
+    {
+      "claim_id": "inv-e5-8e8df9a7-01::dua_sensor",
+      "inv_id": "inv-e5-8e8df9a7-01",
+      "rule": "dua_sensor",
+      "key": "didukung",
+      "putusan": "tidak",
+      "alasan": "Artefak menunjukkan deteksi dengan probabilitas tinggi, bertentangan dengan klaim bahwa kandidat tidak memenuhi dua sensor.",
+      "cited_art_ids": [
+        "a-e5-8e8df9a7-01-001"
+      ],
+      "parse_ok": true
+    },
+    {
+      "claim_id": "inv-e5-5af616b1-01::zona",
+      "inv_id": "inv-e5-5af616b1-01",
+      "rule": "zona",
+      "key": "tidak",
+      "putusan": "tidak",
+      "alasan": "Tidak ada artefak yang dirujuk, sehingga klaim tidak dapat ditegakkan.",
+      "cited_art_ids": [],
+      "parse_ok": true
+    },
+    {
+      "claim_id": "inv-e5-aad0cc0c-01::cakupan",
+      "inv_id": "inv-e5-aad0cc0c-01",
+      "rule": "cakupan",
+      "key": "tidak",
+      "putusan": "tidak",
+      "alasan": "Tidak ada artefak yang dirujuk, sehingga klaim tidak dapat ditegakkan.",
+      "cited_art_ids": [],
+      "parse_ok": true
+    },
+    {
+      "claim_id": "inv-e5-f9e403da-02::zona",
+      "inv_id": "inv-e5-f9e403da-02",
+      "rule": "zona",
+      "key": "tidak",
+      "putusan": "tidak",
+      "alasan": "Tidak ada artefak yang dirujuk, sehingga klaim tidak dapat ditegakkan.",
+      "cited_art_ids": [],
+      "parse_ok": true
+    },
+    {
+      "claim_id": "inv-e5-7dd2a5a4-01::usia",
+      "inv_id": "inv-e5-7dd2a5a4-01",
+      "rule": "usia",
+      "key": "tidak",
+      "putusan": "tidak",
+      "alasan": "Tidak ada artefak yang dirujuk, sehingga klaim tidak dapat ditegakkan.",
+      "cited_art_ids": [],
+      "parse_ok": true
+    },
+    {
+      "claim_id": "inv-e5-93cd69e7-01::konflik",
+      "inv_id": "inv-e5-93cd69e7-01",
+      "rule": "konflik",
+      "key": "tidak",
+      "putusan": "tidak",
+      "alasan": "Tidak ada artefak yang dirujuk, sehingga klaim tidak dapat ditegakkan.",
+      "cited_art_ids": [],
+      "parse_ok": true
+    },
+    {
+      "claim_id": "inv-e5-cf10d2ab-01::cakupan",
+      "inv_id": "inv-e5-cf10d2ab-01",
+      "rule": "cakupan",
+      "key": "tidak",
+      "putusan": "tidak",
+      "alasan": "Tidak ada artefak yang dirujuk, sehingga klaim tidak dapat ditegakkan.",
+      "cited_art_ids": [],
+      "parse_ok": true
+    },
+    {
+      "claim_id": "inv-e5-b5857d9d-01::usia",
+      "inv_id": "inv-e5-b5857d9d-01",
+      "rule": "usia",
+      "key": "tidak",
+      "putusan": "tidak",
+      "alasan": "Tidak ada artefak yang dirujuk, sehingga klaim tidak dapat ditegakkan.",
+      "cited_art_ids": [],
+      "parse_ok": true
+    },
+    {
+      "claim_id": "inv-e5-3a0fff47-01::status",
+      "inv_id": "inv-e5-3a0fff47-01",
+      "rule": "status",
+      "key": "didukung",
+      "putusan": "didukung",
+      "alasan": "Artefak menunjukkan deteksi yang mendukung status 'terindikasi' dengan sensor independen dan bukti yang baru.",
+      "cited_art_ids": [
+        "a-e5-3a0fff47-01-001"
+      ],
+      "parse_ok": true
+    },
+    {
+      "claim_id": "inv-e5-aad0cc0c-01::usia",
+      "inv_id": "inv-e5-aad0cc0c-01",
+      "rule": "usia",
+      "key": "tidak",
+      "putusan": "tidak",
+      "alasan": "Tidak ada artefak yang dirujuk, sehingga klaim tidak dapat ditegakkan.",
+      "cited_art_ids": [],
+      "parse_ok": true
+    },
+    {
+      "claim_id": "inv-e5-4f1ac441-02::cakupan",
+      "inv_id": "inv-e5-4f1ac441-02",
+      "rule": "cakupan",
+      "key": "tidak",
+      "putusan": "tidak",
+      "alasan": "Tidak ada artefak yang dirujuk, sehingga klaim tidak dapat ditegakkan.",
+      "cited_art_ids": [],
+      "parse_ok": true
+    },
+    {
+      "claim_id": "inv-e5-b5857d9d-01::zona",
+      "inv_id": "inv-e5-b5857d9d-01",
+      "rule": "zona",
+      "key": "tidak",
+      "putusan": "tidak",
+      "alasan": "Tidak ada artefak yang dirujuk, sehingga klaim tidak dapat ditegakkan.",
+      "cited_art_ids": [],
+      "parse_ok": true
+    },
+    {
+      "claim_id": "inv-e5-1c904ce3-01::dua_sensor",
+      "inv_id": "inv-e5-1c904ce3-01",
+      "rule": "dua_sensor",
+      "key": "didukung",
+      "putusan": "tidak",
+      "alasan": "Artefak tidak menunjukkan bahwa kandidat tidak memenuhi dua sensor independen; informasi sensor tidak lengkap.",
+      "cited_art_ids": [
+        "a-e5-1c904ce3-01-001"
+      ],
+      "parse_ok": true
+    },
+    {
+      "claim_id": "inv-e5-sint-02::usia",
+      "inv_id": "inv-e5-sint-02",
+      "rule": "usia",
+      "key": "didukung",
+      "putusan": "tidak",
+      "alasan": "Artefak adalah data sintetis yang tidak dapat dianggap sebagai bukti yang valid; tidak mendukung klaim tentang kedaluwarsa.",
+      "cited_art_ids": [
+        "a-e5-sint-02-001"
+      ],
+      "parse_ok": true
+    },
+    {
+      "claim_id": "inv-e5-b771e72b-01::kinematik_gap",
+      "inv_id": "inv-e5-b771e72b-01",
+      "rule": "kinematik_gap",
+      "key": "didukung",
+      "putusan": "tidak",
+      "alasan": "Artefak menunjukkan deteksi SAR yang valid, bertentangan dengan klaim bahwa pola going-dark tidak terpenuhi.",
+      "cited_art_ids": [
+        "a-e5-b771e72b-01-001"
+      ],
+      "parse_ok": true
+    },
+    {
+      "claim_id": "inv-e5-3bc01ebc-02::cakupan",
+      "inv_id": "inv-e5-3bc01ebc-02",
+      "rule": "cakupan",
+      "key": "tidak",
+      "putusan": "tidak",
+      "alasan": "Tidak ada artefak yang dirujuk, sehingga klaim tidak dapat ditegakkan.",
+      "cited_art_ids": [],
+      "parse_ok": true
+    },
+    {
+      "claim_id": "inv-e5-ed7647ea-01::kinematik_gap",
+      "inv_id": "inv-e5-ed7647ea-01",
+      "rule": "kinematik_gap",
+      "key": "didukung",
+      "putusan": "tidak",
+      "alasan": "Artefak menunjukkan deteksi SAR yang valid, bertentangan dengan klaim bahwa pola going-dark tidak terpenuhi.",
+      "cited_art_ids": [
+        "a-e5-ed7647ea-01-001"
+      ],
+      "parse_ok": true
+    },
+    {
+      "claim_id": "inv-e5-cf10d2ab-02::status",
+      "inv_id": "inv-e5-cf10d2ab-02",
+      "rule": "status",
+      "key": "didukung",
+      "putusan": "didukung",
+      "alasan": "Artefak menunjukkan deteksi yang mendukung status 'terindikasi' dengan parameter sensor independen dan usia bukti yang sesuai.",
+      "cited_art_ids": [
+        "a-e5-cf10d2ab-02-001"
+      ],
+      "parse_ok": true
+    },
+    {
+      "claim_id": "inv-e5-679f1af0-02::dua_sensor",
+      "inv_id": "inv-e5-679f1af0-02",
+      "rule": "dua_sensor",
+      "key": "didukung",
+      "putusan": "tidak",
+      "alasan": "Artefak menunjukkan deteksi satu sensor, tidak mendukung klaim tentang ketidakpuasan dua sensor independen.",
+      "cited_art_ids": [
+        "a-e5-679f1af0-02-001"
+      ],
+      "parse_ok": true
+    },
+    {
+      "claim_id": "inv-e5-860e65f9-01::dua_sensor",
+      "inv_id": "inv-e5-860e65f9-01",
+      "rule": "dua_sensor",
+      "key": "didukung",
+      "putusan": "tidak",
+      "alasan": "Artefak tidak menunjukkan bahwa kandidat tidak memenuhi dua sensor independen; informasi sensor tidak lengkap.",
+      "cited_art_ids": [
+        "a-e5-860e65f9-01-001"
+      ],
+      "parse_ok": true
+    },
+    {
+      "claim_id": "inv-e5-0bc18737-01::kinematik_gap",
+      "inv_id": "inv-e5-0bc18737-01",
+      "rule": "kinematik_gap",
+      "key": "didukung",
+      "putusan": "tidak",
+      "alasan": "Artefak menunjukkan deteksi SAR yang valid, bertentangan dengan klaim bahwa pola going-dark tidak terpenuhi.",
+      "cited_art_ids": [
+        "a-e5-0bc18737-01-001"
+      ],
+      "parse_ok": true
+    },
+    {
+      "claim_id": "inv-e5-sint-01::status",
+      "inv_id": "inv-e5-sint-01",
+      "rule": "status",
+      "key": "didukung",
+      "putusan": "tidak",
+      "alasan": "Artefak bersifat sintetis dan tidak dapat dijadikan dasar klaim akurasi atau kecukupan evidensial.",
+      "cited_art_ids": [
+        "a-e5-sint-01-001"
+      ],
+      "parse_ok": true
+    },
+    {
+      "claim_id": "inv-e5-860e65f9-02::cakupan",
+      "inv_id": "inv-e5-860e65f9-02",
+      "rule": "cakupan",
+      "key": "tidak",
+      "putusan": "tidak",
+      "alasan": "Tidak ada artefak yang dirujuk, sehingga klaim tidak dapat ditegakkan.",
+      "cited_art_ids": [],
+      "parse_ok": true
+    },
+    {
+      "claim_id": "inv-e5-f77492d9-01::konflik",
+      "inv_id": "inv-e5-f77492d9-01",
+      "rule": "konflik",
+      "key": "tidak",
+      "putusan": "tidak",
+      "alasan": "Tidak ada artefak yang dirujuk, sehingga klaim tidak dapat ditegakkan.",
+      "cited_art_ids": [],
+      "parse_ok": true
+    },
+    {
+      "claim_id": "inv-e5-5af616b1-01::cakupan",
+      "inv_id": "inv-e5-5af616b1-01",
+      "rule": "cakupan",
+      "key": "tidak",
+      "putusan": "tidak",
+      "alasan": "Tidak ada artefak yang dirujuk, sehingga klaim tidak dapat ditegakkan.",
+      "cited_art_ids": [],
+      "parse_ok": true
+    },
+    {
+      "claim_id": "inv-e5-sint-02::zona",
+      "inv_id": "inv-e5-sint-02",
+      "rule": "zona",
+      "key": "tidak",
+      "putusan": "tidak",
+      "alasan": "Tidak ada artefak yang dirujuk, sehingga klaim tidak dapat ditegakkan.",
+      "cited_art_ids": [],
+      "parse_ok": true
+    },
+    {
+      "claim_id": "inv-e5-f9db277f-02::konflik",
+      "inv_id": "inv-e5-f9db277f-02",
+      "rule": "konflik",
+      "key": "tidak",
+      "putusan": "tidak",
+      "alasan": "Tidak ada artefak yang dirujuk, sehingga klaim tidak dapat ditegakkan.",
+      "cited_art_ids": [],
+      "parse_ok": true
+    },
+    {
+      "claim_id": "inv-e5-570f8bf7-02::kinematik_gap",
+      "inv_id": "inv-e5-570f8bf7-02",
+      "rule": "kinematik_gap",
+      "key": "didukung",
+      "putusan": "tidak",
+      "alasan": "Artefak menunjukkan deteksi SAR yang valid, bertentangan dengan klaim bahwa pola going-dark tidak terpenuhi.",
+      "cited_art_ids": [
+        "a-e5-570f8bf7-02-001"
+      ],
+      "parse_ok": true
+    },
+    {
+      "claim_id": "inv-e5-cf10d2ab-02::dua_sensor",
+      "inv_id": "inv-e5-cf10d2ab-02",
+      "rule": "dua_sensor",
+      "key": "didukung",
+      "putusan": "tidak",
+      "alasan": "Artefak menunjukkan deteksi satu sensor, tidak mendukung klaim tentang ketidakpuasan dua sensor independen.",
+      "cited_art_ids": [
+        "a-e5-cf10d2ab-02-001"
+      ],
+      "parse_ok": true
+    },
+    {
+      "claim_id": "inv-e5-1c904ce3-02::status",
+      "inv_id": "inv-e5-1c904ce3-02",
+      "rule": "status",
+      "key": "didukung",
+      "putusan": "didukung",
+      "alasan": "Artefak menunjukkan deteksi yang relevan dengan investigasi, mendukung status 'terindikasi'.",
+      "cited_art_ids": [
+        "a-e5-1c904ce3-02-001"
+      ],
+      "parse_ok": true
+    },
+    {
+      "claim_id": "inv-e5-3a0fff47-02::status",
+      "inv_id": "inv-e5-3a0fff47-02",
+      "rule": "status",
+      "key": "didukung",
+      "putusan": "didukung",
+      "alasan": "Artefak menunjukkan deteksi yang mendukung status 'terindikasi' dengan sensor independen dan usia bukti 0 jam.",
+      "cited_art_ids": [
+        "a-e5-3a0fff47-02-001"
+      ],
+      "parse_ok": true
+    },
+    {
+      "claim_id": "inv-e5-b5857d9d-01::konflik",
+      "inv_id": "inv-e5-b5857d9d-01",
+      "rule": "konflik",
+      "key": "tidak",
+      "putusan": "tidak",
+      "alasan": "Tidak ada artefak yang dirujuk, sehingga klaim tidak dapat ditegakkan.",
+      "cited_art_ids": [],
+      "parse_ok": true
+    },
+    {
+      "claim_id": "inv-e5-0e815a40-01::usia",
+      "inv_id": "inv-e5-0e815a40-01",
+      "rule": "usia",
+      "key": "tidak",
+      "putusan": "tidak",
+      "alasan": "Tidak ada artefak yang dirujuk, sehingga klaim tidak dapat ditegakkan.",
+      "cited_art_ids": [],
+      "parse_ok": true
+    },
+    {
+      "claim_id": "inv-e5-0e815a40-02::status",
+      "inv_id": "inv-e5-0e815a40-02",
+      "rule": "status",
+      "key": "didukung",
+      "putusan": "didukung",
+      "alasan": "Artefak menunjukkan deteksi yang relevan dengan investigasi, mendukung status 'terindikasi'.",
+      "cited_art_ids": [
+        "a-e5-0e815a40-02-001"
+      ],
+      "parse_ok": true
+    },
+    {
+      "claim_id": "inv-e5-9afdf1b6-02::kinematik_gap",
+      "inv_id": "inv-e5-9afdf1b6-02",
+      "rule": "kinematik_gap",
+      "key": "didukung",
+      "putusan": "tidak",
+      "alasan": "Artefak menunjukkan deteksi SAR yang valid, bertentangan dengan klaim bahwa pola going-dark tidak terpenuhi.",
+      "cited_art_ids": [
+        "a-e5-9afdf1b6-02-001"
+      ],
+      "parse_ok": true
+    },
+    {
+      "claim_id": "inv-e5-ebbbee77-01::cakupan",
+      "inv_id": "inv-e5-ebbbee77-01",
+      "rule": "cakupan",
+      "key": "tidak",
+      "putusan": "tidak",
+      "alasan": "Tidak ada artefak yang dirujuk, sehingga klaim tidak dapat ditegakkan.",
+      "cited_art_ids": [],
+      "parse_ok": true
+    },
+    {
+      "claim_id": "inv-e5-aad0cc0c-01::konflik",
+      "inv_id": "inv-e5-aad0cc0c-01",
+      "rule": "konflik",
+      "key": "tidak",
+      "putusan": "tidak",
+      "alasan": "Tidak ada artefak yang dirujuk, sehingga klaim tidak dapat ditegakkan.",
+      "cited_art_ids": [],
+      "parse_ok": true
+    },
+    {
+      "claim_id": "inv-e5-ed7647ea-01::zona",
+      "inv_id": "inv-e5-ed7647ea-01",
+      "rule": "zona",
+      "key": "tidak",
+      "putusan": "tidak",
+      "alasan": "Tidak ada artefak yang dirujuk, sehingga klaim tidak dapat ditegakkan.",
+      "cited_art_ids": [],
+      "parse_ok": true
+    },
+    {
+      "claim_id": "inv-e5-b771e72b-02::konflik",
+      "inv_id": "inv-e5-b771e72b-02",
+      "rule": "konflik",
+      "key": "tidak",
+      "putusan": "tidak",
+      "alasan": "Tidak ada artefak yang dirujuk, sehingga klaim tidak dapat ditegakkan.",
+      "cited_art_ids": [],
+      "parse_ok": true
+    },
+    {
+      "claim_id": "inv-e5-ec00f105-02::zona",
+      "inv_id": "inv-e5-ec00f105-02",
+      "rule": "zona",
+      "key": "tidak",
+      "putusan": "tidak",
+      "alasan": "Tidak ada artefak yang dirujuk, sehingga klaim tidak dapat ditegakkan.",
+      "cited_art_ids": [],
+      "parse_ok": true
+    },
+    {
+      "claim_id": "inv-e5-2afbfbcc-01::usia",
+      "inv_id": "inv-e5-2afbfbcc-01",
+      "rule": "usia",
+      "key": "tidak",
+      "putusan": "tidak",
+      "alasan": "Tidak ada artefak yang dirujuk, sehingga klaim tidak dapat ditegakkan.",
+      "cited_art_ids": [],
+      "parse_ok": true
+    },
+    {
+      "claim_id": "inv-e5-ec00f105-01::konflik",
+      "inv_id": "inv-e5-ec00f105-01",
+      "rule": "konflik",
+      "key": "tidak",
+      "putusan": "tidak",
+      "alasan": "Tidak ada artefak yang dirujuk, sehingga klaim tidak dapat ditegakkan.",
+      "cited_art_ids": [],
+      "parse_ok": true
+    },
+    {
+      "claim_id": "inv-e5-ed7647ea-01::cakupan",
+      "inv_id": "inv-e5-ed7647ea-01",
+      "rule": "cakupan",
+      "key": "tidak",
+      "putusan": "tidak",
+      "alasan": "Tidak ada artefak yang dirujuk, sehingga klaim tidak dapat ditegakkan.",
+      "cited_art_ids": [],
+      "parse_ok": true
+    },
+    {
+      "claim_id": "inv-e5-sint-01::dua_sensor",
+      "inv_id": "inv-e5-sint-01",
+      "rule": "dua_sensor",
+      "key": "didukung",
+      "putusan": "didukung",
+      "alasan": "Artefak menyatakan hanya ada satu deteksi radar tanpa artefak AIS, mendukung klaim tentang ketidakcukupan modalitas sensor.",
+      "cited_art_ids": [
+        "a-e5-sint-01-001"
+      ],
+      "parse_ok": true
+    },
+    {
+      "claim_id": "inv-e5-5af616b1-02::kinematik_gap",
+      "inv_id": "inv-e5-5af616b1-02",
+      "rule": "kinematik_gap",
+      "key": "didukung",
+      "putusan": "tidak",
+      "alasan": "Artefak menunjukkan deteksi SAR yang valid, bertentangan dengan klaim bahwa pola going-dark tidak terpenuhi.",
+      "cited_art_ids": [
+        "a-e5-5af616b1-02-001"
+      ],
+      "parse_ok": true
+    }
+  ]
+}

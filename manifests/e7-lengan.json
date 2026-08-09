@@ -1,0 +1,90 @@
+{
+ "eksperimen": "E7-A/lengan",
+ "provenance": {
+  "run_id": "e7a-20260809-8ce953c9",
+  "seed": 20260809,
+  "now_terpin": "2026-08-09T11:00:00Z",
+  "commit": "8ce953c962d70b71fa0cdacf24f9f71b708dad2c",
+  "commit_protokol_beku": "0bc9af9",
+  "thresholds": {
+   "ambang_kn": 50,
+   "usia_max_h": 144,
+   "konflik_jendela_jam": 6
+  },
+  "thresholds_sumber": "experiments/e5/thresholds.lock.json",
+  "set_pelaporan": "experiments/e5/goldenset/ (73 inv)",
+  "n": 73,
+  "hardware": "Darwin arm64 py3.14.6",
+  "core_dibungkus": "packages/core/src/{pasha,grounding,diksi}.ts + schemas.ts via experiments/e7/loo_core.ts (impor fungsi asli; TIDAK diedit)",
+  "sintetis": true,
+  "catatan_sintetis": "Semua probe (P1 klaim tak-berartefak, P2 vonis melampaui bukti, P3 diksi putusan) SINTETIS by-construction per investigasi, seed 20260809 (protokol §0.6). Bukan kejadian nyata."
+ },
+ "metrik_headline": "klaim_takberartefak_lolos (probe P1) per 73; lengan iii = properti mutlak EKS-5",
+ "lengan": {
+  "i_tanpa_gerbang": {
+   "deskripsi": "Semua klaim agen diterima; nol gerbang server (config 'none').",
+   "klaim_takberartefak_lolos": 73,
+   "klaim_takberartefak_lolos_prop": "73/73",
+   "klaim_takberartefak_lolos_wilson95": [
+    0.95,
+    1.0
+   ],
+   "status_salah": 73,
+   "status_salah_prop": "73/73",
+   "status_salah_wilson95": [
+    0.95,
+    1.0
+   ],
+   "diksi_bocor": 73,
+   "diksi_bocor_prop": "73/73",
+   "diksi_bocor_wilson95": [
+    0.95,
+    1.0
+   ]
+  },
+  "ii_prompt_only": {
+   "deskripsi": "Guardrail wajib-artefak hanya di prompt, TANPA penegakan server.",
+   "prompt_dipublikasikan": "experiments/e7/prompt-only-guardrail.md",
+   "proksi": "Penegakan server = nol, jadi admittance == lengan (i). Angka = admittance server, BUKAN kepatuhan-diri model (menuntut inferensi live; tak ada trace agen pada set pelaporan). Temuan: prompt menambah nol proteksi yang dapat ditegakkan.",
+   "klaim_takberartefak_lolos": 73,
+   "klaim_takberartefak_lolos_prop": "73/73",
+   "klaim_takberartefak_lolos_wilson95": [
+    0.95,
+    1.0
+   ],
+   "status_salah": 73,
+   "status_salah_prop": "73/73",
+   "status_salah_wilson95": [
+    0.95,
+    1.0
+   ],
+   "diksi_bocor": 73,
+   "diksi_bocor_prop": "73/73",
+   "diksi_bocor_wilson95": [
+    0.95,
+    1.0
+   ]
+  },
+  "iii_pasha_penuh": {
+   "deskripsi": "Gerbang server penuh (config 'full').",
+   "klaim_takberartefak_lolos": 0,
+   "klaim_takberartefak_lolos_prop": "0/73",
+   "klaim_takberartefak_lolos_wilson95": [
+    0.0,
+    0.05
+   ],
+   "status_salah": 0,
+   "status_salah_prop": "0/73",
+   "status_salah_wilson95": [
+    0.0,
+    0.05
+   ],
+   "diksi_bocor": 0,
+   "diksi_bocor_prop": "0/73",
+   "diksi_bocor_wilson95": [
+    0.0,
+    0.05
+   ]
+  }
+ }
+}

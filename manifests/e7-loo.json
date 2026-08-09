@@ -1,0 +1,206 @@
+{
+ "eksperimen": "E7-A/LOO",
+ "provenance": {
+  "run_id": "e7a-20260809-8ce953c9",
+  "seed": 20260809,
+  "now_terpin": "2026-08-09T11:00:00Z",
+  "commit": "8ce953c962d70b71fa0cdacf24f9f71b708dad2c",
+  "commit_protokol_beku": "0bc9af9",
+  "thresholds": {
+   "ambang_kn": 50,
+   "usia_max_h": 144,
+   "konflik_jendela_jam": 6
+  },
+  "thresholds_sumber": "experiments/e5/thresholds.lock.json",
+  "set_pelaporan": "experiments/e5/goldenset/ (73 inv)",
+  "n": 73,
+  "hardware": "Darwin arm64 py3.14.6",
+  "core_dibungkus": "packages/core/src/{pasha,grounding,diksi}.ts + schemas.ts via experiments/e7/loo_core.ts (impor fungsi asli; TIDAK diedit)",
+  "sintetis": true,
+  "catatan_sintetis": "Semua probe (P1 klaim tak-berartefak, P2 vonis melampaui bukti, P3 diksi putusan) SINTETIS by-construction per investigasi, seed 20260809 (protokol §0.6). Bukan kejadian nyata."
+ },
+ "metrik": {
+  "klaim_takberartefak_lolos": "probe P1 (kutip art_id fabrikasi) yang LOLOS gerbang, per 73",
+  "status_salah": "probe P2 (vonis 'terkonfirmasi' melampaui bukti) yang status akhirnya != proksi adjudikasi, per 73",
+  "diksi_bocor": "probe P3 (kata putusan terlarang) yang LOLOS ke tampilan, per 73"
+ },
+ "baseline_pasha_penuh": {
+  "klaim_takberartefak_lolos": 0,
+  "klaim_takberartefak_lolos_prop": "0/73",
+  "klaim_takberartefak_lolos_wilson95": [
+   0.0,
+   0.05
+  ],
+  "status_salah": 0,
+  "status_salah_prop": "0/73",
+  "status_salah_wilson95": [
+   0.0,
+   0.05
+  ],
+  "diksi_bocor": 0,
+  "diksi_bocor_prop": "0/73",
+  "diksi_bocor_wilson95": [
+   0.0,
+   0.05
+  ]
+ },
+ "loo_per_lapis": {
+  "a": {
+   "nama": "pemisahan_persepsi_penalaran",
+   "jalur_kode": "artifacts_cited diturunkan dari output (artIdsPada) + status milik server",
+   "ablasi": "percaya daftar sitasi & status usulan agen",
+   "klaim_takberartefak_lolos": 0,
+   "klaim_takberartefak_lolos_prop": "0/73",
+   "klaim_takberartefak_lolos_wilson95": [
+    0.0,
+    0.05
+   ],
+   "status_salah": 73,
+   "status_salah_prop": "73/73",
+   "status_salah_wilson95": [
+    0.95,
+    1.0
+   ],
+   "diksi_bocor": 0,
+   "diksi_bocor_prop": "0/73",
+   "diksi_bocor_wilson95": [
+    0.0,
+    0.05
+   ],
+   "deviasi": "Metrik status_salah identik dengan lapis (c): pada kode, 'persepsi terpisah dari penalaran' dan 'status milik server' adalah SATU penjaga (executor tak pernah membiarkan agen menghitung status). LOO tak dapat memisah keduanya pada metrik ini; keduanya adalah satu-satunya penahan vonis fabrikasi."
+  },
+  "b": {
+   "nama": "indeks_grounding",
+   "jalur_kode": "periksaEnvelope menolak art_id tak-resolvable (grounding.ts)",
+   "ablasi": "resolver terima-semua",
+   "klaim_takberartefak_lolos": 73,
+   "klaim_takberartefak_lolos_prop": "73/73",
+   "klaim_takberartefak_lolos_wilson95": [
+    0.95,
+    1.0
+   ],
+   "status_salah": 0,
+   "status_salah_prop": "0/73",
+   "status_salah_wilson95": [
+    0.0,
+    0.05
+   ],
+   "diksi_bocor": 0,
+   "diksi_bocor_prop": "0/73",
+   "diksi_bocor_wilson95": [
+    0.0,
+    0.05
+   ]
+  },
+  "c": {
+   "nama": "status_server",
+   "jalur_kode": "computeStatus memutuskan status (pasha.ts)",
+   "ablasi": "pakai status_usulan agen",
+   "klaim_takberartefak_lolos": 0,
+   "klaim_takberartefak_lolos_prop": "0/73",
+   "klaim_takberartefak_lolos_wilson95": [
+    0.0,
+    0.05
+   ],
+   "status_salah": 73,
+   "status_salah_prop": "73/73",
+   "status_salah_wilson95": [
+    0.95,
+    1.0
+   ],
+   "diksi_bocor": 0,
+   "diksi_bocor_prop": "0/73",
+   "diksi_bocor_wilson95": [
+    0.0,
+    0.05
+   ]
+  },
+  "d": {
+   "nama": "usia_bukti_peluruhan",
+   "jalur_kode": "thresholds.usia_max_h di computeStatus",
+   "ablasi": "usia_max_h -> ~inf",
+   "klaim_takberartefak_lolos": 0,
+   "klaim_takberartefak_lolos_prop": "0/73",
+   "klaim_takberartefak_lolos_wilson95": [
+    0.0,
+    0.05
+   ],
+   "status_salah": 0,
+   "status_salah_prop": "0/73",
+   "status_salah_wilson95": [
+    0.0,
+    0.05
+   ],
+   "diksi_bocor": 0,
+   "diksi_bocor_prop": "0/73",
+   "diksi_bocor_wilson95": [
+    0.0,
+    0.05
+   ],
+   "deviasi": "Nol perubahan STRUKTURAL: 70 inv nyata membawa hanya t_tulis (tanpa created_at/observed_at) sehingga evidence_age_h == 0; 3 inv sintetis berusia 1-2 j << usia_max_h=144. Peluruhan tak terpicu pada frame NOW terpin; lapis divalidasi pada skenario peluruhan E5.5, bukan set ini."
+  },
+  "e": {
+   "nama": "penyaring_diksi_A8",
+   "jalur_kode": "cekDiksi menolak kata putusan (diksi.ts) + pemeriksa A8",
+   "ablasi": "lewati cekDiksi",
+   "klaim_takberartefak_lolos": 0,
+   "klaim_takberartefak_lolos_prop": "0/73",
+   "klaim_takberartefak_lolos_wilson95": [
+    0.0,
+    0.05
+   ],
+   "status_salah": 0,
+   "status_salah_prop": "0/73",
+   "status_salah_wilson95": [
+    0.0,
+    0.05
+   ],
+   "diksi_bocor": 73,
+   "diksi_bocor_prop": "73/73",
+   "diksi_bocor_wilson95": [
+    0.95,
+    1.0
+   ]
+  }
+ },
+ "error_rate_gate": {
+  "definisi_prediksi": "status_server PASHA penuh (direproduksi harness == tersimpan)",
+  "definisi_adjudikasi": "PROKSI: kelas_gt (manifests/e5-adjudikasi-basis.json) -> tingkat status via KELAS_ADJ",
+  "peringatan_proksi": "Ini PROKSI, BUKAN adjudikasi manusia ganda buta (protokol §0.5). Set pelaporan seluruhnya kasus satu-modalitas going-dark: tak ada kasus yang bisa mencapai 'terkonfirmasi' (butuh 2 sensor + pelanggaran zona), sehingga false-CONFIRM TAK TERUJI oleh komposisi ini; false-ABSTAIN hanya teruji oleh 1 kasus konflik sintetis. Distribusi kelas: gelap_gt=35, ais_hadir=35, sintetis x3. gelap_gt vs ais_hadir tak terbedakan dari MASUKAN PASHA (artefak investigasi = SAR tunggal untuk keduanya); pemisahan itu metadata GT, bukan input gerbang.",
+  "matriks_konfusi": {
+   "terkonfirmasi": {
+    "terkonfirmasi": 0,
+    "terindikasi": 0,
+    "abstain": 0
+   },
+   "terindikasi": {
+    "terkonfirmasi": 0,
+    "terindikasi": 72,
+    "abstain": 0
+   },
+   "abstain": {
+    "terkonfirmasi": 0,
+    "terindikasi": 0,
+    "abstain": 1
+   }
+  },
+  "urutan": [
+   "terkonfirmasi",
+   "terindikasi",
+   "abstain"
+  ],
+  "false_abstain": 0,
+  "false_confirm": 0,
+  "benar": 73,
+  "n": 73,
+  "akurasi_prop": "73/73",
+  "false_abstain_wilson95": [
+   0.0,
+   0.05
+  ],
+  "false_confirm_wilson95": [
+   0.0,
+   0.05
+  ]
+ }
+}
