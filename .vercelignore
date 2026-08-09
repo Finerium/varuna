@@ -1,0 +1,16 @@
+data/
+models/
+experiments/
+manifests/
+protocol/
+scripts/
+video/
+docs/
+.venv/
+.crown/
+secrets/
+*.log
+packages/core/golden/chips-src/
+.next/
+node_modules/
+.git/
