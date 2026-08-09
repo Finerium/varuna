@@ -1,0 +1,52 @@
+/* Token desain VARUNA — nilai TERKUNCI di contracts/architecture.md
+ * ("Gerak & visual"), palet blueprint 7.2 "beacon amber di atas deep maritime ink".
+ * Tidak ada warna baru di luar berkas ini.
+ *
+ * Ink gelap adalah keputusan domain (ruang operasi maritim, blueprint 7.3),
+ * bukan dark-mode default: satu-satunya register produk, karena itu tidak ada
+ * blok prefers-color-scheme yang membalik peran. */
+
+:root {
+  /* --- ink berlapis (bukan hitam murni, bukan navy default) */
+  --ink-0: #0b141b; /* lapis terdalam: latar halaman */
+  --ink-1: #0f1b25; /* lapis kedua: pita, chrome */
+  --ink-2: #13222e; /* lapis ketiga: permukaan terangkat, scrim di bawah chip */
+
+  /* --- glass (sea-glass dingin + hairline rim terang) */
+  --glass: rgba(202, 220, 228, 0.08);
+  --glass-rim: rgba(220, 240, 245, 0.22);
+  --glass-rim-redup: rgba(220, 240, 245, 0.1);
+
+  /* --- sinyal: amber SATU-SATUNYA warna sinyal */
+  --amber: #f0a63c; /* terkonfirmasi */
+  --amber-redup: #9a7b3f; /* terindikasi — AKSEN NON-TEKS saja (suar, garis) */
+  --amber-redup-teks: #c79b54; /* terindikasi sebagai TEKS: >=4.5:1 di atas komposit panel */
+  --slate: #8a97a3; /* ABSTAIN — netral jujur, bukan alarm */
+
+  /* --- teks near-tone (bukan putih/hitam murni) */
+  --teks: #e6ecef; /* di atas ink */
+  --teks-terang: #10181e; /* di atas permukaan terang, mis. isi tombol amber */
+  --teks-redup: #a8b4bc;
+
+  /* --- tipografi: dikunci di architecture.md; variabel diisi next/font */
+  --font-display: var(--font-space-grotesk), ui-sans-serif, sans-serif;
+  --font-body: var(--font-instrument-sans), ui-sans-serif, sans-serif;
+
+  /* --- ritme */
+  --r-1: 0.25rem;
+  --r-2: 0.5rem;
+  --r-3: 1rem;
+  --r-4: 1.75rem;
+  --r-5: 3rem;
+  --radius: 14px;
+  --radius-kecil: 8px;
+
+  /* --- aksen neumorphic: HANYA untuk kontrol taktil (blueprint 7.1),
+   *     tidak pernah satu layar penuh, tidak pernah teks utama. */
+  --taktil-atas: rgba(220, 240, 245, 0.14);
+  --taktil-bawah: rgba(0, 0, 0, 0.45);
+
+  /* --- bayang panel terangkat (frame Patroli). Nilai hidup di sini, bukan
+   *     mentah di globals.css: "tidak ada warna baru di luar berkas ini". */
+  --bayang-panel: 0 24px 60px rgba(0, 0, 0, 0.55);
+}

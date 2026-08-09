@@ -13,27 +13,27 @@
   {
    "inv_id": "inv-x3-3bc01ebc-01",
    "split": "demo",
-   "kasus": null
+   "kasus": "abstain"
   },
   {
    "inv_id": "inv-x3-570f8bf7-01",
    "split": "demo",
-   "kasus": null
+   "kasus": "patroli"
   },
   {
    "inv_id": "inv-x3-860e65f9-01",
    "split": "demo",
-   "kasus": null
+   "kasus": "going-dark"
   },
   {
    "inv_id": "inv-x3-93cd69e7-01",
    "split": "demo",
-   "kasus": null
+   "kasus": "abstain"
   },
   {
    "inv_id": "inv-x3-c078ff51-01",
    "split": "demo",
-   "kasus": null
+   "kasus": "patroli"
   }
  ]
 }

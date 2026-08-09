@@ -1,0 +1,9 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    // bin/gate.ts dijalankan Node apa adanya (type stripping) oleh harness
+    // python, jadi import relatifnya harus membawa ekstensi ".ts".
+    "allowImportingTsExtensions": true
+  },
+  "include": ["src/**/*.ts", "test/**/*.ts", "bin/**/*.ts", "vitest.config.ts"]
+}

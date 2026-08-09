@@ -5,7 +5,7 @@
  "source": {
   "dataset": "xview3-public",
   "ref": "860e65f9f3191ffdp",
-  "provenance": "Deteksi E1 nyata dari inferensi batch xView3 (experiments/e1/results/batch/860e65f9f3191ffdp.csv, baris 43, ambang objectness 0.3, tile 2048/step 1536, fp16, TTA fliplr); peran kurasi 'panjang_maksimum'. Georeferensi memakai CRS dan affine GeoTIFF scene itu sendiri (EPSG:32632 -> EPSG:4326), RMSE terhadap 883 label public.csv = 7.0 m. Metode affine cocok-label yang diminta (least squares row/col->lat/lon atas 883 label scene ini) dipakai sebagai uji-silang independen, bukan sumber koordinat: RMSE terhadap georeferensi GeoTIFF = 706.7 m, selisih pada deteksi ini 865.4 m; affine datar dalam (lat,lon) tidak dapat mewakili lengkung UTM->WGS84 sepanjang scene ~300 km. Chip 256x256 px band VH_dB dibaca per-window (rasterio), regangan kontras persentil 2-98 pada [-34.84,-25.20] dB, kontras inti-vs-latar 34.4 dB. confidence_calibrated = objectness_p apa adanya; kalibrasi E1b belum diterapkan dan akan menggantikan nilai ini."
+  "provenance": "Deteksi E1 nyata dari inferensi batch xView3 (experiments/e1/results/batch/860e65f9f3191ffdp.csv, baris 43, ambang objectness 0.3, tile 2048/step 1536, fp16, TTA fliplr); peran kurasi 'panjang_maksimum'. Georeferensi memakai CRS dan affine GeoTIFF scene itu sendiri (EPSG:32632 -> EPSG:4326), RMSE terhadap 883 label public.csv = 7.0 m. Metode affine cocok-label yang diminta (least squares row/col->lat/lon atas 883 label scene ini) dipakai sebagai uji-silang independen, bukan sumber koordinat: RMSE terhadap georeferensi GeoTIFF = 706.7 m, selisih pada deteksi ini 865.4 m; affine datar dalam (lat,lon) tidak dapat mewakili lengkung UTM->WGS84 sepanjang scene ~300 km. Chip 256x256 px band VH_dB dibaca per-window (rasterio), regangan kontras persentil 2-98 pada [-34.84,-25.20] dB, kontras inti-vs-latar 34.4 dB. confidence_calibrated = objectness_p apa adanya; kalibrasi E1b belum diterapkan dan akan menggantikan nilai ini. Scene ESA asli: S1A_IW_GRDH_1SDV_20201022T171800 (akuisisi 2020-10-22T17:18:00Z); kejadian historis dataset xView3, direplay untuk split demo, usia bukti dihitung sejak ingest."
  },
  "sintetis": false,
  "payload": {
@@ -21,5 +21,5 @@
   "scene_id": "860e65f9f3191ffdp"
  },
  "created_at": "2026-08-09T10:11:10Z",
- "hash_sha256": "e7e060a89d62290d2e78e9be48b34366f6169853cca2cdf520875f8a770f08c2"
+ "hash_sha256": "843871e62c5c0d6583f630b9dbd68898b65058534c77189c99e63e10e11c4d13"
 }

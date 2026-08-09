@@ -1,0 +1,26 @@
+{
+  "name": "@varuna/core",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./pasha": "./src/pasha.ts",
+    "./diksi": "./src/diksi.ts",
+    "./grounding": "./src/grounding.ts",
+    "./schemas": "./src/schemas.ts"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "rebuild:golden": "node bin/rebuild-golden.ts"
+  },
+  "dependencies": {
+    "zod": "^4.1.12"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "typescript": "^5.9.3",
+    "vitest": "^3.2.4"
+  }
+}

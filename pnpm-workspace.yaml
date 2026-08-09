@@ -1,0 +1,5 @@
+# pnpm tidak membaca field "workspaces" di package.json; file ini yang mengikat.
+# Isi harus tetap cermin dari package.json#workspaces (arsitektur: apps/web + packages/*).
+packages:
+  - "apps/*"
+  - "packages/*"

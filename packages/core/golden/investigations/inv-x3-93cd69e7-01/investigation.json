@@ -1,0 +1,85 @@
+{
+ "inv_id": "inv-x3-93cd69e7-01",
+ "seed": 20260809,
+ "aoi": "xview3-93cd69e7a7ca7b2ap",
+ "zona": null,
+ "t_acquisition": "2026-08-09T10:11:10Z",
+ "t_observasi_terakhir": "2026-08-09T10:11:10Z",
+ "split": "demo",
+ "sintetis": false,
+ "kasus": {
+  "label": "abstain",
+  "peran_demo": "Kurasi berbasis ground truth public.csv: tidak ada label dalam 3 km dari deteksi dekat-pantai kecil ini (cakupan label dekat pantai memang LOW confidence); peran demo = target kecil dekat pantai yang jujurnya tak bisa dikonfirmasi siapa pun."
+ },
+ "candidate": {
+  "lat": 45.184086,
+  "lon": 14.339638,
+  "length_m_est": 21.31,
+  "confidence_calibrated": 0.764876
+ },
+ "artifacts": [
+  "a-x3-93cd69e7-01-001"
+ ],
+ "status_server": {
+  "status": "terindikasi",
+  "computed_at": "2026-08-09T11:00:00Z",
+  "sensors_independent": 1,
+  "zone_violation": false,
+  "evidence_age_h": 0.8138888888888889,
+  "decay_applied": false,
+  "conflicting_art_ids": [],
+  "missing_coverage": [
+   "AIS"
+  ],
+  "reasons": [
+   {
+    "rule": "dua_sensor",
+    "passed": false,
+    "art_ids": [
+     "a-x3-93cd69e7-01-001"
+    ]
+   },
+   {
+    "rule": "zona",
+    "passed": false,
+    "art_ids": []
+   },
+   {
+    "rule": "kinematik_gap",
+    "passed": false,
+    "art_ids": [
+     "a-x3-93cd69e7-01-001"
+    ]
+   },
+   {
+    "rule": "usia",
+    "passed": true,
+    "art_ids": [
+     "a-x3-93cd69e7-01-001"
+    ]
+   },
+   {
+    "rule": "konflik",
+    "passed": true,
+    "art_ids": []
+   },
+   {
+    "rule": "cakupan",
+    "passed": false,
+    "art_ids": []
+   }
+  ],
+  "abstain_reason": null,
+  "display_state": [],
+  "hash": "749c884e2cf3ea220749ec6d2afc54bdaa88b90afd09e8f2b08b154a3072b05d"
+ },
+ "agent_proposal": null,
+ "berkas": {
+  "sections": [],
+  "diksi_ok": true
+ },
+ "patrol": {
+  "package_id": null,
+  "result": null
+ }
+}

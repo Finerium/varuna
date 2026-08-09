@@ -1,0 +1,89 @@
+{
+ "inv_id": "inv-x3-c078ff51-01",
+ "seed": 20260809,
+ "aoi": "xview3-c078ff51eb54a68fp",
+ "zona": null,
+ "t_acquisition": "2026-08-09T10:11:10Z",
+ "t_observasi_terakhir": "2026-08-09T10:11:10Z",
+ "split": "demo",
+ "sintetis": false,
+ "kasus": {
+  "label": "patroli",
+  "peran_demo": "Kurasi berbasis ground truth public.csv: kedua deteksi cocok 7 m dengan label source=ais/manual is_vessel=TRUE (satu is_fishing=TRUE HIGH); peran demo = kontak objectness tertinggi yang saat diperiksa patroli ternyata ber-AIS, kontrol bahwa sistem tidak berteriak serigala."
+ },
+ "candidate": {
+  "lat": 57.391621,
+  "lon": 5.394031,
+  "length_m_est": 29.97,
+  "confidence_calibrated": 0.864996
+ },
+ "artifacts": [
+  "a-x3-c078ff51-01-001",
+  "a-x3-c078ff51-01-002"
+ ],
+ "status_server": {
+  "status": "terindikasi",
+  "computed_at": "2026-08-09T11:00:00Z",
+  "sensors_independent": 1,
+  "zone_violation": false,
+  "evidence_age_h": 0.8138888888888889,
+  "decay_applied": false,
+  "conflicting_art_ids": [],
+  "missing_coverage": [
+   "AIS"
+  ],
+  "reasons": [
+   {
+    "rule": "dua_sensor",
+    "passed": false,
+    "art_ids": [
+     "a-x3-c078ff51-01-001",
+     "a-x3-c078ff51-01-002"
+    ]
+   },
+   {
+    "rule": "zona",
+    "passed": false,
+    "art_ids": []
+   },
+   {
+    "rule": "kinematik_gap",
+    "passed": false,
+    "art_ids": [
+     "a-x3-c078ff51-01-001",
+     "a-x3-c078ff51-01-002"
+    ]
+   },
+   {
+    "rule": "usia",
+    "passed": true,
+    "art_ids": [
+     "a-x3-c078ff51-01-001",
+     "a-x3-c078ff51-01-002"
+    ]
+   },
+   {
+    "rule": "konflik",
+    "passed": true,
+    "art_ids": []
+   },
+   {
+    "rule": "cakupan",
+    "passed": false,
+    "art_ids": []
+   }
+  ],
+  "abstain_reason": null,
+  "display_state": [],
+  "hash": "2592ffcbe1d359e4e8cc0c0947656dd15df4263341c1770bc6a8e67d12e9e488"
+ },
+ "agent_proposal": null,
+ "berkas": {
+  "sections": [],
+  "diksi_ok": true
+ },
+ "patrol": {
+  "package_id": null,
+  "result": null
+ }
+}

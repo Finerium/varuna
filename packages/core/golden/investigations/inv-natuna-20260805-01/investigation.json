@@ -4,7 +4,7 @@
  "aoi": "natuna",
  "zona": "ZEE-ID",
  "t_acquisition": "2026-08-03T00:00:00Z",
- "t_observasi_terakhir": "2026-08-05T20:37:00Z",
+ "t_observasi_terakhir": "2026-08-05T06:28:32Z",
  "split": "demo",
  "sintetis": false,
  "kasus": {
@@ -28,11 +28,10 @@
  ],
  "status_server": {
   "status": "abstain",
-  "computed_at": "2026-08-09T10:20:30Z",
-  "hash": "e7a1d58ec742563a24acf905434e9a7aadf3292abcee5f83bdc9cd30f9f2126b",
+  "computed_at": "2026-08-09T11:00:00Z",
   "sensors_independent": 0,
   "zone_violation": true,
-  "evidence_age_h": 85.73,
+  "evidence_age_h": 100.52444444444444,
   "decay_applied": false,
   "conflicting_art_ids": [],
   "missing_coverage": [
@@ -59,6 +58,18 @@
     ]
    },
    {
+    "rule": "kinematik_gap",
+    "passed": false,
+    "art_ids": []
+   },
+   {
+    "rule": "usia",
+    "passed": true,
+    "art_ids": [
+     "a-natuna-20260805-01-04"
+    ]
+   },
+   {
     "rule": "konflik",
     "passed": true,
     "art_ids": []
@@ -70,7 +81,8 @@
    }
   ],
   "abstain_reason": "kurang_cakupan",
-  "display_state": []
+  "display_state": [],
+  "hash": "eb203904adda931e15a431e8f3ca37d076bec719f5b3fdaf725d2316e98cbbfc"
  },
  "agent_proposal": null,
  "berkas": {

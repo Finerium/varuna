@@ -16,5 +16,6 @@
   "geometri_ref": "data/processed/zona/natuna_eez.geojson#features[0]"
  },
  "created_at": "2026-08-09T10:12:27Z",
- "hash_sha256": "515e60ef88a62ee3fc2619e8d05c7e15b10b1f74c0956a39b16fd8a2c508b543"
+ "hash_sha256": "a125f2a2721dbc95a0489465de00f436ea6526a1e3ba8f8f7a0ddab81c4f4152",
+ "observed_at": "2026-05-03T16:05:58Z"
 }

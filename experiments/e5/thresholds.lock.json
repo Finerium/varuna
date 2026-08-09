@@ -1,0 +1,8 @@
+{
+  "_catatan": "Ambang PASHA runtime, seed pra-kalibrasi. Sumber: ambang_kn=50 (protokol beku/paper, uji kelayakan kinematik); usia_max_h=144 (satu siklus revisit nominal 6 hari; akan dikalibrasi set kalibrasi E5 per protokol); konflik_jendela_jam=6 (selaras definisi gap >6 jam). Perubahan hanya via kalibrasi E5 (commit baru) atau delta A10 beraudit.",
+  "ambang_kn": 50,
+  "usia_max_h": 144,
+  "konflik_jendela_jam": 6,
+  "dikunci_pada": "2026-08-09T18:15:00+07:00",
+  "commit_protokol": "0bc9af9"
+}

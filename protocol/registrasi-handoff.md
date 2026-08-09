@@ -3,6 +3,12 @@
 Password per layanan sudah digenerate di `secrets/semifinal-accounts.md` (buka sendiri; jangan paste ke chat).
 Email semua akun: ghaisan.khoirul.b@gmail.com
 
+> STATUS 9 Agu: CDSE ✓ (token aktif) · xView3 ✓ (bisa login) · GFW: registrasi berjalan.
+> CATATAN: untuk CDSE dan xView3 operator memakai PASSWORD PRIBADI, BUKAN yang di
+> semifinal-accounts.md — entri file itu untuk kedua akun tsb. dianggap VOID.
+> Autentikasi Claude tidak butuh password: CDSE via cdse-refresh-token, xView3 via
+> browser operator, GFW via secrets/gfw-token.
+
 ## 1. CDSE / Copernicus (untuk scene Sentinel-1 Natuna) — PRIORITAS TERTINGGI
 1. Buka: https://identity.dataspace.copernicus.eu/auth/realms/CDSE/protocol/openid-connect/registrations?client_id=cdse-public&response_type=code&scope=openid&redirect_uri=https%3A%2F%2Fdataspace.copernicus.eu
 2. Isi: First name `Ghaisan`, Last name `Badruzaman`, Email, Password (dari secrets), Country `Indonesia`; field sektor/domain pilih `Education/Research` bila ada; centang terms; Register.

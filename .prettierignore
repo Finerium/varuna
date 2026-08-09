@@ -1,0 +1,16 @@
+node_modules/
+.next/
+.venv/
+dist/
+data/
+models/
+experiments/
+manifests/
+pnpm-lock.yaml
+
+# Jalur lain, gaya sudah mapan; format ulang dari sini hanya membuat diff palsu.
+packages/core/
+protocol/
+contracts/
+scripts/
+video/

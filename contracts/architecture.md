@@ -63,7 +63,7 @@ outputs; eksperimen python tetap di experiments/ tanpa disentuh.
 - Tipografi TERKUNCI (keputusan foundation): display "Space Grotesk", body
   "Instrument Sans" (keduanya variable, open, karakter teknis; bukan default terlarang).
 - Token warna TERKUNCI: ink berlapis #0B141B / #0F1B25 / #13222E; glass
-  rgba(202,220,228,0.08) rim rgba(220,240,245,0.22); amber penuh #F0A63C, amber redup
-  #9A7B3F; slate ABSTAIN #8A97A3; teks near-tone #E6ECEF di gelap, #10181E di terang;
+  rgba(202,220,228,0.08) rim rgba(220,240,245,0.22); amber penuh #F0A63C; amber redup #9A7B3F (non-teks) dengan varian teks
+  --amber-redup-teks #C79B54 (>=4.5:1 di atas komposit panel); slate ABSTAIN #8A97A3; teks near-tone #E6ECEF di gelap, #10181E di terang; teks redup #A8B4BC;
   kontras diuji terprogram di gate (VAR-A11Y-01).
 ```

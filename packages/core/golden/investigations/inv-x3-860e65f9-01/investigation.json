@@ -1,0 +1,93 @@
+{
+ "inv_id": "inv-x3-860e65f9-01",
+ "seed": 20260809,
+ "aoi": "xview3-860e65f9f3191ffdp",
+ "zona": null,
+ "t_acquisition": "2026-08-09T10:11:10Z",
+ "t_observasi_terakhir": "2026-08-09T10:11:10Z",
+ "split": "demo",
+ "sintetis": false,
+ "kasus": {
+  "label": "going-dark",
+  "peran_demo": "Kurasi berbasis ground truth public.csv: deteksi-002 cocok 16 m dengan label source=manual (anotasi citra TANPA korelasi AIS = kapal gelap menurut label resmi xView3) di samping dua deteksi ber-AIS; peran demo = kapal terlihat radar tanpa AIS pada scene yang sama dengan pembanding ber-AIS."
+ },
+ "candidate": {
+  "lat": 56.908633,
+  "lon": 7.502319,
+  "length_m_est": 156.79,
+  "confidence_calibrated": 0.664798
+ },
+ "artifacts": [
+  "a-x3-860e65f9-01-001",
+  "a-x3-860e65f9-01-002",
+  "a-x3-860e65f9-01-003"
+ ],
+ "status_server": {
+  "status": "terindikasi",
+  "computed_at": "2026-08-09T11:00:00Z",
+  "sensors_independent": 1,
+  "zone_violation": false,
+  "evidence_age_h": 0.8138888888888889,
+  "decay_applied": false,
+  "conflicting_art_ids": [],
+  "missing_coverage": [
+   "AIS"
+  ],
+  "reasons": [
+   {
+    "rule": "dua_sensor",
+    "passed": false,
+    "art_ids": [
+     "a-x3-860e65f9-01-001",
+     "a-x3-860e65f9-01-002",
+     "a-x3-860e65f9-01-003"
+    ]
+   },
+   {
+    "rule": "zona",
+    "passed": false,
+    "art_ids": []
+   },
+   {
+    "rule": "kinematik_gap",
+    "passed": false,
+    "art_ids": [
+     "a-x3-860e65f9-01-001",
+     "a-x3-860e65f9-01-002",
+     "a-x3-860e65f9-01-003"
+    ]
+   },
+   {
+    "rule": "usia",
+    "passed": true,
+    "art_ids": [
+     "a-x3-860e65f9-01-001",
+     "a-x3-860e65f9-01-002",
+     "a-x3-860e65f9-01-003"
+    ]
+   },
+   {
+    "rule": "konflik",
+    "passed": true,
+    "art_ids": []
+   },
+   {
+    "rule": "cakupan",
+    "passed": false,
+    "art_ids": []
+   }
+  ],
+  "abstain_reason": null,
+  "display_state": [],
+  "hash": "196d822ff609aeb1c674408c1a06f8c4a9d5501a8209a085f51160ff77d4336e"
+ },
+ "agent_proposal": null,
+ "berkas": {
+  "sections": [],
+  "diksi_ok": true
+ },
+ "patrol": {
+  "package_id": null,
+  "result": null
+ }
+}

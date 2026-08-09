@@ -26,6 +26,7 @@ for name, mani in [("tiny", "tiny.txt"), ("public", "public.txt")]:
 print(f"antrean: {len(queue)} file ({sum(1 for q in queue if q[0]=='tiny')} tiny + {sum(1 for q in queue if q[0]=='public')} subsampel)")
 
 dest_root = RAW / "scenes"; dest_root.mkdir(exist_ok=True)
+gagal = []
 for i, (grp, sid, url, sha) in enumerate(queue, 1):
     dest = dest_root / f"{sid}.tar.gz"
     if dest.exists():
@@ -35,14 +36,23 @@ for i, (grp, sid, url, sha) in enumerate(queue, 1):
         if h.hexdigest() == sha:
             print(f"[{i}/{len(queue)}] {sid} sudah ada+valid, lewati"); continue
         dest.unlink()
-    t0=time.time(); h=hashlib.sha1(); done=0
-    req = urllib.request.Request(url, headers={"User-Agent":"Mozilla/5.0"})
-    with urllib.request.urlopen(req, timeout=120) as r, open(dest,'wb') as f:
-        while True:
-            c = r.read(1<<22)
-            if not c: break
-            f.write(c); h.update(c); done += len(c)
-    ok = h.hexdigest() == sha
+    ok = False
+    for attempt in range(1, 5):
+        try:
+            t0=time.time(); h=hashlib.sha1(); done=0
+            req = urllib.request.Request(url, headers={"User-Agent":"Mozilla/5.0"})
+            with urllib.request.urlopen(req, timeout=180) as r, open(dest,'wb') as f:
+                while True:
+                    c = r.read(1<<22)
+                    if not c: break
+                    f.write(c); h.update(c); done += len(c)
+            ok = h.hexdigest() == sha
+            break
+        except Exception as e:
+            print(f"[{i}/{len(queue)}] {sid} attempt {attempt}: {e}; ulang 10s", flush=True)
+            time.sleep(10)
     print(f"[{i}/{len(queue)}] {grp}/{sid}: {done/1e9:.2f} GB {time.time()-t0:.0f}s SHA1={'OK' if ok else 'GAGAL!'}", flush=True)
-    if not ok: dest.rename(dest.with_suffix(".BADSHA"))
-print("ANTREAN SELESAI")
+    if not ok:
+        gagal.append(sid)
+        if dest.exists(): dest.rename(dest.with_suffix(".BADSHA"))
+print("ANTREAN SELESAI; gagal:", gagal)

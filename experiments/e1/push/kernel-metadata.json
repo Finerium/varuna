@@ -1,0 +1,13 @@
+{
+ "id": "ghaisank/varuna-e1-smoke",
+ "title": "varuna-e1-smoke",
+ "code_file": "run_e1.py",
+ "language": "python",
+ "kernel_type": "script",
+ "is_private": "true",
+ "enable_gpu": "true",
+ "enable_internet": "true",
+ "dataset_sources": [],
+ "competition_sources": [],
+ "kernel_sources": []
+}

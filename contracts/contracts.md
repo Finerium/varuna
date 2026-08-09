@@ -35,7 +35,12 @@ append-only, aturan hash sama. RESOLVER GROUNDING = union(indeks statis, indeks 
   "source": { "dataset": "xview3-public|cdse-natuna|cdse-denmark|dma-aisdk|gfw-events|marineregions-eez|open-meteo|runtime",
               "ref": "<scene_id|mmsi_hash|event_id|package_id>", "provenance": "<kalimat>" },
   "sintetis": false,
-  "payload": { }, "created_at": "ISO8601", "hash_sha256": "<hex>" }
+  "payload": { }, "created_at": "ISO8601", "observed_at": "ISO8601|null",
+  "hash_sha256": "<hex>" }
+Semantik waktu: `observed_at` = waktu kejadian dunia nyata artefak (akuisisi scene, akhir
+segmen AIS); `created_at` = waktu tulis. Usia bukti dihitung dari observed_at (fallback
+created_at bila null). [Amandemen kontrak K-A1, 9 Agu: field opsional aditif; ronde
+verifikasi wave-1 menemukan divergensi semantik usia; matriks diverifikasi ulang.]
 ```
 `payload` per type:
 - sar_detection: {lat, lon, row, col, length_m_est, objectness_p, vessel_p, fishing_p, confidence_calibrated, scene_id}

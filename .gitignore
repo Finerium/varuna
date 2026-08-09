@@ -14,3 +14,7 @@ e1_work/
 .vercel/
 node_modules/
 .next/
+# adapter runtime dev (append-only JSONL); produksi memakai Vercel Blob
+.runtime/
+next-env.d.ts
+*.tsbuildinfo
