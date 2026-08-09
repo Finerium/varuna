@@ -1,0 +1,37 @@
+# Subsampel E1 pra-deklarasi. seed=20260809, protokol freeze-eval-v1.
+# Stratifikasi tercile proporsi dekat-pantai (<=2km) dari public.csv (150 scene).
+eval	8e8df9a7440c1243p	0.1745
+eval	f77492d9a28db605p	0.1505
+eval	3bc01ebcedc7e328p	0.1803
+eval	aad0cc0c9ff85960p	0.0978
+eval	ed7647eaf1bfdbdep	0.1432
+eval	860e65f9f3191ffdp	0.0736
+eval	583ae138189d9121p	0.2119
+eval	1c904ce36a05bdddp	0.1776
+eval	4f1ac44118a7cc96p	0.1412
+eval	97e4833c46771a67p	0.4158
+eval	6ed4301901fa31fbp	0.2733
+eval	5af616b150417f93p	0.3681
+eval	55281e894b4445dfp	0.4054
+eval	7dd2a5a4d2e9e27bp	0.2670
+eval	cf10d2ab427c6aedp	0.3488
+eval	b5857d9d4719c304p	0.2727
+eval	dff6047c947e8fb6p	0.3309
+eval	9afdf1b6ba2e069ep	0.4194
+eval	c078ff51eb54a68fp	0.4903
+eval	0bc18737319f2ce6p	0.6742
+eval	cd67e528fd692386p	0.5432
+eval	2afbfbcc8499a514p	0.5500
+eval	570f8bf76cac1d94p	0.6853
+eval	f72465088b4c4276p	0.5686
+eval	93cd69e7a7ca7b2ap	0.4947
+eval	8bac7ec905895b12p	0.5513
+eval	679f1af0ae91e23ep	0.4412
+calib	0e815a40b2fbdc76p	0.1473
+calib	f9db277f662e8bcap	0.2522
+calib	ebbbee77e0b8bfbdp	0.1920
+calib	f9e403da040d714cp	0.3003
+calib	8decb780ddc167b9p	0.3824
+calib	ec00f105aafbade6p	0.4242
+calib	b771e72b21c08775p	0.4708
+calib	3a0fff47ada3e269p	0.7512
