@@ -101,13 +101,23 @@ def petakan_safe(zip_path):
 
 
 def _spline_lut(vektor, tag):
-    """Bangun interpolator bilinear LUT (line x pixel) dari daftar vektor annotation."""
-    sumbu_px = vektor[0].findtext("pixel")
-    if any(v.findtext("pixel") != sumbu_px for v in vektor):
-        raise ValueError(f"sumbu pixel LUT '{tag}' tidak seragam antar vektor")
+    """Bangun interpolator bilinear LUT (line x pixel) dari daftar vektor annotation.
+
+    Produk IPF lama memakai satu sumbu pixel bersama; produk 2026 (S1A IPF baru,
+    S1D) menulis sumbu pixel BERBEDA per vektor. Generalisasi: resample tiap
+    vektor ke sumbu vektor pertama via interpolasi linier 1D (LUT mulus, galat
+    resampling jauh di bawah 0,01 dB), lalu bangun spline 2D seperti biasa."""
     baris = np.array([float(v.findtext("line")) for v in vektor])
-    kolom = np.fromstring(sumbu_px, sep=" ")
-    nilai = np.stack([np.fromstring(v.findtext(tag), sep=" ") for v in vektor])
+    kolom = np.fromstring(vektor[0].findtext("pixel"), sep=" ")
+    nilai = []
+    for v in vektor:
+        px = np.fromstring(v.findtext("pixel"), sep=" ")
+        val = np.fromstring(v.findtext(tag), sep=" ")
+        if px.shape == kolom.shape and np.array_equal(px, kolom):
+            nilai.append(val)
+        else:
+            nilai.append(np.interp(kolom, px, val))
+    nilai = np.stack(nilai)
     if not (np.all(np.diff(baris) > 0) and np.all(np.diff(kolom) > 0)):
         raise ValueError(f"sumbu LUT '{tag}' tidak menaik ketat")
     return RectBivariateSpline(baris, kolom, nilai, kx=1, ky=1)
