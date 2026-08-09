@@ -45,47 +45,70 @@ async function panggung(): Promise<Panggung> {
   };
 }
 
-/** Entry — surface paling ekspresif, tetapi tiga gerakan saja:
- *  1. hero masuk SEKALI saat halaman dibuka, kata demi kata;
- *  2. chip SAR muncul saat panelnya masuk viewport, rim glass-nya menyala pelan
- *     sesudahnya (lapisan .pijar: opacity, bukan border atau filter);
- *  3. roster "Masuk sebagai" muncul satu kartu per kartu.
- *  Tidak ada parallax, tidak ada pin, tidak ada scrub — halaman ini dibaca, bukan
- *  ditonton. */
+/** Entry — hero masuk SEKALI saat halaman dibuka (di atas lipatan, tanpa
+ *  bergantung scroll), lalu tiap blok di bawahnya muncul saat masuk viewport.
+ *  Reveal bawah memakai ScrollTrigger.batch: ia menyalakan juga elemen yang
+ *  SUDAH di viewport ketika halaman dimuat — persis kasus yang dulu membuat
+ *  kartu peran tersangkut opacity 0. Ditambah jaring pengaman: setelah refresh,
+ *  apa pun yang masih tersembunyi di dalam lipatan dipaksa tampil. Halaman ini
+ *  dibaca, bukan ditonton — tanpa parallax, pin, atau scrub. */
 function susunEntry(gsap: Gsap): void {
+  const ST = (gsap as unknown as { core: { globals: () => { ScrollTrigger: any } } }).core
+    ?.globals?.().ScrollTrigger;
+
+  // 1. Hero: langsung, berirama, tanpa pemicu scroll.
   gsap.fromTo(
     "[data-adegan='hero'] [data-gerak-masuk]",
-    { opacity: 0, y: 10 },
-    { opacity: 1, y: 0, duration: 0.55, ease: "power2.out", stagger: 0.022, delay: 0.05 },
+    { opacity: 0, y: 14 },
+    { opacity: 1, y: 0, duration: 0.6, ease: "power3.out", stagger: 0.07, delay: 0.05 },
   );
 
-  gsap.fromTo(
-    "[data-adegan='pengantar'][data-gerak-masuk]",
-    { opacity: 0, y: 12 },
-    { opacity: 1, y: 0, duration: 0.6, ease: "power2.out", delay: 0.28 },
+  // 2. Sorot + narasi + apa pun di bawah: batch (menangani yang sudah terlihat).
+  const bawah = gsap.utils.toArray<HTMLElement>(
+    "[data-adegan='sorot'] [data-gerak-masuk], [data-adegan='narasi'] [data-gerak-masuk]",
   );
+  gsap.set(bawah, { opacity: 0, y: 16 });
+  if (ST?.batch) {
+    ST.batch(bawah, {
+      start: "top 90%",
+      onEnter: (els: HTMLElement[]) =>
+        gsap.to(els, {
+          opacity: 1,
+          y: 0,
+          duration: 0.6,
+          ease: "power3.out",
+          stagger: 0.08,
+          overwrite: true,
+        }),
+    });
+  } else {
+    gsap.to(bawah, { opacity: 1, y: 0, duration: 0.6, stagger: 0.06 });
+  }
 
-  gsap
-    .timeline({ scrollTrigger: { trigger: "[data-adegan='chip']", start: "top 82%", once: true } })
-    .fromTo(
-      "[data-adegan='chip'] [data-gerak-masuk]",
-      { opacity: 0, y: 14 },
-      { opacity: 1, y: 0, duration: 0.6, ease: "power2.out", stagger: 0.09 },
-    )
-    .fromTo(".pijar", { opacity: 0 }, { opacity: 1, duration: 1.5, ease: "sine.inOut" }, 0.3);
-
+  // Pita amber pada chip menyala pelan sekali panelnya kelihatan.
   gsap.fromTo(
-    "[data-adegan='roster'] [data-gerak-masuk]",
-    { opacity: 0, y: 12 },
+    ".sorot__pita",
+    { opacity: 0 },
     {
-      opacity: 1,
-      y: 0,
-      duration: 0.5,
-      ease: "power2.out",
-      stagger: 0.08,
-      scrollTrigger: { trigger: "[data-adegan='roster']", start: "top 85%", once: true },
+      opacity: 0.55,
+      duration: 1.4,
+      ease: "sine.inOut",
+      scrollTrigger: ST ? { trigger: "[data-adegan='sorot']", start: "top 80%", once: true } : undefined,
     },
   );
+
+  // Jaring pengaman: setelah tata letak final (Lenis mengubah tinggi), apa pun
+  // yang tersembunyi tapi sudah di dalam lipatan dipaksa tampil — tidak ada isi
+  // yang boleh tergantung di opacity 0 kalau pemicunya meleset.
+  if (ST?.refresh) {
+    ST.refresh();
+    for (const el of bawah) {
+      const r = el.getBoundingClientRect();
+      if (r.top < window.innerHeight && gsap.getProperty(el, "opacity") === 0) {
+        gsap.to(el, { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" });
+      }
+    }
+  }
 }
 
 /** Portal — dua gerakan: garis pemisah tumbuh dari kiri, dan angka agregat

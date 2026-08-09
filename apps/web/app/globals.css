@@ -746,3 +746,399 @@ html[data-gerak="hidup"] [data-gerak-masuk] {
     }
   }
 }
+
+/* ============================================================
+   ENTRY REDESIGN — hero terpusat kelas pameran, narasi bernomor.
+   Semua warna dari tokens.css; amber tetap satu-satunya sinyal.
+   ============================================================ */
+
+.pita--entry {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  align-items: center;
+  background: color-mix(in srgb, var(--ink-1) 82%, transparent);
+  backdrop-filter: blur(12px) saturate(120%);
+}
+
+.merek {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.merek__glif {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 50%, var(--amber) 0 30%, transparent 42%),
+    conic-gradient(from 0deg, transparent 0 40%, var(--amber-redup) 55%, transparent 70%);
+  box-shadow: 0 0 14px -4px var(--amber);
+}
+.merek__nama {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-size: 0.95rem;
+}
+.pita__cta {
+  font-family: var(--font-display);
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+  color: var(--teks);
+  text-decoration: none;
+  padding: 0.5rem 0.9rem;
+  border: 1px solid var(--glass-rim);
+  border-radius: 999px;
+  transition:
+    border-color 200ms cubic-bezier(0.22, 1, 0.36, 1),
+    background 200ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.pita__cta:hover,
+.pita__cta:focus-visible {
+  border-color: var(--amber);
+  background: color-mix(in srgb, var(--amber) 10%, transparent);
+}
+
+.isi-entry {
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 clamp(var(--r-3), 5vw, var(--r-5));
+  overflow: clip;
+}
+
+/* --- HERO -------------------------------------------------- */
+.wira {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: clamp(3.5rem, 12vh, 9rem) 0 clamp(2.5rem, 7vh, 5rem);
+  position: relative;
+}
+/* Latar hero: grid maritim yang sangat halus, memudar ke bawah. */
+.wira::before {
+  content: "";
+  position: absolute;
+  inset: -10% -50% auto;
+  height: 130%;
+  background-image:
+    linear-gradient(var(--glass-rim-redup) 1px, transparent 1px),
+    linear-gradient(90deg, var(--glass-rim-redup) 1px, transparent 1px);
+  background-size: 64px 64px;
+  -webkit-mask-image: radial-gradient(120% 70% at 50% 12%, #000 0%, transparent 68%);
+  mask-image: radial-gradient(120% 70% at 50% 12%, #000 0%, transparent 68%);
+  opacity: 0.5;
+  pointer-events: none;
+}
+.wira > * {
+  position: relative;
+}
+
+.wira__mata {
+  font-family: var(--font-display);
+  font-size: 0.76rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--teks-redup);
+  padding: 0.4rem 0.85rem;
+  border: 1px solid var(--glass-rim-redup);
+  border-radius: 999px;
+  margin-bottom: clamp(1.5rem, 4vh, 2.5rem);
+}
+.wira__mata span {
+  color: var(--amber);
+}
+
+.wira__judul {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(2.3rem, 6.4vw, 4.6rem);
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  max-width: 16ch;
+  margin: 0;
+  text-wrap: balance;
+}
+.wira__judul .baris {
+  display: inline;
+}
+.baris--aksen {
+  color: var(--amber);
+}
+
+.wira__sub {
+  margin: clamp(1.4rem, 4vh, 2.2rem) auto 0;
+  max-width: 58ch;
+  font-size: clamp(1rem, 1.5vw, 1.16rem);
+  line-height: 1.6;
+  color: var(--teks-redup);
+}
+
+/* --- masuk (tombol peran, SELALU terlihat) ----------------- */
+.masuk {
+  margin-top: clamp(2rem, 5vh, 3rem);
+}
+.masuk__pil {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: center;
+}
+.pil {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.15rem;
+  text-align: left;
+  text-decoration: none;
+  color: var(--teks);
+  background: var(--ink-2);
+  border: 1px solid var(--glass-rim-redup);
+  border-radius: var(--radius-kecil);
+  padding: 0.7rem 1.1rem;
+  min-width: 9.5rem;
+  box-shadow: inset 0 1px 0 var(--taktil-atas);
+  transition:
+    transform 200ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 200ms cubic-bezier(0.22, 1, 0.36, 1),
+    background 200ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.pil:first-child {
+  background: var(--amber);
+  border-color: var(--amber);
+}
+.pil:first-child .pil__nama {
+  color: var(--teks-terang);
+}
+.pil:first-child .pil__ket {
+  color: color-mix(in srgb, var(--teks-terang) 72%, transparent);
+}
+.pil:hover,
+.pil:focus-visible {
+  transform: translateY(-2px);
+  border-color: var(--amber);
+}
+.pil:first-child:hover,
+.pil:first-child:focus-visible {
+  background: color-mix(in srgb, var(--amber) 88%, white);
+}
+.pil__nama {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.98rem;
+  letter-spacing: 0.01em;
+}
+.pil__ket {
+  font-size: 0.74rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--teks-redup);
+}
+.masuk__nota {
+  margin: 0.9rem 0 0;
+  font-size: 0.78rem;
+  color: var(--teks-redup);
+  letter-spacing: 0.02em;
+}
+
+/* --- strip bukti mini --------------------------------------- */
+.buktimini {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: clamp(1.5rem, 5vw, 3.5rem);
+  margin: clamp(2.5rem, 6vh, 4rem) 0 0;
+  padding: 1.4rem 0 0;
+  border-top: 1px solid var(--glass-rim-redup);
+  width: min(100%, 42rem);
+}
+.buktimini__sel {
+  text-align: center;
+}
+.buktimini__angka {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1.5rem, 3vw, 2.1rem);
+  line-height: 1;
+  color: var(--teks);
+}
+.buktimini__ket {
+  margin: 0.4rem 0 0;
+  font-size: 0.74rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--teks-redup);
+}
+
+/* --- SOROT chip -------------------------------------------- */
+.sorot {
+  display: grid;
+  gap: clamp(1.5rem, 4vw, 3rem);
+  align-items: center;
+  padding: clamp(2.5rem, 8vh, 6rem) 0;
+}
+.sorot__bingkai {
+  position: relative;
+  border: 1px solid var(--glass-rim);
+  border-radius: var(--radius);
+  padding: 0.6rem;
+  background: var(--ink-1);
+  max-width: 380px;
+  margin: 0 auto;
+  box-shadow: var(--bayang-panel);
+}
+.sorot__pita {
+  position: absolute;
+  left: 0.6rem;
+  right: 0.6rem;
+  top: 50%;
+  height: 1px;
+  background: var(--amber);
+  opacity: 0.55;
+  box-shadow: 0 0 12px 1px color-mix(in srgb, var(--amber) 60%, transparent);
+  pointer-events: none;
+}
+.mata {
+  font-family: var(--font-display);
+  font-size: 0.74rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--amber-redup-teks);
+  margin: 0 0 0.8rem;
+}
+.sorot__kalimat {
+  font-size: clamp(1rem, 1.4vw, 1.15rem);
+  line-height: 1.6;
+  color: var(--teks-redup);
+  max-width: 46ch;
+}
+@media (min-width: 820px) {
+  .sorot {
+    grid-template-columns: 0.9fr 1.1fr;
+  }
+}
+
+/* --- NARASI bernomor --------------------------------------- */
+.narasi {
+  display: flex;
+  flex-direction: column;
+}
+.bab {
+  padding: clamp(3rem, 10vh, 7rem) 0;
+  border-top: 1px solid var(--glass-rim-redup);
+  max-width: 40ch;
+}
+.bab:nth-child(even) {
+  margin-left: auto;
+  text-align: right;
+}
+.bab__mata {
+  font-family: var(--font-display);
+  font-size: 0.76rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--teks-redup);
+  margin: 0 0 1.2rem;
+}
+.bab__no {
+  color: var(--amber);
+  margin-right: 0.5rem;
+}
+.bab__judul {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1.8rem, 4.2vw, 3rem);
+  line-height: 1.05;
+  letter-spacing: -0.015em;
+  margin: 0 0 1.2rem;
+  text-wrap: balance;
+}
+.bab__judul .baris {
+  display: inline;
+}
+.bab__isi {
+  font-size: clamp(1rem, 1.3vw, 1.12rem);
+  line-height: 1.65;
+  color: var(--teks-redup);
+  margin: 0;
+}
+
+/* --- JELAJAH kartu ----------------------------------------- */
+.jelajah {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1px;
+  background: var(--glass-rim-redup);
+  border: 1px solid var(--glass-rim-redup);
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin: clamp(2rem, 6vh, 4rem) 0;
+}
+.jelajah__kartu {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: clamp(1.4rem, 3vw, 2.2rem);
+  background: var(--ink-1);
+  text-decoration: none;
+  color: var(--teks);
+  transition: background 200ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.jelajah__kartu:hover,
+.jelajah__kartu:focus-visible {
+  background: var(--ink-2);
+}
+.jelajah__nama {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+.jelajah__nama::after {
+  content: " →";
+  color: var(--amber);
+}
+.jelajah__ket {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--teks-redup);
+}
+@media (min-width: 720px) {
+  .jelajah {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* --- wordmark raksasa -------------------------------------- */
+.tandaraksasa {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(4rem, 20vw, 16rem);
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+  text-align: center;
+  margin: clamp(1rem, 4vh, 3rem) 0 0;
+  color: transparent;
+  background: linear-gradient(180deg, var(--ink-2) 0%, var(--ink-1) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  user-select: none;
+}
+
+.kaki--entry {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 2rem;
+  align-items: baseline;
+  justify-content: space-between;
+}
+.kaki--entry span:first-child {
+  font-family: var(--font-display);
+  letter-spacing: 0.04em;
+  color: var(--teks);
+}
+.kaki--entry .redup {
+  max-width: 60ch;
+  font-size: 0.78rem;
+}

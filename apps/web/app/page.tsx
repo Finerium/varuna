@@ -1,179 +1,197 @@
-// "/" — Entry multi-persona. Register: paling ekspresif dari lima surface,
-// tetapi keberaniannya dibelanjakan pada SATU elemen tanda tangan (blueprint 7.3):
-// hero konten-nyata dari chip SAR asli beranotasi, bukan hero dekoratif.
-// Tanpa pasangan tombol Get Started/Learn More, tanpa tiga kartu fitur sejajar:
-// peran disusun sebagai roster tugas berirama.
+// "/" — Entry multi-persona. Register paling ekspresif dari lima surface, tetapi
+// keberanian dibelanjakan pada komposisi, bukan hiasan: hero terpusat yang
+// menjelaskan sistem dalam dua detik, lalu narasi bernomor yang membacanya turun.
+// Semua isi hadir tanpa JavaScript; gerak hanya menambah irama (GerakEntry).
 
 import Link from "next/link";
 
 import { GerakEntry } from "@/components/gerak";
-import { ChipSar, Kosong } from "@/components/tampil";
-import { pecahKata } from "@/lib/gerak";
+import { ChipSar } from "@/components/tampil";
 import { chipPertama } from "@/lib/gudang";
 
 export const dynamic = "force-dynamic";
 
-const HERO = "Laut yang terlalu luas untuk dijaga mata, dibaca sebagai bukti yang bisa diperiksa.";
+const PERAN = [
+  { href: "/enter/analis", nama: "Analis", ket: "Pusat Komando" },
+  { href: "/enter/patroli", nama: "Kru Patroli", ket: "aplikasi lapangan" },
+  { href: "/enter/publik", nama: "Publik", ket: "Portal agregat" },
+] as const;
 
-const PERAN_MASUK = [
+const BUKTI = [
+  { angka: "0,854", ket: "F1 deteksi lepas pantai" },
+  { angka: "24/24", ket: "skenario red-team tertangkap" },
+  { angka: "0", ket: "klaim tanpa artefak lolos" },
+] as const;
+
+const NARASI = [
   {
-    href: "/enter/analis",
-    nama: "Analis",
-    ket: "Menilai antrean investigasi di Pusat Komando, membaca rantai bukti sampai ke artefak, dan memutuskan penerimaan berkas.",
+    no: "01",
+    tanda: "Masalah",
+    judul: ["Lautnya diawasi.", "Kapalnya menghilang."],
+    isi: "Antara 72 dan 76 persen kapal ikan industri dunia tidak terlacak publik. Mereka mematikan transponder AIS tepat sebelum masuk zona sasaran, memalsukan posisi, lalu menukar identitas. Kapasitas patroli Indonesia untuk 6,4 juta kilometer persegi laut justru menyusut.",
   },
   {
-    href: "/enter/patroli",
-    nama: "Kru patroli",
-    ket: "Menerima paket sasaran di laut sebagai area pencarian, lalu mengembalikan hasil pemeriksaan yang menutup siklus.",
+    no: "02",
+    tanda: "Cara kerja",
+    judul: ["Radar melihat.", "Agen menyusun.", "Server memutus."],
+    isi: "Citra radar Sentinel-1 mendeteksi lambung kapal tanpa peduli sinyal AIS mati. Lapisan sebelas agen mengorelasikan deteksi itu dengan lintasan AIS, memeriksa perilaku, lalu menyusun berkas. Yang tidak dikerjakan agen: memutus status — itu dihitung server dari artefak yang ada.",
   },
   {
-    href: "/enter/publik",
-    nama: "Publik",
-    ket: "Membaca agregat status per zona di Portal, tanpa satu pun field identitas kapal.",
+    no: "03",
+    tanda: "Bukti",
+    judul: ["Setiap klaim menunjuk artefak.", "Kalau ragu, menahan diri."],
+    isi: "PASHA Gate menolak klaim yang artefaknya tidak ada, menyaring kata bernada putusan, dan menahan status jadi ABSTAIN saat bukti kurang atau berkonflik. Status terkonfirmasi menuntut dua sensor independen dan pelanggaran zona — analog operasional asas minimum pembuktian, bukan vonis.",
+  },
+  {
+    no: "04",
+    tanda: "Empat layar",
+    judul: ["Satu sistem,", "empat sudut pandang."],
+    isi: "Pusat Komando untuk analis, Patroli untuk lapangan, Konsol Skenario untuk memutar ulang investigasi, Portal Publik untuk agregat tanpa identitas. Satu aplikasi web; hasil pemeriksaan patroli kembali menjadi kalibrasi sistem, menutup siklusnya.",
   },
 ] as const;
 
 export default async function Entry() {
-  const chips = await chipPertama(3);
+  const chips = await chipPertama(1);
+  const chip = chips[0] ?? null;
 
   return (
     <div className="cangkang">
-      <a className="lewati" href="#isi">
+      <a className="lewati" href="#hero">
         Lompat ke isi
       </a>
 
-      <header className="pita">
-        <span className="pita__tanda">VARUNA</span>
-        <p className="eyebrow">pengawasan maritim berbasis bukti</p>
+      <header className="pita pita--entry">
+        <span className="merek">
+          <span className="merek__glif" aria-hidden="true" />
+          <span className="merek__nama">VARUNA</span>
+        </span>
+        <a className="pita__cta" href="/enter/analis">
+          Masuk sebagai analis <span aria-hidden="true">&rarr;</span>
+        </a>
       </header>
 
-      <main className="isi tumpuk tumpuk--renggang" id="isi">
-        <section className="tumpuk">
-          {/* Hero dipecah per kata di server: markupnya final sebelum JS jalan,
-              dan spasi tetap simpul teks di luar span supaya kalimat yang dibaca
-              pembaca layar dan yang tersalin ke clipboard tidak berubah. */}
-          <h1 className="ukur" data-adegan="hero">
-            {pecahKata(HERO).map((kata, i) => (
-              <span key={i}>
-                <span className="kata" data-gerak-masuk="">
-                  {kata}
-                </span>{" "}
-              </span>
-            ))}
+      <main className="isi-entry" id="hero">
+        {/* HERO terpusat — menjelaskan sistem sebelum digulir. */}
+        <section className="wira" data-adegan="hero">
+          <p className="wira__mata" data-gerak-masuk="">
+            <span aria-hidden="true">◆</span> Intelijen maritim multi-agen
+          </p>
+          <h1 className="wira__judul">
+            <span className="baris" data-gerak-masuk="">
+              Kapal gelap mematikan AIS
+            </span>{" "}
+            <span className="baris" data-gerak-masuk="">
+              biar tak terlihat.
+            </span>{" "}
+            <span className="baris baris--aksen" data-gerak-masuk="">
+              Radar tetap melihat.
+            </span>
           </h1>
-          <div className="tumpuk tumpuk--rapat ukur" data-adegan="pengantar" data-gerak-masuk="">
-            <p>
-              Perairan Indonesia seluas 6,4 juta kilometer persegi harus diawasi dengan kapasitas
-              patroli yang menyusut, sehingga sebagian besar laut tidak pernah benar-benar dilihat.
-            </p>
-            <p>
-              VARUNA memfusikan deteksi radar SAR dengan lintasan AIS menjadi satu berkas bukti, dan
-              status berkas itu dihitung oleh server dari artefak yang ada, bukan disimpulkan oleh
-              model.
-            </p>
-            <p>
-              Kebaruannya ada pada dua hal: berkas disusun mengikuti kebutuhan hukum acara
-              Indonesia, dan siklus patroli ditutup karena hasil pemeriksaan di laut kembali menjadi
-              kalibrasi sistem.
-            </p>
-          </div>
-        </section>
+          <p className="wira__sub" data-gerak-masuk="">
+            VARUNA memfusikan deteksi radar Sentinel-1 dengan lintasan AIS menjadi satu berkas
+            bukti. Statusnya dihitung server dari artefak nyata, bukan ditebak model — dan kalau
+            bukti kurang, sistem menahan diri.
+          </p>
 
-        {/* Elemen tanda tangan Entry: piksel radar sungguhan dari Evidence Store. */}
-        <section
-          className="panel panel--rim panel--pijar tumpuk"
-          aria-labelledby="bukti"
-          data-adegan="chip"
-        >
-          {/* Rim glass yang menyala pelan saat panel masuk viewport. Lapisan
-              terpisah karena hanya opacity yang boleh bergerak; border dan
-              filter tidak. Dekorasi murni: tanpa gerak ia tidak pernah menyala
-              dan tidak ada isi yang hilang. */}
-          <span className="pijar" aria-hidden="true" />
-          <div className="panel__kepala">
-            <h2 id="bukti">Bukti, bukan ilustrasi</h2>
-            <p className="eyebrow">chip SAR dari Evidence Store</p>
+          <div className="masuk" data-gerak-masuk="">
+            <div className="masuk__pil">
+              {PERAN.map((p) => (
+                // Anchor penuh, bukan Link: rute memasang cookie peran lalu mengalihkan.
+                <a key={p.href} className="pil" href={p.href}>
+                  <span className="pil__nama">{p.nama}</span>
+                  <span className="pil__ket">{p.ket}</span>
+                </a>
+              ))}
+            </div>
+            <p className="masuk__nota">Akun uji untuk juri tersedia di tiap peran.</p>
           </div>
-          {chips.length === 0 ? (
-            <Kosong
-              kalimat="Belum ada chip SAR pada Evidence Store."
-              sebab="Bingkai ini diisi piksel radar sungguhan begitu kurasi golden set menulis chip pertamanya. Tidak ada gambar pengganti yang dipasang di sini."
-            />
-          ) : (
-            <>
-              <div className="deret" style={{ alignItems: "flex-start" }}>
-                {chips.map((a) => (
-                  <div
-                    key={a.art_id}
-                    style={{ flex: "1 1 200px", maxWidth: 280 }}
-                    data-gerak-masuk=""
-                  >
-                    <ChipSar artefak={a} />
-                  </div>
-                ))}
+
+          <dl className="buktimini" data-gerak-masuk="">
+            {BUKTI.map((b) => (
+              <div key={b.ket} className="buktimini__sel">
+                <dt className="buktimini__angka">{b.angka}</dt>
+                <dd className="buktimini__ket">{b.ket}</dd>
               </div>
-              <p className="redup ukur" style={{ fontSize: "0.86rem" }}>
-                Setiap chip adalah potongan band VH dari scene yang benar-benar diunduh, ditampilkan
-                grayscale asli dengan satu penanda amber pada pusat deteksi. Provenans lengkap tiap
-                artefak tersedia lewat <code>/api/artifacts/&lt;art_id&gt;</code>.
-              </p>
-            </>
-          )}
-        </section>
-
-        <section className="tumpuk" aria-labelledby="peran">
-          <h2 id="peran">Masuk sebagai</h2>
-          <div className="roster" data-adegan="roster">
-            {PERAN_MASUK.map((p) => (
-              // Anchor biasa, bukan Link: rute ini memasang cookie peran lalu
-              // mengalihkan; navigasi penuh yang tepat untuk itu.
-              <a key={p.href} className="roster__peran" href={p.href} data-gerak-masuk="">
-                <span className="roster__nama">{p.nama}</span>
-                <span className="roster__tanda" aria-hidden="true">
-                  &rarr;
-                </span>
-                <span className="roster__ket">{p.ket}</span>
-              </a>
             ))}
-          </div>
+          </dl>
         </section>
 
-        <section className="tumpuk tumpuk--rapat" aria-labelledby="tautan">
-          <h2 id="tautan">Tautan</h2>
-          <ul className="tumpuk tumpuk--rapat" style={{ listStyle: "none", margin: 0, padding: 0 }}>
-            <li>
-              <Link href="/konsol">Konsol Skenario</Link> &mdash; jalannya orkestrasi agen, langkah
-              demi langkah.
-            </li>
-            <li>
-              <Link href="/portal">Portal publik</Link> &mdash; agregat status per zona.
-            </li>
-            <li>
-              <a href="https://github.com/Finerium/varuna" rel="noreferrer">
-                Repositori Finerium/varuna
-              </a>{" "}
-              &mdash; kode, kontrak beku, dan manifest eksperimen.
-            </li>
-            <li>
-              <a href="https://huggingface.co/Finerium" rel="noreferrer">
-                Hugging Face Finerium
-              </a>{" "}
-              &mdash; artefak model dan data yang boleh dibagikan.
-            </li>
-            <li className="redup">
-              Paper semifinal &mdash; belum terbit. Tautannya sengaja dikosongkan daripada menunjuk
-              alamat yang tidak ada.
-            </li>
-          </ul>
+        {/* Momen tanda tangan: piksel radar sungguhan, diberi konteks. */}
+        {chip ? (
+          <section className="sorot" data-adegan="sorot" aria-label="Contoh deteksi radar">
+            <div className="sorot__bingkai" data-gerak-masuk="">
+              <ChipSar artefak={chip} />
+              <span className="sorot__pita" aria-hidden="true" />
+            </div>
+            <div className="sorot__teks" data-gerak-masuk="">
+              <p className="mata">Bukti, bukan ilustrasi</p>
+              <p className="sorot__kalimat">
+                Potongan band VH dari scene Sentinel-1 yang benar-benar diunduh. Penanda amber
+                menandai pusat deteksi — sebuah lambung yang terlihat radar tanpa satu pun pesan
+                AIS. Provenans tiap piksel dapat ditelusuri lewat <code>/api/artifacts</code>.
+              </p>
+            </div>
+          </section>
+        ) : null}
+
+        {/* NARASI bernomor. */}
+        <div className="narasi" data-adegan="narasi">
+          {NARASI.map((n) => (
+            <section key={n.no} className="bab" data-gerak-masuk="">
+              <p className="bab__mata">
+                <span className="bab__no">{n.no}</span> {n.tanda}
+              </p>
+              <h2 className="bab__judul">
+                {n.judul.map((baris, i) => (
+                  <span key={i} className="baris">
+                    {baris}{" "}
+                  </span>
+                ))}
+              </h2>
+              <p className="bab__isi">{n.isi}</p>
+            </section>
+          ))}
+        </div>
+
+        {/* Tautan sebagai kartu, bukan daftar. */}
+        <section className="jelajah" aria-label="Jelajahi">
+          <Link className="jelajah__kartu" href="/komando">
+            <span className="jelajah__nama">Pusat Komando</span>
+            <span className="jelajah__ket">Antrean investigasi dan rantai buktinya.</span>
+          </Link>
+          <Link className="jelajah__kartu" href="/konsol">
+            <span className="jelajah__nama">Konsol Skenario</span>
+            <span className="jelajah__ket">Orkestrasi agen diputar ulang, langkah demi langkah.</span>
+          </Link>
+          <Link className="jelajah__kartu" href="/portal">
+            <span className="jelajah__nama">Portal Publik</span>
+            <span className="jelajah__ket">Agregat status per zona, tanpa identitas kapal.</span>
+          </Link>
+          <a
+            className="jelajah__kartu jelajah__kartu--luar"
+            href="https://github.com/Finerium/varuna"
+            rel="noreferrer"
+          >
+            <span className="jelajah__nama">Repositori &amp; model</span>
+            <span className="jelajah__ket">
+              Kode, kontrak beku, manifest eksperimen, bobot di Hugging Face.
+            </span>
+          </a>
         </section>
+
+        <p className="tandaraksasa" aria-hidden="true">
+          VARUNA
+        </p>
       </main>
 
-      <footer className="kaki">
-        Seed global 20260809. Status berkas dihitung server dan dapat diaudit; identitas kapal tidak
-        pernah meninggalkan server dalam bentuk mentah.
+      <footer className="kaki kaki--entry">
+        <span>Tim Rajendra &middot; Politeknik Negeri Bandung</span>
+        <span className="redup">
+          Purwarupa penjurian Datathon 2026. Status dihitung server dan dapat diaudit; identitas
+          kapal tidak pernah meninggalkan server dalam bentuk mentah. Seed 20260809.
+        </span>
       </footer>
 
-      {/* Tidak merender apa pun; menempelkan timeline pada data-adegan di atas. */}
       <GerakEntry />
     </div>
   );
