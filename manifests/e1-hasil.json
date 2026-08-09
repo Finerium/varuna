@@ -1,0 +1,47 @@
+{
+ "n_scene_eval_dinilai": 27,
+ "n_scene_hilang": [],
+ "point_estimate": {
+  "loc_fscore": 0.7660772757039948,
+  "loc_fscore_shore": 0.5137914913510986,
+  "vessel_fscore": 0.9366634018935684,
+  "fishing_fscore": 0.8136813681368137,
+  "length_acc": 0.6901976858283339,
+  "aggregate": 0.6058650755004639
+ },
+ "ci": {
+  "loc_f1_bootstrap_ci95": [
+   0.7079866310530537,
+   0.8119679656513916
+  ],
+  "B": 1000,
+  "seed": 20260809
+ },
+ "config_inferensi": "traced ensemble juara-1, tile 2048 step 1536 fp16 TTA fliplr, ambang 0.300/0.338/0.350, P100 Kaggle",
+ "sumber_kernel": [
+  "varuna-e1-batch1",
+  "varuna-e1-batch2",
+  "varuna-e1-batch3",
+  "varuna-e1-batch4"
+ ],
+ "tanggal": "2026-08-09",
+ "vonis_praregistrasi": {
+  "target": "F1 lepas pantai >= 0.75",
+  "tercapai": true,
+  "nilai": 0.8539588388604296,
+  "metrik_vonis": "F1 offshore (GT distance_from_shore_km > 2 km; pred di luar radius 1.8 km dari kontur pantai), compute_loc_performance reference/metric.py",
+  "offshore_precision": 0.8572717430530494,
+  "offshore_recall": 0.8506714413607879,
+  "offshore_tp_fp_fn": [
+   4751,
+   791,
+   834
+  ],
+  "catatan": "loc_fscore penuh (0.766) BUKAN metrik lepas pantai; loc_fscore_shore (0.514) adalah dekat-pantai (<=2 km). Keduanya dilaporkan di point_estimate."
+ },
+ "catatan_provenans": [
+  "35/35 scene subsampel terprediksi (27 eval + 8 calib); tidak ada scene hilang.",
+  "batch4 sempat COMPLETE lalu terbaca RUNNING lagi (kemungkinan didorong ulang agen lain); 10 CSV hasil run COMPLETE sudah dipanen sebelum itu dan dipakai apa adanya.",
+  "Polling status menolak menganggap error auth/koneksi sebagai status terminal (access_token sempat di-aside oleh proses lain)."
+ ]
+}

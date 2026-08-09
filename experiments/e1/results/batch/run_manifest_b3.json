@@ -1,0 +1,81 @@
+{
+ "scenes": [
+  {
+   "scene": "1c904ce36a05bdddp",
+   "n_det": 363,
+   "t_unduh_s": 48.9,
+   "t_infer_s": 1853.5
+  },
+  {
+   "scene": "4f1ac44118a7cc96p",
+   "n_det": 317,
+   "t_unduh_s": 53.3,
+   "t_infer_s": 2119.2
+  },
+  {
+   "scene": "97e4833c46771a67p",
+   "n_det": 145,
+   "t_unduh_s": 46.1,
+   "t_infer_s": 1886.4
+  },
+  {
+   "scene": "6ed4301901fa31fbp",
+   "n_det": 260,
+   "t_unduh_s": 45.2,
+   "t_infer_s": 1865.6
+  },
+  {
+   "scene": "5af616b150417f93p",
+   "n_det": 448,
+   "t_unduh_s": 47.3,
+   "t_infer_s": 1874.2
+  },
+  {
+   "scene": "55281e894b4445dfp",
+   "n_det": 255,
+   "t_unduh_s": 42.7,
+   "t_infer_s": 1863.6
+  },
+  {
+   "scene": "7dd2a5a4d2e9e27bp",
+   "n_det": 175,
+   "t_unduh_s": 49.1,
+   "t_infer_s": 1872.1
+  },
+  {
+   "scene": "cf10d2ab427c6aedp",
+   "n_det": 208,
+   "t_unduh_s": 49.4,
+   "t_infer_s": 1864.4
+  },
+  {
+   "scene": "b5857d9d4719c304p",
+   "n_det": 92,
+   "t_unduh_s": 183.7,
+   "t_infer_s": 1866.7
+  },
+  {
+   "scene": "dff6047c947e8fb6p",
+   "n_det": 134,
+   "t_unduh_s": 47.3,
+   "t_infer_s": 1870.3
+  },
+  {
+   "scene": "9afdf1b6ba2e069ep",
+   "n_det": 286,
+   "t_unduh_s": 42.9,
+   "t_infer_s": 1863.3
+  }
+ ],
+ "config": {
+  "tile": 2048,
+  "step": 1536,
+  "fp16": true,
+  "tta": "fliplr(traced)",
+  "thresholds": {
+   "objectness": 0.3,
+   "vessel": 0.338,
+   "fishing": 0.35
+  }
+ }
+}
