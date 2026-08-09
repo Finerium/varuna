@@ -1,0 +1,57 @@
+{
+ "scenes": [
+  {
+   "scene": "8e8df9a7440c1243p",
+   "n_det": 138,
+   "t_unduh_s": 73.9,
+   "t_infer_s": 1856.8
+  },
+  {
+   "scene": "f77492d9a28db605p",
+   "n_det": 348,
+   "t_unduh_s": 68.5,
+   "t_infer_s": 1826.5
+  },
+  {
+   "scene": "3bc01ebcedc7e328p",
+   "n_det": 357,
+   "t_unduh_s": 74.0,
+   "t_infer_s": 1835.9
+  },
+  {
+   "scene": "aad0cc0c9ff85960p",
+   "n_det": 510,
+   "t_unduh_s": 71.2,
+   "t_infer_s": 1855.2
+  },
+  {
+   "scene": "ed7647eaf1bfdbdep",
+   "n_det": 367,
+   "t_unduh_s": 69.1,
+   "t_infer_s": 1837.0
+  },
+  {
+   "scene": "860e65f9f3191ffdp",
+   "n_det": 756,
+   "t_unduh_s": 86.9,
+   "t_infer_s": 2194.6
+  },
+  {
+   "scene": "583ae138189d9121p",
+   "n_det": 240,
+   "t_unduh_s": 72.3,
+   "t_infer_s": 1863.1
+  }
+ ],
+ "config": {
+  "tile": 2048,
+  "step": 1536,
+  "fp16": true,
+  "tta": "fliplr(traced)",
+  "thresholds": {
+   "objectness": 0.3,
+   "vessel": 0.338,
+   "fishing": 0.35
+  }
+ }
+}
