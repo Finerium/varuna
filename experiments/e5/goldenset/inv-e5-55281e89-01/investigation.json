@@ -1,0 +1,59 @@
+{
+ "inv_id": "inv-e5-55281e89-01",
+ "arm": "xview3",
+ "status_server": {
+  "status": "terindikasi",
+  "computed_at": "2026-08-09T11:00:00Z",
+  "sensors_independent": 1,
+  "zone_violation": false,
+  "evidence_age_h": 0,
+  "decay_applied": false,
+  "conflicting_art_ids": [],
+  "missing_coverage": [
+   "AIS"
+  ],
+  "reasons": [
+   {
+    "rule": "dua_sensor",
+    "passed": false,
+    "art_ids": [
+     "a-e5-55281e89-01-001"
+    ]
+   },
+   {
+    "rule": "zona",
+    "passed": false,
+    "art_ids": []
+   },
+   {
+    "rule": "kinematik_gap",
+    "passed": false,
+    "art_ids": [
+     "a-e5-55281e89-01-001"
+    ]
+   },
+   {
+    "rule": "usia",
+    "passed": true,
+    "art_ids": []
+   },
+   {
+    "rule": "konflik",
+    "passed": true,
+    "art_ids": []
+   },
+   {
+    "rule": "cakupan",
+    "passed": false,
+    "art_ids": []
+   }
+  ],
+  "abstain_reason": null,
+  "display_state": [],
+  "hash": "f855b21eb675af66c41bb6af5419b2ad570aeaec23d65c34bbb49f831f1b97a0"
+ },
+ "artifacts": [
+  "a-e5-55281e89-01-001"
+ ],
+ "t_now_frame": "2026-08-09T11:00:00Z"
+}

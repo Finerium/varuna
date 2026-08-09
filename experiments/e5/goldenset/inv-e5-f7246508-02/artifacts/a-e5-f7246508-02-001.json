@@ -5,15 +5,15 @@
  "t_tulis": "2026-08-09T11:00:00Z",
  "payload": {
   "scene_id": "f72465088b4c4276p",
-  "row": 9924.0,
-  "col": 11354.0,
-  "objectness_p": 0.81755394,
-  "vessel_p": 0.87359554,
-  "fishing_p": 0.6356694,
-  "length_m_est": 29.755375
+  "row": 18214.0,
+  "col": 12540.0,
+  "objectness_p": 0.8395195,
+  "vessel_p": 0.9409531,
+  "fishing_p": 0.06293986,
+  "length_m_est": 92.125854
  },
  "source": {
   "provenance": "Deteksi E1 nyata (experiments/e1/results/batch/f72465088b4c4276p.csv, ambang objectness 0.3, tile 2048/stride 1536, fp16, TTA fliplr). Scene historis dataset xView3 direplay untuk evaluasi E5; usia bukti dihitung sejak ingest."
  },
- "hash_sha256": "83249b390ba802abe9f72166eb8fa2b4e4dfbddfb144cda2568b91b4addc0ac8"
+ "hash_sha256": "65351af28af13f747deb7cb798a1881de1fd6b0900d9b1324babf5aa66052e12"
 }
