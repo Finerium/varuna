@@ -114,7 +114,7 @@ function haversineKm(a: Titik, b: Titik): number {
   return 2 * R_BUMI_KM * Math.asin(Math.min(1, Math.sqrt(h)));
 }
 
-type Titik = {
+export type Titik = {
   art_id: string;
   t: number;
   lat: number;
@@ -130,8 +130,11 @@ type Titik = {
  *  cuaca, bukan posisi kapal — konteks, bukan klaim (Bagian 1).
  *  ponytail: hanya fix TERAKHIR ais_track_segment yang dipindai. Rekonsiliasi
  *  per-fix adalah pekerjaan artefak kinematic_feasibility/assoc_result (A4/A6);
- *  kalau nanti perlu, ganti map ini jadi flatMap seluruh points. */
-function posisi(a: ArtifactLike): Titik | null {
+ *  kalau nanti perlu, ganti map ini jadi flatMap seluruh points.
+ *  Diekspor karena jalur tulis runtime (runtime.ts, pusat area pencarian)
+ *  harus membaca posisi artefak dengan aturan yang SAMA PERSIS; salinan kedua
+ *  akan membuat area patroli dan konflik PASHA memandang bukti yang berbeda. */
+export function posisi(a: ArtifactLike): Titik | null {
   if (a.type === "sar_detection") {
     const { lat, lon, scene_id } = a.payload as {
       lat?: unknown;

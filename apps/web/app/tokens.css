@@ -49,4 +49,9 @@
   /* --- bayang panel terangkat (frame Patroli). Nilai hidup di sini, bukan
    *     mentah di globals.css: "tidak ada warna baru di luar berkas ini". */
   --bayang-panel: 0 24px 60px rgba(0, 0, 0, 0.55);
+
+  /* --- pijar rim glass: satu-satunya cahaya yang bergerak di produk ini.
+   *     Sengaja rim glass, BUKAN amber: amber tetap satu-satunya warna sinyal
+   *     (kosakata beku Bagian 7) dan tidak boleh dipakai sebagai hiasan. */
+  --pijar-rim: rgba(220, 240, 245, 0.38);
 }

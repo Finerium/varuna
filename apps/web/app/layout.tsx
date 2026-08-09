@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Instrument_Sans, Space_Grotesk } from "next/font/google";
 
+import { SKRIP_GERAK } from "@/lib/gerak";
+
 import "./globals.css";
 
 // Tipografi TERKUNCI (architecture.md, "Gerak & visual"): display Space Grotesk,
@@ -25,7 +27,13 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="id" className={`${display.variable} ${body.variable}`}>
-      <body>{children}</body>
+      <body>
+        {/* Bendera gerak dipasang sinkron, sebelum parser menyentuh isi: kalau
+            ia menunggu hidrasi, satu frame konten penuh sempat berkedip lalu
+            disembunyikan lagi. Isinya konstanta dari lib/gerak.ts, bukan data. */}
+        <script dangerouslySetInnerHTML={{ __html: SKRIP_GERAK }} />
+        {children}
+      </body>
     </html>
   );
 }

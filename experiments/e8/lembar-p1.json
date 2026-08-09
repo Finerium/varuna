@@ -1,0 +1,215 @@
+{
+ "penilai": "P1",
+ "jenis_penilai": "penilai internal agen (pass 1), BUKAN pakar, BUKAN manusia",
+ "instrumen": "experiments/e8/protokol-penilaian.md v1",
+ "basis_fakta": "experiments/e8/bukti-mesin.json",
+ "lintasan": "urutan item A1..D4, dari item ke berkas bukti",
+ "beku_pada": "2026-08-09 (sebelum pass 2 dijalankan)",
+ "skor": [
+  {
+   "item": "A1",
+   "skor": "terpenuhi",
+   "alasan": "Seluruh 39 artefak golden dan 28 artefak E5 membawa source.provenance yang menyebut berkas sumber, ambang, dan konfigurasi inferensi; deteksi menyebut metode georeferensi beserta RMSE; komponen terlatih menyebut model_ref ke pickle dan seed. Manifest run menyebut run_id/seed/commit. Seorang ahli dapat menurunkan ulang angkanya dari rekamannya sendiri.",
+   "bukti": [
+    "bukti-mesin.json: provenance_terpendek_char 428 (golden) / 226 (e5), 67/67 artefak berprovenance",
+    "packages/core/golden/investigations/inv-x3-860e65f9-01/artifacts/a-x3-860e65f9-01-001.json (ambang 0.3, tile 2048/step 1536, fp16, TTA fliplr, EPSG:32632->4326, RMSE 7,0 m)",
+    "packages/core/golden/investigations/inv-dk-01/artifacts/a-dk-01-n01.json (model_ref experiments/e2/model_gap12.pkl, seed 20260809)",
+    "manifests/e3-hasil.json"
+   ]
+  },
+  {
+   "item": "A2",
+   "skor": "parsial",
+   "alasan": "Dokumen investigasi berstruktur ada dan tervalidasi skema, tetapi seksi klaim baru terisi pada 1 dari 6 investigasi bergolden (3 klaim); inv-dk-01 bahkan belum punya investigation.json. Tidak ditemukan jalur ekspor/cetak berkas utuh untuk diserahkan ke penyidik.",
+   "bukti": [
+    "bukti-mesin.json.golden_demo.berkas: n_investigasi 6, n_dengan_berkas 1, n_seksi_klaim 3",
+    "packages/core/golden/investigations/inv-dk-01/ (tanpa investigation.json)",
+    "pencarian cetak|unduh|export|pdf di apps/web: nihil"
+   ]
+  },
+  {
+   "item": "A3",
+   "skor": "parsial",
+   "alasan": "Alasan status menyebut art_id per aturan pada 6/6 investigasi, dan hubungan antar bukti direkam sebagai artefak tersendiri lewat kinematic_feasibility. Namun artefak hubungan hanya 2 buah, keduanya bertanda sintetis (sisi targetnya placeholder menunggu inferensi Denmark), dan nol artefak assoc_result di seluruh korpus: rantai inferensi terekam baru untuk modalitas going-dark.",
+   "bukti": [
+    "histogram tipe: kinematic_feasibility 2 (sintetis true), assoc_result 0",
+    "packages/core/golden/investigations/inv-dk-01/artifacts/a-dk-01-k01.json",
+    "status_server.reasons[].art_ids pada 6 investigation.json"
+   ]
+  },
+  {
+   "item": "A4",
+   "skor": "terpenuhi",
+   "alasan": "Penyaring diksi menolak 11 kata bernada putusan pada teks tampil, teruji unit, dan nol pelanggaran pada 9 teks tampil korpus. Pernyataan keterbatasan tampil pada permukaan produk ('Batas putus-putus: area pencarian, bukan posisi pasti') dan keadaan kosong ditulis jujur. Catatan: kalimat kedudukan hukum ('bahan pra-penyidikan') baru hidup di paper dan protokol, belum di permukaan.",
+   "bukti": [
+    "packages/core/src/diksi.ts + packages/core/test/diksi.test.ts",
+    "bukti-mesin.json.golden_demo.berkas.pelanggaran_diksi = 0 dari 9 teks",
+    "apps/web/app/(surfaces)/patroli/page.tsx baris 48",
+    "contracts/contracts.md Bagian 5 (label TargetPackage) dan Bagian 7"
+   ]
+  },
+  {
+   "item": "A5",
+   "skor": "terpenuhi",
+   "alasan": "Status tertinggi mensyaratkan >= 2 modalitas independen DAN pelanggaran zona; definisi modalitas independen dibatasi eksplisit ke {SAR, AIS} dengan behavior/weather/patrol dinyatakan sebagai konteks; aturan ditegakkan server dan terbukti berjalan pada korpus (nol investigasi terkonfirmasi; natuna tetap ABSTAIN walau zone_violation true). Analogi hukum dinyatakan sebagai 'meniru asas', bukan kesetaraan.",
+   "bukti": [
+    "contracts/contracts.md Bagian 4 + Bagian 1 (modalitas independen HANYA {SAR, AIS})",
+    "packages/core/src/pasha.ts",
+    "bukti-mesin.json.golden_demo.status.detail (1 abstain, 5 terindikasi, 0 terkonfirmasi)",
+    "protocol/janji-audit.md MEK-14"
+   ]
+  },
+  {
+   "item": "B1",
+   "skor": "parsial",
+   "alasan": "Keluaran adalah dokumen elektronik tervalidasi skema dan dapat diambil per rute (investigasi, artefak, chip). Tidak ada jalur ekspor/cetak berkas utuh sehingga wujud yang dapat diserahkan ke penyidik masih berupa panggilan API satu-satu, bukan satu dokumen.",
+   "bukti": [
+    "bukti-mesin.json.permukaan.rute_api (13 rute)",
+    "packages/core/src/schemas.ts",
+    "pencarian cetak|unduh|export|pdf di apps/web: nihil"
+   ]
+  },
+  {
+   "item": "B2",
+   "skor": "terpenuhi",
+   "alasan": "Setiap artefak beralamat art_id dan dipanggil lewat /api/artifacts/{art_id}; daftar berpaginasi; indeks grounding menutup 39/39 artefak golden dengan salinan hash cocok 39/39. Resolver grounding menyatukan indeks statis dan runtime sehingga rekaman runtime pun beralamat.",
+   "bukti": [
+    "apps/web/app/api/artifacts/[art_id]/route.ts, apps/web/app/api/investigations/[inv_id]/artifacts/route.ts",
+    "bukti-mesin.json.golden_demo.grounding: 39 terindeks, 39 hash cocok, 0 tak terindeks",
+    "packages/core/src/grounding.ts"
+   ]
+  },
+  {
+   "item": "B3",
+   "skor": "parsial",
+   "alasan": "Permukaan Komando menampilkan berkas, tabel artefak, alasan ABSTAIN, dan chip citra lewat /api/artifacts/{id}/chip. Namun cakupan visual belum menyeluruh: 10 chip untuk 12 sar_detection, dan investigasi inv-dk-01 (22 artefak, kasus asosiasi Denmark) belum punya investigation.json sehingga rantai buktinya belum dapat ditampilkan sama sekali.",
+   "bukti": [
+    "apps/web/components/tampil.tsx baris 63-77 (chip img)",
+    "apps/web/app/(surfaces)/komando/page.tsx (AlasanAbstain, tabel artefak, klaim+artefak)",
+    "bukti-mesin.json.permukaan.chip_png = 10 vs sar_detection = 12",
+    "inv-dk-01 tanpa investigation.json"
+   ]
+  },
+  {
+   "item": "B4",
+   "skor": "terpenuhi",
+   "alasan": "67 dari 67 artefak (39 golden + 28 E5) mereproduksi hash_sha256-nya dari isinya sendiri di bawah aturan JSON kanonik yang sama; indeks grounding menyimpan salinan hash yang cocok 39/39; hash status_server dihitung ulang oleh fungsi gerbang produksi (bin/gate.ts) dan identik 6/6. Perubahan satu byte terdeteksi (self-check aturan hash lulus). Plafon: hash melekat pada rekaman (bukan tanda tangan pihak ketiga), sehingga keutuhan bersandar pada riwayat git dan salinan indeks, bukan pada notarisasi.",
+   "bukti": [
+    "bukti-mesin.json: hash_reproduksi_ok 39/39 dan 28/28, hash_indeks_cocok 39/39, hash_status_cocok 6/6",
+    "packages/core/bin/gate.ts + packages/core/src/pasha.ts (canonicalJson)",
+    "packages/core/golden/verifikasi_golden.py",
+    "experiments/e8/periksa_bukti.py --check"
+   ]
+  },
+  {
+   "item": "B5",
+   "skor": "parsial",
+   "alasan": "Korpus golden lengkap pada dataset+ref+provenance+penanda sintetis, tetapi 32 dari 39 artefak tidak membawa observed_at sehingga usia bukti jatuh ke created_at (dua sumbu waktu tidak terpisah), dan seluruh 28 artefak E5 memakai skema lain (t_tulis; tanpa source.dataset, tanpa penanda sintetis, tanpa observed_at). Tidak ada field yang menyatakan proses/peran penulis rekaman.",
+   "bukti": [
+    "bukti-mesin.json: tanpa_observed_at 32/39 (golden) dan 28/28 (e5); tanpa_source_dataset 28/28 (e5); tanpa_field_sintetis 28/28 (e5)",
+    "contracts/contracts.md Bagian 1 semantik waktu + amandemen K-A1"
+   ]
+  },
+  {
+   "item": "B6",
+   "skor": "parsial",
+   "alasan": "Konfigurasi penentu terkunci dan terversi: thresholds.lock.json menyebut commit protokol 0bc9af9, seed global 20260809, kontrak dan protokol beku, jalur produksi terdefinisi. Pernyataan kedudukan hukum ada di protokol dan janji audit ('bukan validasi keberterimaan di pengadilan'), tetapi pengecualian Pasal 5 ayat (4) UU ITE (dokumen yang wajib berbentuk tertulis/akta notaril) tidak dinyatakan di mana pun di repo.",
+   "bukti": [
+    "experiments/e5/thresholds.lock.json",
+    "protocol/eval-protocol.md §E8, protocol/janji-audit.md",
+    "pencarian pengecualian Ps. 5(4)/akta di repo: nihil"
+   ]
+  },
+  {
+   "item": "C1",
+   "skor": "parsial",
+   "alasan": "Deteksi SAR menyatakan dasar georeferensi dan besaran galat (RMSE 7,0 m terhadap 883 label; uji silang independen 706,7 m; selisih per deteksi disebut) dan zone_rule menyebut geometri sumber beserta kesepakatan 75/75 titik terhadap penanda independen. Rekaman AIS (8 lintasan, 3 celah) tidak menyatakan akurasi posisi maupun toleransi waktu fix, sehingga cakupan tidak menyeluruh.",
+   "bukti": [
+    "a-x3-860e65f9-01-001.json (RMSE, uji silang, kontras dB)",
+    "a-natuna-20260805-01-01.json (geometri_ref, 75/75 sepakat)",
+    "a-dk-01-t01.json (footprint dan downsample dinyatakan; akurasi posisi tidak)"
+   ]
+  },
+  {
+   "item": "C2",
+   "skor": "parsial",
+   "alasan": "Mekanisme append-only ada (store.ts, adapter filesystem/Blob) dan aksi manusia tercatat lewat /api/validate serta /api/patrol/results. Jejak lapisan agen praktis kosong: satu berkas replay JSONL berisi 1 baris (A0 phase start). Tahap ingest->artefak hanya terekam sebagai created_at, tanpa entri kustodi tersendiri.",
+   "bukti": [
+    "packages/core/src/store.ts (append-only, tidak pernah menimpa)",
+    "bukti-mesin.json.permukaan.jejak_replay_jsonl (1 berkas, baris_jejak 1)",
+    "apps/web/app/api/validate/route.ts, apps/web/app/api/patrol/results/route.ts"
+   ]
+  },
+  {
+   "item": "C3",
+   "skor": "terpenuhi",
+   "alasan": "Identitas kapal hanya beredar sebagai mmsi_hash HMAC-SHA256 16-hex berkunci salt server (salt di env, tidak di repo; vektor uji diverifikasi), matriks tulis per peran ditegakkan (validate=analis, patrol/results=patroli), dan satu-satunya ingress teks bebas disaring diksi + penolak pola identitas sebelum ditulis. Plafon dinyatakan kontrak: pseudonim, bukan anonim.",
+   "bukti": [
+    "contracts/contracts.md Bagian 1 (mmsi_hash) dan Bagian 3 (ingress note, matriks peran)",
+    "packages/core/src/peran.ts",
+    "apps/web/app/api/patrol/results/route.ts baris 6-7",
+    "packages/core/golden/verifikasi_golden.py (vektor HMAC)"
+   ]
+  },
+  {
+   "item": "C4",
+   "skor": "parsial",
+   "alasan": "Reprodusibilitas kuat: seed global tunggal, protokol beku bertanda commit, manifest per run berisi run_id/commit/seed/slice/tanggal, seluruh skrip penghasil angka ada di repo, ambang terkunci ke commit protokol. Kebijakan retensi rekaman (berapa lama artefak dan jejak disimpan, siapa yang boleh menghapus) tidak dinyatakan di mana pun.",
+   "bukti": [
+    "protocol/eval-protocol.md §0.3 dan §0.10",
+    "manifests/e3-hasil.json, manifests/e1-metadata.json",
+    "pencarian retensi/retention di repo: nihil"
+   ]
+  },
+  {
+   "item": "C5",
+   "skor": "terpenuhi",
+   "alasan": "Sistem menolak menyimpulkan dari satu sumber secara mekanis, bukan sebagai anjuran: terkonfirmasi hanya bila >= 2 modalitas independen DAN pelanggaran zona; ABSTAIN keluaran sah dengan alasan berkode (bukti_tunggal, konflik_artefak, kurang_cakupan, kedaluwarsa_tanpa_penguatan) berikut kalimat baku. Terbukti pada korpus: inv-natuna tetap ABSTAIN kurang_cakupan meski zone_violation true, dan lima kasus satu-sensor berhenti di terindikasi.",
+   "bukti": [
+    "contracts/contracts.md Bagian 4 (klasifikasi, abstain_reason)",
+    "packages/core/src/pasha.ts",
+    "bukti-mesin.json.golden_demo.status.detail"
+   ]
+  },
+  {
+   "item": "D1",
+   "skor": "parsial",
+   "alasan": "Deteksi golden tertelusur sampai identitas produk asli: scene xView3 menyebut S1A_IW_GRDH_1SDV_20201022T171800 beserta waktu akuisisi, kasus Denmark menyebut S1C_IW_GRDH_1SDV_20260805T171634...E663, dan katalog CDSE termanifest. Namun 28 artefak korpus E5 hanya menyebut scene_id dataset dan berkas hasil inferensi, tanpa identitas produk ESA, sensor, atau waktu akuisisi, sehingga cakupan tidak menyeluruh.",
+   "bukti": [
+    "a-x3-860e65f9-01-001.json, a-dk-01-g01.json (ID produk + waktu akuisisi)",
+    "manifests/cdse-katalog-denmark.json, manifests/cdse-katalog-natuna.json",
+    "experiments/e5/goldenset/inv-e5-0bc18737-01/artifacts/a-e5-0bc18737-01-001.json"
+   ]
+  },
+  {
+   "item": "D2",
+   "skor": "parsial",
+   "alasan": "Metode korelasi terdefinisi di kontrak (assoc_result Hungarian; kelayakan kinematik gap x deteksi dengan ambang 50 kn) dan artefak kelayakan kinematik ada di korpus, tetapi keduanya bertanda sintetis karena sisi target masih placeholder; nol artefak assoc_result; tidak ada manifest hasil E4 dan kontrol negatif shuffle belum dijalankan.",
+   "bukti": [
+    "contracts/contracts.md Bagian 1 (assoc_result, kinematic_feasibility)",
+    "a-dk-01-k01.json (sintetis true)",
+    "manifests/: tidak ada e4-hasil.json; pencarian kontrol negatif/shuffle: nihil"
+   ]
+  },
+  {
+   "item": "D3",
+   "skor": "terpenuhi",
+   "alasan": "Keterbatasan dinyatakan PADA rekaman, bukan hanya di dokumen proyek: artefak placeholder membuka diri sebagai 'PLACEHOLDER-TARGET, BUKAN deteksi SAR'; deteksi menyatakan 'kalibrasi E1b belum diterapkan dan akan menggantikan nilai ini' serta selisih uji silang 865,4 m; zone_rule menyatakan asumsi demo perizinan dan menutup dengan 'Bukan penilaian hukum'; investigasi menerangkan bahwa nilai 0 berarti TIDAK TERSEDIA, bukan hasil estimasi. Deviasi sumber data tercatat sebagai amandemen protokol A1-A3.",
+   "bukti": [
+    "a-dk-01-d01.json, a-x3-860e65f9-01-001.json, a-natuna-20260805-01-01.json",
+    "packages/core/golden/investigations/inv-natuna-20260805-01/investigation.json (kasus.peran_demo)",
+    "protocol/eval-protocol.md Amandemen A1-A3"
+   ]
+  },
+  {
+   "item": "D4",
+   "skor": "terpenuhi",
+   "alasan": "Tidak ada jalur aksi otomatis di korpus rute: paket sasaran hanya dicetak server setelah aksi 'terima' oleh peran analis lewat /api/validate; hasil patroli hanya boleh ditulis peran patroli; paket berlabel wajib 'area pencarian, bukan posisi pasti' dan digambar putus-putus di peta. Usulan agen berkedudukan metadata (agent_proposal), status dihitung server.",
+   "bukti": [
+    "contracts/contracts.md Bagian 3 (matriks peran) dan Bagian 5 (label paket)",
+    "apps/web/app/api/validate/route.ts, apps/web/app/api/patrol/results/route.ts",
+    "apps/web/app/(surfaces)/patroli/page.tsx baris 48"
+   ]
+  }
+ ]
+}

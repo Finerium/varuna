@@ -1,0 +1,35 @@
+{
+ "art_id": "a-e5-sint-03-002",
+ "inv_id": "inv-e5-sint-03",
+ "type": "ais_track_segment",
+ "source": {
+  "dataset": "runtime",
+  "ref": "e5-sintetis/inv-e5-sint-03",
+  "provenance": "SINTETIS by-construction utk E5 edge. Kasus edge bukti-konflik (sisi AIS). Dua artefak mengklaim posisi objek yang sama pada jendela 1 jam (<= konflik_jendela_jam = 6 jam), terpisah 199.5 km: sog_implied 107.7 kn > ambang_kn 50. Posisi tak terdamaikan secara kinematik. Dibangkitkan scripts/e5_sintetis.py (seed 20260809, frame waktu 2026-08-09T11:00:00Z); TIDAK ada piksel, fix AIS, atau scene nyata di balik angka ini. Dipakai hanya untuk menguji mekanika gerbang PASHA pada bentuk bukti edge; tidak boleh menjadi dasar klaim akurasi atau kecukupan evidensial (protokol E5.5)."
+ },
+ "sintetis": true,
+ "payload": {
+  "mmsi_hash": "c62552a4bbffdeda",
+  "points": [
+   {
+    "t": "2026-08-09T09:00:00Z",
+    "lat": 4.5,
+    "lon": 110.25,
+    "sog": 9.0,
+    "cog": 90.0
+   },
+   {
+    "t": "2026-08-09T10:00:00Z",
+    "lat": 4.5,
+    "lon": 110.3,
+    "sog": 9.0,
+    "cog": 90.0
+   }
+  ],
+  "start": "2026-08-09T09:00:00Z",
+  "end": "2026-08-09T10:00:00Z"
+ },
+ "created_at": "2026-08-09T10:55:00Z",
+ "observed_at": "2026-08-09T10:00:00Z",
+ "hash_sha256": "46dbd77610b1685cfe31535d9c156097fd2bd95e8073c28fd5c04ace366660dc"
+}

@@ -3,6 +3,7 @@
 // /api/public/aggregate (lib/agregat.ts), jadi halaman dan API tidak bisa
 // menyimpang.
 
+import { GerakPortal } from "@/components/gerak";
 import { Kosong, Status } from "@/components/tampil";
 import { Cangkang } from "@/components/cangkang";
 import { KUNCI_TANPA_ZONA, POLA_PERIODE, hitungAgregat, periodeTersedia } from "@/lib/agregat";
@@ -57,6 +58,10 @@ export default async function Portal({
           </form>
         </section>
 
+        {/* Garis pemisah: diam-nya penuh, tumbuh dari kiri hanya kalau gerak
+            hidup. Tanpa gerak ia tetap tergambar utuh. */}
+        <span className="garis" aria-hidden="true" data-garis="" />
+
         <section className="panel panel--rim tumpuk" aria-labelledby="cacah">
           <div className="panel__kepala">
             <h2 id="cacah">Cacah status per zona</h2>
@@ -88,7 +93,12 @@ export default async function Portal({
                         <Status status={s} />
                       </th>
                       {zona.map((z) => (
-                        <td key={z}>{agregat.counts[s]?.[z] ?? 0}</td>
+                        // Angkanya dirender server. data-angka hanya menandai
+                        // sel yang boleh dihitung naik; nilai akhirnya dibaca
+                        // dari teks ini, tidak pernah dikarang di peramban.
+                        <td key={z} data-angka="" data-gerak-masuk="">
+                          {agregat.counts[s]?.[z] ?? 0}
+                        </td>
                       ))}
                     </tr>
                   ))}
@@ -97,6 +107,8 @@ export default async function Portal({
             </div>
           )}
         </section>
+
+        <span className="garis" aria-hidden="true" data-garis="" />
 
         <section className="tumpuk tumpuk--rapat">
           <p className="eyebrow">Sumber data</p>
@@ -108,6 +120,8 @@ export default async function Portal({
             <p className="ukur">{agregat.sumber.join(", ")}</p>
           )}
         </section>
+
+        <GerakPortal />
       </div>
     </Cangkang>
   );

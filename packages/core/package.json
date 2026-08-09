@@ -9,6 +9,7 @@
     "./diksi": "./src/diksi.ts",
     "./grounding": "./src/grounding.ts",
     "./peran": "./src/peran.ts",
+    "./runtime": "./src/runtime.ts",
     "./schemas": "./src/schemas.ts",
     "./store": "./src/store.ts"
   },

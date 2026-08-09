@@ -1,0 +1,33 @@
+{
+ "inv_id": "inv-e5-c078ff51-01",
+ "dibuat_oleh": "scripts/chip_dari_scene.py",
+ "sumber": "data/raw/xview3/scenes/<scene>.tar.gz -> /vsitar/ <scene>/VH_dB.tif, baca per-window (tar tidak diekstrak)",
+ "render": "regangan kontras persentil 2-98 pada piksel berhingga jendela, 8-bit; penanda amber di piksel deteksi",
+ "chips": [
+  {
+   "art_id": "a-e5-c078ff51-01-001",
+   "path": "chips/chip-001.png",
+   "sha256": "beccd5f52e8f539f71d2f9f31932eefe44723a110b678a5e86defaa3db0c28fc",
+   "bytes": 125190,
+   "scene_id": "c078ff51eb54a68fp",
+   "band": "VH_dB",
+   "row": 16122.0,
+   "col": 16908.0,
+   "jendela_px": {
+    "x": 16780,
+    "y": 15994,
+    "w": 256,
+    "h": 256
+   },
+   "pusat_deteksi_px": {
+    "x": 128,
+    "y": 128
+   },
+   "kontras_db_p2_p98": [
+    -31.2656,
+    -25.6719
+   ],
+   "penanda": "cincin #F0A63C r=12px w=2px"
+  }
+ ]
+}

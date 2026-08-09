@@ -6,10 +6,14 @@
 
 import Link from "next/link";
 
+import { GerakEntry } from "@/components/gerak";
 import { ChipSar, Kosong } from "@/components/tampil";
+import { pecahKata } from "@/lib/gerak";
 import { chipPertama } from "@/lib/gudang";
 
 export const dynamic = "force-dynamic";
+
+const HERO = "Laut yang terlalu luas untuk dijaga mata, dibaca sebagai bukti yang bisa diperiksa.";
 
 const PERAN_MASUK = [
   {
@@ -45,10 +49,19 @@ export default async function Entry() {
 
       <main className="isi tumpuk tumpuk--renggang" id="isi">
         <section className="tumpuk">
-          <h1 className="ukur">
-            Laut yang terlalu luas untuk dijaga mata, dibaca sebagai bukti yang bisa diperiksa.
+          {/* Hero dipecah per kata di server: markupnya final sebelum JS jalan,
+              dan spasi tetap simpul teks di luar span supaya kalimat yang dibaca
+              pembaca layar dan yang tersalin ke clipboard tidak berubah. */}
+          <h1 className="ukur" data-adegan="hero">
+            {pecahKata(HERO).map((kata, i) => (
+              <span key={i}>
+                <span className="kata" data-gerak-masuk="">
+                  {kata}
+                </span>{" "}
+              </span>
+            ))}
           </h1>
-          <div className="tumpuk tumpuk--rapat ukur">
+          <div className="tumpuk tumpuk--rapat ukur" data-adegan="pengantar" data-gerak-masuk="">
             <p>
               Perairan Indonesia seluas 6,4 juta kilometer persegi harus diawasi dengan kapasitas
               patroli yang menyusut, sehingga sebagian besar laut tidak pernah benar-benar dilihat.
@@ -67,7 +80,16 @@ export default async function Entry() {
         </section>
 
         {/* Elemen tanda tangan Entry: piksel radar sungguhan dari Evidence Store. */}
-        <section className="panel panel--rim tumpuk" aria-labelledby="bukti">
+        <section
+          className="panel panel--rim panel--pijar tumpuk"
+          aria-labelledby="bukti"
+          data-adegan="chip"
+        >
+          {/* Rim glass yang menyala pelan saat panel masuk viewport. Lapisan
+              terpisah karena hanya opacity yang boleh bergerak; border dan
+              filter tidak. Dekorasi murni: tanpa gerak ia tidak pernah menyala
+              dan tidak ada isi yang hilang. */}
+          <span className="pijar" aria-hidden="true" />
           <div className="panel__kepala">
             <h2 id="bukti">Bukti, bukan ilustrasi</h2>
             <p className="eyebrow">chip SAR dari Evidence Store</p>
@@ -81,7 +103,11 @@ export default async function Entry() {
             <>
               <div className="deret" style={{ alignItems: "flex-start" }}>
                 {chips.map((a) => (
-                  <div key={a.art_id} style={{ flex: "1 1 200px", maxWidth: 280 }}>
+                  <div
+                    key={a.art_id}
+                    style={{ flex: "1 1 200px", maxWidth: 280 }}
+                    data-gerak-masuk=""
+                  >
                     <ChipSar artefak={a} />
                   </div>
                 ))}
@@ -97,11 +123,11 @@ export default async function Entry() {
 
         <section className="tumpuk" aria-labelledby="peran">
           <h2 id="peran">Masuk sebagai</h2>
-          <div className="roster">
+          <div className="roster" data-adegan="roster">
             {PERAN_MASUK.map((p) => (
               // Anchor biasa, bukan Link: rute ini memasang cookie peran lalu
               // mengalihkan; navigasi penuh yang tepat untuk itu.
-              <a key={p.href} className="roster__peran" href={p.href}>
+              <a key={p.href} className="roster__peran" href={p.href} data-gerak-masuk="">
                 <span className="roster__nama">{p.nama}</span>
                 <span className="roster__tanda" aria-hidden="true">
                   &rarr;
@@ -146,6 +172,9 @@ export default async function Entry() {
         Seed global 20260809. Status berkas dihitung server dan dapat diaudit; identitas kapal tidak
         pernah meninggalkan server dalam bentuk mentah.
       </footer>
+
+      {/* Tidak merender apa pun; menempelkan timeline pada data-adegan di atas. */}
+      <GerakEntry />
     </div>
   );
 }

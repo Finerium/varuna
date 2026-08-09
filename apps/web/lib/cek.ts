@@ -7,8 +7,10 @@
 // vitest sendiri di packages/core.
 
 import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
 
 import { LIMIT_DEFAULT, LIMIT_MAX, bacaLimit, potong } from "./api.ts";
+import { BENDERA_GERAK, SKRIP_GERAK, bacaAngka, pecahKata } from "./gerak.ts";
 import { daftarInvestigasi, invDariArtId } from "./gudang.ts";
 
 const id = (s: string) => s;
@@ -75,6 +77,49 @@ const halaman = (items: string[], cursor: string | null, limit: number) =>
   ]) {
     assert.equal(invDariArtId(jahat), null, `art_id cacat harus null: ${jahat}`);
   }
+}
+
+// --- util gerak: pemecah kata hero dan pembaca angka count-up
+{
+  assert.deepEqual(pecahKata("Laut yang  luas\ndibaca"), ["Laut", "yang", "luas", "dibaca"]);
+  assert.deepEqual(pecahKata("   "), [], "teks kosong tidak menghasilkan span hantu");
+  assert.deepEqual(pecahKata(" Sekata "), ["Sekata"], "spasi tepi tidak jadi kata");
+
+  assert.equal(bacaAngka("12"), 12);
+  assert.equal(bacaAngka(" 0 "), 0);
+  // Count-up menulis ulang textContent, jadi ia hanya boleh menyentuh teks yang
+  // bisa dipulihkan persis; sisanya dilewati, bukan ditebak.
+  for (const bukan of ["1.234", "1,2", "—", "", " ", "-3", "12 kapal", "1e3"]) {
+    assert.equal(bacaAngka(bukan), null, `bukan angka utuh: ${JSON.stringify(bukan)}`);
+  }
+  assert.equal(bacaAngka(null), null);
+}
+
+// --- kontrak reduced-motion: skrip inline dan pra-sembunyi CSS harus menyepakati
+// bendera yang SAMA. Kalau tidak, isi bisa tinggal tersembunyi selamanya — itulah
+// satu-satunya cara stack gerak ini bisa menyembunyikan konten, jadi di sinilah
+// ia dijaga.
+{
+  assert.ok(
+    SKRIP_GERAK.includes(`"${BENDERA_GERAK}"`),
+    "skrip inline memasang bendera yang dibaca CSS",
+  );
+  assert.ok(
+    SKRIP_GERAK.includes("prefers-reduced-motion: reduce"),
+    "bendera tidak pernah dipasang saat pengguna meminta reduced motion",
+  );
+
+  const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+  assert.ok(
+    css.includes(`html[data-gerak="${BENDERA_GERAK}"] [data-gerak-masuk]`),
+    "pra-sembunyi CSS bergantung pada bendera, bukan berlaku tanpa syarat",
+  );
+  assert.equal(
+    /\[data-gerak-masuk\]\s*\{\s*opacity:\s*0;\s*\}/.test(css.replace(/\n/g, " ")) &&
+      !/^\s*\[data-gerak-masuk\]/m.test(css),
+    true,
+    "tidak ada selektor pra-sembunyi tanpa penjaga bendera",
+  );
 }
 
 console.log("cek apps/web: lulus");

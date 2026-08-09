@@ -7,6 +7,7 @@ import Link from "next/link";
 
 import { AlasanAbstain, Keadaan, Kosong, Status } from "@/components/tampil";
 import { Cangkang } from "@/components/cangkang";
+import { Peta, type TitikKandidat } from "@/components/peta";
 import { ambilInvestigasi, daftarInvestigasi, ringkas } from "@/lib/gudang";
 
 export const dynamic = "force-dynamic";
@@ -17,52 +18,83 @@ export default async function Komando({
   searchParams: Promise<{ inv?: string }>;
 }) {
   const { inv: dipilih } = await searchParams;
-  const antrean = (await daftarInvestigasi()).map(ringkas);
+  const semua = await daftarInvestigasi();
+  const antrean = semua.map(ringkas);
   const terbuka = dipilih === undefined ? null : await ambilInvestigasi(dipilih);
+
+  // Posisi peta datang dari `candidate` investigasi — sumber yang sama yang
+  // dibaca /api/queue, dibaca langsung karena halaman ini server component
+  // (memanggil API sendiri lewat HTTP hanya menambah satu perjalanan jaringan
+  // untuk data yang sudah ada di memori). Frontend tetap tidak menghitung apa
+  // pun: status yang mewarnai titik disalin dari status_server.
+  const titik: TitikKandidat[] = semua.map((i) => ({
+    inv_id: i.inv_id,
+    lat: i.candidate.lat,
+    lon: i.candidate.lon,
+    status: i.status_server.status,
+    href: `/komando?inv=${encodeURIComponent(i.inv_id)}`,
+  }));
 
   return (
     <Cangkang aktif="/komando" register="Antrean investigasi dan rantai buktinya">
       <div className="papan">
-        <section className="panel tumpuk" aria-labelledby="antrean">
-          <div className="panel__kepala">
-            <h2 id="antrean">Antrean</h2>
-            <p className="eyebrow">{antrean.length} investigasi</p>
-          </div>
-
-          {antrean.length === 0 ? (
-            <Kosong
-              kalimat="Tidak ada lintasan pada rentang ini."
-              sebab="Evidence Store belum memuat investigasi yang lengkap. Antrean akan terisi sendiri begitu kurasi golden set menulis berkas investigasinya."
-            />
-          ) : (
-            <div>
-              {antrean.map((s) => (
-                <article className="baris" key={s.inv_id}>
-                  <div className="tumpuk tumpuk--rapat">
-                    <Link
-                      className="baris__utama"
-                      href={{ pathname: "/komando", query: { inv: s.inv_id } }}
-                      aria-current={s.inv_id === dipilih ? "true" : undefined}
-                    >
-                      {s.inv_id}
-                    </Link>
-                    <p className="baris__meta">
-                      <span>{s.aoi}</span>
-                      <span>{s.zona ?? "tanpa zona"}</span>
-                      <span>{s.kasus_label ?? "tanpa label kasus"}</span>
-                      <span>{s.sensors_independent} modalitas independen</span>
-                      <span>usia bukti {s.evidence_age_h.toFixed(1)} jam</span>
-                    </p>
-                  </div>
-                  <div className="deret" style={{ gap: "var(--r-2)" }}>
-                    <Status status={s.status} />
-                    <Keadaan daftar={s.display_state} />
-                  </div>
-                </article>
-              ))}
-            </div>
+        <div className="tumpuk">
+          {titik.length > 0 && (
+            <section className="panel tumpuk" aria-labelledby="peta">
+              <div className="panel__kepala">
+                <h2 id="peta">Peta kandidat</h2>
+                <p className="eyebrow">{titik.length} posisi</p>
+              </div>
+              <Peta
+                label={`Peta kandidat: ${titik.length} posisi investigasi di atas geometri ZEE Indonesia. Tautan yang sama tersedia sebagai daftar Antrean di bawah peta.`}
+                zona={["nasional", "natuna"]}
+                titik={titik}
+                dipilih={dipilih ?? null}
+              />
+            </section>
           )}
-        </section>
+
+          <section className="panel tumpuk" aria-labelledby="antrean">
+            <div className="panel__kepala">
+              <h2 id="antrean">Antrean</h2>
+              <p className="eyebrow">{antrean.length} investigasi</p>
+            </div>
+
+            {antrean.length === 0 ? (
+              <Kosong
+                kalimat="Tidak ada lintasan pada rentang ini."
+                sebab="Evidence Store belum memuat investigasi yang lengkap. Antrean akan terisi sendiri begitu kurasi golden set menulis berkas investigasinya."
+              />
+            ) : (
+              <div>
+                {antrean.map((s) => (
+                  <article className="baris" key={s.inv_id}>
+                    <div className="tumpuk tumpuk--rapat">
+                      <Link
+                        className="baris__utama"
+                        href={{ pathname: "/komando", query: { inv: s.inv_id } }}
+                        aria-current={s.inv_id === dipilih ? "true" : undefined}
+                      >
+                        {s.inv_id}
+                      </Link>
+                      <p className="baris__meta">
+                        <span>{s.aoi}</span>
+                        <span>{s.zona ?? "tanpa zona"}</span>
+                        <span>{s.kasus_label ?? "tanpa label kasus"}</span>
+                        <span>{s.sensors_independent} modalitas independen</span>
+                        <span>usia bukti {s.evidence_age_h.toFixed(1)} jam</span>
+                      </p>
+                    </div>
+                    <div className="deret" style={{ gap: "var(--r-2)" }}>
+                      <Status status={s.status} />
+                      <Keadaan daftar={s.display_state} />
+                    </div>
+                  </article>
+                ))}
+              </div>
+            )}
+          </section>
+        </div>
 
         <section className="panel panel--rim tumpuk" aria-labelledby="berkas">
           <div className="panel__kepala">

@@ -1,0 +1,132 @@
+{
+ "akar_repo": "varuna",
+ "golden_demo": {
+  "n_artefak": 39,
+  "hash_reproduksi_ok": 39,
+  "hash_reproduksi_gagal": 0,
+  "tipe": {
+   "behavior_class": 4,
+   "sar_detection": 12,
+   "ais_gap": 3,
+   "kinematic_feasibility": 2,
+   "ais_anomaly": 3,
+   "ais_track_segment": 8,
+   "zone_rule": 7
+  },
+  "union_kunci": [
+   "art_id",
+   "created_at",
+   "hash_sha256",
+   "inv_id",
+   "observed_at",
+   "payload",
+   "sintetis",
+   "source",
+   "type"
+  ],
+  "provenance_terpendek_char": 428,
+  "tanpa_source_dataset": 0,
+  "tanpa_observed_at": 32,
+  "tanpa_field_sintetis": 0,
+  "grounding": {
+   "artefak_terindeks_total": 39,
+   "hash_indeks_cocok": 39,
+   "tak_terindeks": 0
+  },
+  "status": {
+   "n_investigasi": 6,
+   "hash_status_cocok": 6,
+   "hash_status_beda": 0,
+   "detail": [
+    {
+     "inv_id": "inv-natuna-20260805-01",
+     "status": "abstain",
+     "hash_sama": true
+    },
+    {
+     "inv_id": "inv-x3-3bc01ebc-01",
+     "status": "terindikasi",
+     "hash_sama": true
+    },
+    {
+     "inv_id": "inv-x3-570f8bf7-01",
+     "status": "terindikasi",
+     "hash_sama": true
+    },
+    {
+     "inv_id": "inv-x3-860e65f9-01",
+     "status": "terindikasi",
+     "hash_sama": true
+    },
+    {
+     "inv_id": "inv-x3-93cd69e7-01",
+     "status": "terindikasi",
+     "hash_sama": true
+    },
+    {
+     "inv_id": "inv-x3-c078ff51-01",
+     "status": "terindikasi",
+     "hash_sama": true
+    }
+   ]
+  },
+  "berkas": {
+   "n_investigasi": 6,
+   "n_dengan_berkas": 1,
+   "n_seksi_klaim": 3,
+   "art_id_klaim_tak_resolvable": 0,
+   "n_teks_tampil_diuji_diksi": 9,
+   "pelanggaran_diksi": 0
+  }
+ },
+ "e5_goldenset": {
+  "n_artefak": 28,
+  "hash_reproduksi_ok": 28,
+  "hash_reproduksi_gagal": 0,
+  "tipe": {
+   "sar_detection": 28
+  },
+  "union_kunci": [
+   "art_id",
+   "hash_sha256",
+   "inv_id",
+   "payload",
+   "source",
+   "t_tulis",
+   "type"
+  ],
+  "provenance_terpendek_char": 226,
+  "tanpa_source_dataset": 28,
+  "tanpa_observed_at": 28,
+  "tanpa_field_sintetis": 28
+ },
+ "permukaan": {
+  "rute_api": [
+   "apps/web/app/api/artifacts/[art_id]/chip/route.ts",
+   "apps/web/app/api/artifacts/[art_id]/route.ts",
+   "apps/web/app/api/calibration/route.ts",
+   "apps/web/app/api/investigations/[inv_id]/artifacts/route.ts",
+   "apps/web/app/api/investigations/[inv_id]/route.ts",
+   "apps/web/app/api/meta/stability/route.ts",
+   "apps/web/app/api/patrol/packages/route.ts",
+   "apps/web/app/api/patrol/results/route.ts",
+   "apps/web/app/api/public/aggregate/route.ts",
+   "apps/web/app/api/queue/route.ts",
+   "apps/web/app/api/replay/[inv_id]/route.ts",
+   "apps/web/app/api/replay/[inv_id]/step/route.ts",
+   "apps/web/app/api/validate/route.ts"
+  ],
+  "halaman": [
+   "apps/web/app/(surfaces)/komando/page.tsx",
+   "apps/web/app/(surfaces)/konsol/page.tsx",
+   "apps/web/app/(surfaces)/patroli/page.tsx",
+   "apps/web/app/(surfaces)/portal/page.tsx",
+   "apps/web/app/page.tsx"
+  ],
+  "chip_png": 10,
+  "jejak_replay_jsonl": [
+   "apps/web/.runtime/runtime/inv-natuna-20260805-01/trace/replay-rdvyekoh.jsonl"
+  ],
+  "baris_jejak": 1
+ }
+}

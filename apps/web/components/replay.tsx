@@ -11,7 +11,10 @@
 // mengulang MENGULANG LANGKAH YANG SAMA dengan token yang sama, bukan memulai
 // dari awal diam-diam.
 
-import { useCallback, useRef, useState } from "react";
+import { useAnimate } from "motion/react-mini";
+import { useCallback, useEffect, useRef, useState } from "react";
+
+import { gerakHidup } from "@/lib/gerak";
 
 /** Urutan agen kontrak Bagian 2. Ditulis di sini, BUKAN diimpor dari
  *  @varuna/agents: paket itu menarik SDK agen ke dalam bundel peramban padahal
@@ -63,6 +66,45 @@ async function* peristiwa(res: Response): AsyncGenerator<{ event: string; data: 
       batas = sisa.indexOf("\n\n");
     }
   }
+}
+
+/** Satu-satunya gerak di Konsol, dan ia menandai perubahan yang SUNGGUH terjadi:
+ *  badge fase muncul saat langkah agen berpindah fase. Bukan animasi saat halaman
+ *  dibuka — di surface operasional tidak ada scroll-theater.
+ *
+ *  Motion dipakai lewat `motion/react-mini`, bukan `motion/react`: yang dibutuhkan
+ *  cuma satu transisi opacity+transform, dan varian mini menjalankannya di WAAPI.
+ *  Terukur (esbuild, minify+gzip, react eksternal): mini 3,2 KB lawan penuh
+ *  23,0 KB — 19,8 KB yang tidak perlu diunduh rute ini.
+ *  Hover dan fokus di Komando, Patroli, dan Konsol tetap transisi CSS transform,
+ *  tanpa satu byte JavaScript.
+ *
+ *  Gaya awal tidak pernah dirender: badge lahir terlihat dan animasinya baru
+ *  dijalankan pada pergantian berikutnya, jadi hidrasi cocok dan tidak ada isi
+ *  yang bergantung pada JS untuk muncul. reduced-motion (bendera lib/gerak.ts):
+ *  badge yang sama persis, langsung. */
+function Fase({ kata, cacat }: { kata: string; cacat: boolean }) {
+  const [ruang, animasikan] = useAnimate<HTMLSpanElement>();
+  const pernah = useRef(false);
+
+  useEffect(() => {
+    if (!pernah.current) {
+      pernah.current = true;
+      return;
+    }
+    if (!gerakHidup() || ruang.current === null) return;
+    void animasikan(
+      ruang.current,
+      { opacity: [0, 1], transform: ["translateY(-3px)", "none"] },
+      { duration: 0.18, ease: [0.22, 1, 0.36, 1] },
+    );
+  }, [kata, animasikan, ruang]);
+
+  return (
+    <span ref={ruang} className={`keadaan${cacat ? " keadaan--error" : ""}`}>
+      {kata}
+    </span>
+  );
 }
 
 export function Replay({ inv }: { inv: string | null }) {
@@ -157,9 +199,10 @@ export function Replay({ inv }: { inv: string | null }) {
           return (
             <li key={a} className="baris" style={{ padding: "var(--r-2) 0" }}>
               <span className="baris__utama">{a}</span>
-              <span className={`keadaan${l?.phase === "discarded" ? " keadaan--error" : ""}`}>
-                {l === undefined ? "belum dijalankan" : KATA_FASE[l.phase]}
-              </span>
+              <Fase
+                kata={l === undefined ? "belum dijalankan" : KATA_FASE[l.phase]}
+                cacat={l?.phase === "discarded"}
+              />
             </li>
           );
         })}

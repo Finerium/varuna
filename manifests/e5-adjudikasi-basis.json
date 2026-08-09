@@ -5,9 +5,12 @@
  "ruang_silang": "piksel (10 m/px)",
  "kelas": [
   "ais_hadir",
-  "gelap_gt"
+  "gelap_gt",
+  "sintetis-ais-only",
+  "sintetis-konflik",
+  "sintetis-sar-only"
  ],
- "n_inv": 28,
+ "n_inv": 31,
  "basis": [
   {
    "inv_id": "inv-e5-0bc18737-01",
@@ -344,7 +347,65 @@
    "gt_confidence": "HIGH",
    "gt_shore_km": "9999.99",
    "status_gate": "terindikasi"
+  },
+  {
+   "inv_id": "inv-e5-sint-01",
+   "kelas_gt": "sintetis-sar-only",
+   "scene_id": null,
+   "gt_jarak_m": null,
+   "gt_source": null,
+   "gt_is_vessel": null,
+   "gt_is_fishing": null,
+   "gt_confidence": null,
+   "gt_shore_km": null,
+   "status_gate": "terindikasi",
+   "sintetis": true,
+   "status_harapan": "terindikasi",
+   "abstain_reason_harapan": null,
+   "abstain_reason_gate": null,
+   "harapan_cocok": true,
+   "basis_konstruksi": "Satu artefak sar_detection; nol artefak bermodalitas AIS. sensors_independent = 1, missing_coverage = [AIS].",
+   "catatan_penilai": "SINTETIS by-construction utk E5 edge: GT adalah konstruksinya sendiri, bukan pengamatan. Tidak masuk hitungan akurasi/kecukupan evidensial."
+  },
+  {
+   "inv_id": "inv-e5-sint-02",
+   "kelas_gt": "sintetis-ais-only",
+   "scene_id": null,
+   "gt_jarak_m": null,
+   "gt_source": null,
+   "gt_is_vessel": null,
+   "gt_is_fishing": null,
+   "gt_confidence": null,
+   "gt_shore_km": null,
+   "status_gate": "terindikasi",
+   "sintetis": true,
+   "status_harapan": "terindikasi",
+   "abstain_reason_harapan": null,
+   "abstain_reason_gate": null,
+   "harapan_cocok": true,
+   "basis_konstruksi": "Satu artefak ais_track_segment (3 fix); nol artefak sar_detection. sensors_independent = 1, missing_coverage = [SAR].",
+   "catatan_penilai": "SINTETIS by-construction utk E5 edge: GT adalah konstruksinya sendiri, bukan pengamatan. Tidak masuk hitungan akurasi/kecukupan evidensial."
+  },
+  {
+   "inv_id": "inv-e5-sint-03",
+   "kelas_gt": "sintetis-konflik",
+   "scene_id": null,
+   "gt_jarak_m": null,
+   "gt_source": null,
+   "gt_is_vessel": null,
+   "gt_is_fishing": null,
+   "gt_confidence": null,
+   "gt_shore_km": null,
+   "status_gate": "abstain",
+   "sintetis": true,
+   "status_harapan": "abstain",
+   "abstain_reason_harapan": "konflik_artefak",
+   "abstain_reason_gate": "konflik_artefak",
+   "harapan_cocok": true,
+   "basis_konstruksi": "Dua artefak mengklaim posisi objek yang sama pada jendela 1 jam (<= konflik_jendela_jam = 6 jam), terpisah 199.5 km: sog_implied 107.7 kn > ambang_kn 50. Posisi tak terdamaikan secara kinematik.",
+   "catatan_penilai": "SINTETIS by-construction utk E5 edge: GT adalah konstruksinya sendiri, bukan pengamatan. Tidak masuk hitungan akurasi/kecukupan evidensial."
   }
  ],
- "catatan": "Basis GT untuk penilai buta E5; BUKAN artefak investigasi. Lengan Natuna + sintetis dikomposisi terpisah sebelum lock e5-goldenset.json."
+ "catatan": "Basis GT untuk penilai buta E5; BUKAN artefak investigasi. Lengan Natuna + sintetis dikomposisi terpisah sebelum lock e5-goldenset.json.",
+ "catatan_sintetis": "Entri kelas_gt berawalan 'sintetis-' adalah kasus edge by-construction (scripts/e5_sintetis.py), protokol E5 komposisi. Harapan status pra-registrasi ada di field status_harapan; lengan ini menguji mekanika gerbang, bukan akurasi."
 }

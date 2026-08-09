@@ -8,6 +8,11 @@ experiments/
 manifests/
 pnpm-lock.yaml
 
+# Geometri zona turunan (scripts/zona_web.py): sengaja satu baris tanpa spasi —
+# dirapikan prettier, ukurannya berlipat dan langit-langit 150 KB per berkas
+# jadi tidak ada artinya. Berkas ini tidak pernah disunting tangan.
+apps/web/lib/zona/
+
 # Jalur lain, gaya sudah mapan; format ulang dari sini hanya membuat diff palsu.
 packages/core/
 protocol/

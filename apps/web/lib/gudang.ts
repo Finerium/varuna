@@ -13,7 +13,10 @@
 import { access, appendFile, mkdir, readFile, readdir } from "node:fs/promises";
 import { dirname, join, resolve, sep } from "node:path";
 
+import { neon } from "@neondatabase/serverless";
+
 import { periksaBerkas, resolverGrounding } from "@varuna/core/grounding";
+import { kunciArtefak, postgresRuntimeStore } from "@varuna/core/runtime";
 import type { RuntimeStore } from "@varuna/core/store";
 import {
   ArtIdSchema,
@@ -86,10 +89,9 @@ export async function daftarInvId(): Promise<string[]> {
  *  runtime)"). Union, bukan per-investigasi: klaim boleh mengutip artefak
  *  investigasi lain dan itu tetap resolvable. Dihitung sekali — golden set
  *  adalah data plane STATIS ("dibaca, tidak pernah ditulis"), sama alasannya
- *  dengan akar() di atas.
- *  ponytail: sisi runtime masih kosong; belum ada satu pun penulis (lihat
- *  bacaRuntime di bawah). Isi dari indeks Blob append-only begitu aksi
- *  validasi/patroli hidup di M1. */
+ *  dengan akar() di atas. Sisi runtime-nya (indeksGroundingRuntime, di bawah)
+ *  dihitung per permintaan karena ia memang bergerak: laporan patroli menambah
+ *  art_id yang boleh dikutip replay berikutnya. */
 let indeksStatis: Promise<string[]> | null = null;
 
 function grounding(): Promise<string[]> {
@@ -149,11 +151,11 @@ export async function ambilInvestigasi(inv_id: string): Promise<InvestigasiTampi
   };
 }
 
-/** Artefak satu investigasi, terurut art_id. Berkas yang gagal skema dilewati:
- *  satu artefak cacat tidak boleh menyembunyikan sisa rantai bukti. */
-export async function ambilArtefak(inv_id: string): Promise<Artifact[]> {
+/** Artefak golden satu investigasi. Berkas yang gagal skema dilewati: satu
+ *  artefak cacat tidak boleh menyembunyikan sisa rantai bukti. */
+async function artefakGolden(inv_id: string): Promise<Artifact[]> {
   const root = await akar();
-  if (root === null || !invSah(inv_id)) return [];
+  if (root === null) return [];
   const dir = join(root, "investigations", inv_id, "artifacts");
   const berkas = await readdir(dir).then(
     (f) => f.filter((n) => n.endsWith(".json")).sort(),
@@ -166,6 +168,31 @@ export async function ambilArtefak(inv_id: string): Promise<Artifact[]> {
     .map((v) => ArtifactSchema.safeParse(v))
     .filter((r) => r.success)
     .map((r) => r.data);
+}
+
+/** Artefak yang LAHIR saat produksi (laporan patroli). Dedup art_id: ruas
+ *  terakhir art_id adalah sidik payload, jadi kiriman ulang yang identik —
+ *  antrean offline kru — menghasilkan artefak yang sama, dan simpanan
+ *  append-only menyimpan keduanya. Yang pertama yang tampil. */
+export async function artefakRuntime(inv_id: string): Promise<Artifact[]> {
+  if (!invSah(inv_id)) return [];
+  const baris = await bacaRuntime(kunciArtefak(inv_id)).catch(() => []);
+  const per = new Map<string, Artifact>();
+  for (const b of baris) {
+    const a = ArtifactSchema.safeParse(b);
+    if (a.success && !per.has(a.data.art_id)) per.set(a.data.art_id, a.data);
+  }
+  return [...per.values()];
+}
+
+/** Rantai bukti utuh satu investigasi, terurut art_id: golden statis DITAMBAH
+ *  artefak runtime. Union, bukan fallback — sama seperti resolver grounding
+ *  (architecture.md): laporan patroli adalah bukti sederajat, jadi ia muncul di
+ *  katalog agen, di berkas, dan di daftar artefak API. */
+export async function ambilArtefak(inv_id: string): Promise<Artifact[]> {
+  if (!invSah(inv_id)) return [];
+  const [golden, runtime] = await Promise.all([artefakGolden(inv_id), artefakRuntime(inv_id)]);
+  return [...golden, ...runtime].sort((a, b) => a.art_id.localeCompare(b.art_id));
 }
 
 /** Frontend HANYA membaca status_server (architecture.md, VAR-SRF-03): ringkasan
@@ -241,20 +268,16 @@ export async function chipPertama(n: number): Promise<Artifact[]> {
   return keluar;
 }
 
-/** Akar tulisan runtime. Di Vercel hanya /tmp yang bisa ditulis, dan isinya
- *  hidup selama instansi fungsi — cukup untuk satu rangkaian replay yang
- *  langkah-langkahnya berdekatan, tidak untuk simpanan jangka panjang.
- *  ponytail: filesystem, dengan langit-langit yang disebut di atas; naikkan ke
- *  @vercel/blob dengan mengganti DUA fungsi di bawah — RuntimeStore adalah
- *  antarmuka yang sama yang dipakai packages/core dan packages/agents. */
+/** Akar tulisan runtime untuk adapter filesystem. Di Vercel hanya /tmp yang
+ *  bisa ditulis, dan isinya hidup selama instansi fungsi — cukup untuk satu
+ *  rangkaian replay yang langkah-langkahnya berdekatan, tidak untuk simpanan
+ *  jangka panjang. Itulah sebabnya produksi memakai Postgres (lihat di bawah);
+ *  adapter ini tinggal sebagai jalur dev lokal dan cadangan jujur. */
 const dirRuntime = (): string =>
   process.env.VARUNA_RUNTIME_DIR ??
   (process.env.VERCEL === undefined ? join(process.cwd(), ".runtime") : "/tmp/varuna-runtime");
 
-/** Tulisan runtime (state replay, jejak agen, hasil patroli, kalibrasi):
- *  append-only JSONL. packages/core/src/store.ts sengaja menyerahkan
- *  implementasinya ke jalur produk ini ("blobRuntimeStore: diisi di apps/web"). */
-export function gudangRuntime(): RuntimeStore {
+function gudangBerkas(): RuntimeStore {
   // Containment: kunci apa pun (termasuk dari resume_token) tidak boleh
   // menembus keluar direktori runtime.
   const path = (kunci: string) => {
@@ -279,6 +302,29 @@ export function gudangRuntime(): RuntimeStore {
         .map((b) => JSON.parse(b) as unknown);
     },
   };
+}
+
+/** Satu instansi Postgres per proses: adapter memoisasi migrasi idempotennya,
+ *  jadi membuatnya ulang tiap permintaan akan mengirim DDL berkali-kali. */
+let gudangPg: RuntimeStore | null = null;
+
+/** Tulisan runtime (state replay, jejak agen, aksi validasi, paket, hasil
+ *  patroli, kalibrasi): append-only, satu antarmuka RuntimeStore.
+ *  - Produksi (Vercel + Neon): DATABASE_URL terpasang -> tabel runtime_rekaman.
+ *  - Dev lokal / CI: filesystem JSONL, seperti sebelumnya.
+ *  Pemanggilnya identik di kedua jalur; itu syaratnya, bukan kebetulan. */
+export function gudangRuntime(): RuntimeStore {
+  const url = process.env.DATABASE_URL;
+  if (url === undefined || url.length === 0) return gudangBerkas();
+  // neon() dipanggil malas: memanggilnya saat modul dimuat akan melempar pada
+  // lingkungan tanpa DATABASE_URL — yakni setiap `next build`.
+  gudangPg ??= (() => {
+    const sql = neon(url);
+    return postgresRuntimeStore(
+      (teks, params) => sql.query(teks, [...params]) as Promise<Record<string, unknown>[]>,
+    );
+  })();
+  return gudangPg;
 }
 
 export const bacaRuntime = (kunci: string): Promise<unknown[]> => gudangRuntime().read(kunci);

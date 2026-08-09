@@ -1,0 +1,68 @@
+{
+ "inv_id": "inv-e5-sint-03",
+ "arm": "sintetis",
+ "sintetis": true,
+ "status_server": {
+  "status": "abstain",
+  "computed_at": "2026-08-09T11:00:00Z",
+  "sensors_independent": 2,
+  "zone_violation": false,
+  "evidence_age_h": 1,
+  "decay_applied": false,
+  "conflicting_art_ids": [
+   "a-e5-sint-03-001",
+   "a-e5-sint-03-002"
+  ],
+  "missing_coverage": [],
+  "reasons": [
+   {
+    "rule": "dua_sensor",
+    "passed": true,
+    "art_ids": [
+     "a-e5-sint-03-001",
+     "a-e5-sint-03-002"
+    ]
+   },
+   {
+    "rule": "zona",
+    "passed": false,
+    "art_ids": []
+   },
+   {
+    "rule": "kinematik_gap",
+    "passed": false,
+    "art_ids": [
+     "a-e5-sint-03-001"
+    ]
+   },
+   {
+    "rule": "usia",
+    "passed": true,
+    "art_ids": [
+     "a-e5-sint-03-002"
+    ]
+   },
+   {
+    "rule": "konflik",
+    "passed": false,
+    "art_ids": [
+     "a-e5-sint-03-001",
+     "a-e5-sint-03-002"
+    ]
+   },
+   {
+    "rule": "cakupan",
+    "passed": true,
+    "art_ids": []
+   }
+  ],
+  "abstain_reason": "konflik_artefak",
+  "display_state": [],
+  "hash": "ce4045173111f53429f49c75ef02346e094e509425442dd3f6e408a75edc9ea3"
+ },
+ "artifacts": [
+  "a-e5-sint-03-001",
+  "a-e5-sint-03-002"
+ ],
+ "t_now_frame": "2026-08-09T11:00:00Z"
+}

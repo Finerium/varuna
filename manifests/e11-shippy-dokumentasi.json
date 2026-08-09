@@ -1,0 +1,41 @@
+{
+ "id": "e11-shippy-dokumentasi",
+ "tanggal_akses": "2026-08-09",
+ "seed": 20260809,
+ "protokol": "eval-protocol.md#E11 (freeze-eval-v1) — jalur fallback dokumentasi publik",
+ "metode": "review dokumentasi publik Skylight/Shippy; tiap klaim berbatas tanggal + URL; tabel side-by-side hanya dimensi terbukti dua sisi (sisi VARUNA = live varuna-gamma.vercel.app atau kode di repo)",
+ "berkas": {
+  "review": "experiments/e11/shippy-review.md",
+  "skrip_gfw": "experiments/e11/gfw_crosscheck.py"
+ },
+ "sumber": [
+  {"url": "https://www.skylight.global/", "diakses": "2026-08-09"},
+  {"url": "https://www.skylight.global/platform", "diakses": "2026-08-09"},
+  {"url": "https://www.skylight.global/news/shippy-launch", "diakses": "2026-08-09"},
+  {"url": "https://allenai.org/blog/shippy-deep-dive", "diakses": "2026-08-09"},
+  {"url": "https://www.geekwire.com/2026/ai2s-skylight-project-launches-shippy-an-ai-agent-that-dives-into-ocean-data/", "terbit": "2026-06-08", "diakses": "2026-08-09"},
+  {"url": "https://support.skylight.global/access-to-skylight?kb_language=en_US", "diakses": "2026-08-09"},
+  {"url": "https://globalfishingwatch.org/our-apis/documentation", "diakses": "2026-08-09"}
+ ],
+ "jumlah_klaim_berbatas_tanggal": 10,
+ "dimensi_side_by_side": 7,
+ "verifikasi_varuna_live": {
+  "landing": "fetch 2026-08-09: chip SAR VH, bundel bukti SAR+AIS, provenance /api/artifacts/<art_id>, status server-side, tiga peran",
+  "api_public_aggregate": "fetch 2026-08-09T14:54:56Z: counts.abstain={\"ZEE-ID\":1}, counts.terindikasi={\"tanpa_zona\":5}, sumber=[gfw-events,xview3-public]"
+ },
+ "gfw_crosscheck": {
+  "status": "human-gated",
+  "alasan": "API GFW butuh token (verifikasi 2026-08-09: respons tanpa token = {\"error\":\"invalid token\"}); token tidak dibaca agen",
+  "scene": "S1C_IW_GRDH_1SDV_20260805T171634_20260805T171659_008863_01194A",
+  "bbox": [4.798, 53.241, 9.278, 55.161],
+  "dataset": "public-global-sar-presence:latest",
+  "catatan_latensi": "dokumentasi GFW: cakupan s.d. ±5 hari lalu; scene 4 hari sebelum akses — borderline",
+  "selftest_skrip": "lulus 2026-08-09 (haversine + matching radius 200 m)"
+ },
+ "head_to_head_layar": {
+  "status": "human-gated",
+  "alasan": "akun Skylight = persetujuan manual kelembagaan; Shippy terbatas 'small group of trusted agencies' per 2026-08-09",
+  "tindakan_manusia": "ajukan akses via support.skylight.global/access-to-skylight atau support@skylight.global"
+ },
+ "batasan": "klaim Shippy dari materi vendor/press, bukan hands-on; 'tidak terdokumentasi' bukan 'tidak ada'; tanpa angka agreement sebelum run ber-token"
+}

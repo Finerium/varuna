@@ -89,9 +89,9 @@ Portal, Entry) akan ditambahkan di sini.*
 
 Sistem ini berdiri di atas data dan kode terbuka berikut:
 
-- **xView3 reference solution** — Eugene Khvedchenya (BloodAxe),
-  [xView3 solution](https://github.com/BloodAxe/xView3) — MIT License. Dipakai
-  sebagai basis bobot deteksi SAR pada E1.
+- **xView3 first place solution** — Eugene Khvedchenya (BloodAxe),
+  [DIUx-xView/xView3_first_place](https://github.com/DIUx-xView/xView3_first_place)
+  — MIT License. Kode inferensi + bobot juara dipakai apa adanya pada E1.
 - **xView3-SAR labels** — lisensi CC BY-NC-SA; label tidak didistribusikan dalam
   repo ini, unduh dari [iuu.xview.us](https://iuu.xview.us/).
 - **Copernicus Sentinel-1** — citra SAR via Copernicus Data Space Ecosystem;
@@ -101,7 +101,6 @@ Sistem ini berdiri di atas data dan kode terbuka berikut:
 - **Global Fishing Watch** — data event publik ([globalfishingwatch.org](https://globalfishingwatch.org/)),
   CC BY-NC.
 - **Marine Regions** — geometri ZEE ([marineregions.org](https://marineregions.org/)).
-- **Open-Meteo** — data cuaca konteks ([open-meteo.com](https://open-meteo.com/)).
 
 Data mentah (GeoTIFF, AIS mentah) tidak pernah masuk repo; yang terdistribusi hanya
 artefak turunan web-optimized. Identitas kapal hanya hadir sebagai pseudonim.

@@ -13,13 +13,7 @@ import {
   type MesinAgen,
   type Pemancar,
 } from "@varuna/agents";
-import type { Thresholds } from "@varuna/core/pasha";
 import type { Investigation } from "@varuna/core/schemas";
-
-// Ambang PASHA DI-SEED dari protokol beku (contracts.md Bagian 4). Diimpor,
-// bukan disalin: satu angka yang menyimpang membuat status runtime berbeda dari
-// angka yang dilaporkan paper.
-import kunciAmbang from "../../../experiments/e5/thresholds.lock.json";
 
 import { aliranSSE } from "./api";
 import {
@@ -29,12 +23,13 @@ import {
   indeksGroundingRuntime,
   indeksGroundingStatis,
 } from "./gudang";
+// Ambang PASHA hidup di lib/tulis: DI-SEED dari protokol beku (contracts.md
+// Bagian 4) lalu di-overlay delta kalibrasi beraudit. Satu sumber untuk jalur
+// agen dan jalur tulis — kalau tidak, status yang dihitung replay dan area
+// patroli yang dicetak server bisa memakai angka yang berbeda.
+import { ambangSekarang, sekarang } from "./tulis";
 
-export const AMBANG: Thresholds = {
-  usia_max_h: kunciAmbang.usia_max_h,
-  ambang_kn: kunciAmbang.ambang_kn,
-  konflik_jendela_jam: kunciAmbang.konflik_jendela_jam,
-};
+export { AMBANG_SEED as AMBANG } from "./tulis";
 
 /** Jalur live menuntut kunci API. Ketiadaannya adalah keadaan yang diumumkan,
  *  bukan alasan memutar respons kalengan. */
@@ -43,7 +38,7 @@ export const modelSiap = (): boolean => (process.env.OPENAI_API_KEY ?? "").lengt
 export const PESAN_TANPA_KUNCI =
   "Replay memanggil model sungguhan pada tiap langkah, dan kunci API belum terpasang di lingkungan ini. Tidak ada rekaman kalengan yang diputar sebagai gantinya.";
 
-export function mesinReplay(): MesinAgen {
+export async function mesinReplay(): Promise<MesinAgen> {
   return {
     sumber: {
       async investigasi(inv_id): Promise<Investigation | null> {
@@ -61,8 +56,8 @@ export function mesinReplay(): MesinAgen {
     },
     store: gudangRuntime(),
     runner: runnerVaruna(),
-    thresholds: AMBANG,
-    sekarang: () => new Date().toISOString(),
+    thresholds: await ambangSekarang(),
+    sekarang,
   };
 }
 
@@ -84,10 +79,9 @@ const potong = (teks: string): string => {
 export function alirkanReplay(
   jalankan: (m: MesinAgen, emit: Pemancar) => Promise<HasilLangkah>,
 ): Response {
-  const m = mesinReplay();
   return aliranSSE(async (tulis) => {
     try {
-      const hasil = await jalankan(m, (p) => tulis("agent_step", p));
+      const hasil = await jalankan(await mesinReplay(), (p) => tulis("agent_step", p));
       tulis(hasil.selesai ? "selesai" : "lanjut", {
         selesai: hasil.selesai,
         resume_token: hasil.resume_token,

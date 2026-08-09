@@ -286,6 +286,14 @@ img {
   );
 }
 
+/* Langkah agen yang dibuang. Rim-nya penuh dan garisnya rapat — cukup untuk
+   membedakannya dari fase lain tanpa memperkenalkan warna sinyal kedua. */
+.keadaan--error {
+  border-style: solid;
+  border-color: var(--glass-rim);
+  color: var(--teks);
+}
+
 /* Keadaan kosong jujur (matriks kontrak Bagian 8). */
 .kosong {
   border: 1px dashed var(--glass-rim);
@@ -344,6 +352,15 @@ img {
   font-family: var(--font-display);
   font-size: 1rem;
   word-break: break-word;
+  /* Micro-transition surface operasional: 2px, transform saja, tanpa satu byte
+     JavaScript. Komando/Patroli/Konsol tidak punya scroll-theater. */
+  display: inline-block;
+  transition: transform 160ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+a.baris__utama:hover,
+a.baris__utama:focus-visible {
+  transform: translateX(2px);
 }
 
 .baris__meta {
@@ -442,14 +459,16 @@ img {
   padding: var(--r-3) 0;
   border-top: 1px solid var(--glass-rim-redup);
   text-decoration: none;
+  /* transform, bukan padding: menggeser kotak berarti reflow tiap frame, dan
+     "hanya transform+opacity" berlaku untuk hover juga, bukan cuma timeline. */
   transition:
-    padding-left 220ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 220ms cubic-bezier(0.22, 1, 0.36, 1),
     border-color 220ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .roster__peran:hover,
 .roster__peran:focus-visible {
-  padding-left: var(--r-2);
+  transform: translateX(var(--r-2));
   border-color: var(--amber);
 }
 
@@ -469,6 +488,47 @@ img {
   color: var(--teks-redup);
   font-size: 0.9rem;
   max-width: 58ch;
+}
+
+/* Gerak (architecture.md "Gerak & visual"; lib/gerak.ts memegang benderanya) --
+   Pra-sembunyi HANYA berlaku saat bendera gerak menyala, dan bendera itu tidak
+   pernah dipasang pada prefers-reduced-motion, tanpa JavaScript, atau saat modul
+   gerak gagal dimuat. Karena itu tidak ada satu pun isi yang bisa tertinggal tak
+   terlihat: selektor di bawah berhenti cocok dan halamannya utuh. */
+html[data-gerak="hidup"] [data-gerak-masuk] {
+  opacity: 0;
+}
+
+/* Kata hero. transform tidak berlaku pada elemen inline, jadi tiap kata jadi
+   inline-block; spasinya tetap simpul teks di luar span. */
+.kata {
+  display: inline-block;
+}
+
+/* Pijar rim: satu-satunya cara menyalakan rim tanpa menganimasikan border atau
+   filter — lapisan sendiri yang hanya opacity-nya bergerak. Dekorasi murni, jadi
+   tanpa gerak ia memang tidak pernah menyala dan tidak ada isi yang hilang. */
+.panel--pijar {
+  position: relative;
+}
+
+.pijar {
+  position: absolute;
+  inset: -1px;
+  border: 1px solid var(--pijar-rim);
+  border-radius: var(--radius);
+  box-shadow: 0 0 28px -14px var(--pijar-rim);
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Garis pemisah Portal: tumbuh dari kiri lewat scaleX. Nilai diamnya penuh, jadi
+   tanpa gerak garisnya tetap tergambar utuh. */
+.garis {
+  display: block;
+  height: 1px;
+  background: var(--glass-rim-redup);
+  transform-origin: left center;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -557,4 +617,132 @@ img {
 
 .gulir-x {
   overflow-x: auto;
+}
+
+/* Peta SVG mandiri (components/peta.tsx). Tidak ada tile, tidak ada pustaka
+   peta: laut = ink terdalam, zona = glass rim, kandidat = amber. Lebar garis
+   memakai non-scaling-stroke supaya tebalnya tetap sama walau viewBox berubah
+   skala antara panel Komando dan layar Patroli. */
+.peta {
+  margin: 0;
+  display: grid;
+  gap: var(--r-2);
+}
+
+.peta__gambar {
+  width: 100%;
+  height: auto;
+  display: block;
+  background: var(--ink-0);
+  border: 1px solid var(--glass-rim-redup);
+  border-radius: var(--radius-kecil);
+}
+
+.peta__laut {
+  fill: var(--ink-0);
+}
+
+.peta__zona {
+  fill: var(--glass);
+  stroke: var(--glass-rim-redup);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+/* Zona fokus = geometri yang sungguh dipakai gerbang zona; rim-nya penuh. */
+.peta__zona--fokus {
+  stroke: var(--glass-rim);
+}
+
+/* Area pencarian paket sasaran: garis putus-putus, karena batasnya memang
+   perkiraan ("area pencarian, bukan posisi pasti"). */
+.peta__area {
+  fill: none;
+  stroke: var(--amber-redup);
+  stroke-width: 1.5;
+  stroke-dasharray: 7 6;
+  vector-effect: non-scaling-stroke;
+}
+
+.peta__titik {
+  fill: var(--amber);
+}
+
+.peta__titik--terindikasi {
+  fill: var(--amber-redup);
+}
+
+/* ABSTAIN = suar berongga slate, sama seperti .status--abstain: penolakan
+   menyimpulkan, bukan kontak yang lebih lemah. */
+.peta__titik--abstain {
+  fill: none;
+  stroke: var(--slate);
+  stroke-width: 1.5;
+  vector-effect: non-scaling-stroke;
+}
+
+.peta__denyut {
+  fill: var(--amber);
+  opacity: 0.16;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.peta__pilih {
+  fill: none;
+  stroke: var(--teks);
+  stroke-width: 1.5;
+  vector-effect: non-scaling-stroke;
+}
+
+/* Label kecil Space Grotesk dengan halo ink: kontras teks tidak bergantung
+   pada apa yang kebetulan ada di belakangnya. */
+.peta__label {
+  font-family: var(--font-display);
+  font-size: 20px;
+  fill: var(--teks);
+  paint-order: stroke;
+  stroke: var(--ink-0);
+  stroke-width: 5;
+  stroke-linejoin: round;
+}
+
+.peta a {
+  cursor: pointer;
+}
+
+.peta a:hover .peta__titik,
+.peta a:focus-visible .peta__titik {
+  stroke: var(--teks);
+  stroke-width: 2;
+  vector-effect: non-scaling-stroke;
+}
+
+.peta__kaki {
+  font-size: 0.72rem;
+  color: var(--teks-redup);
+  line-height: 1.35;
+}
+
+.peta__catatan {
+  color: var(--teks);
+}
+
+/* Denyut halus: hanya transform + opacity (architecture.md), dan hanya kalau
+   pembaca tidak meminta gerak dikurangi. */
+@media (prefers-reduced-motion: no-preference) {
+  .peta__denyut {
+    animation: suar 3000ms cubic-bezier(0.22, 1, 0.36, 1) infinite;
+  }
+  @keyframes suar {
+    0% {
+      transform: scale(0.3);
+      opacity: 0.32;
+    }
+    70%,
+    100% {
+      transform: scale(1);
+      opacity: 0;
+    }
+  }
 }

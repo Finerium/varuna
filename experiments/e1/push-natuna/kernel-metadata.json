@@ -1,0 +1,15 @@
+{
+ "id": "ghaisank/varuna-e1b-natuna",
+ "title": "varuna-e1b-natuna",
+ "code_file": "run_e1.py",
+ "language": "python",
+ "kernel_type": "script",
+ "is_private": "true",
+ "enable_gpu": "true",
+ "enable_internet": "true",
+ "dataset_sources": [
+  "ghaisank/varuna-natuna-s1-2026"
+ ],
+ "competition_sources": [],
+ "kernel_sources": []
+}
