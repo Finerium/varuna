@@ -1,0 +1,101 @@
+{
+ "run_id": "e3-behavior-20260809",
+ "date": "2026-08-09T12:06:58.099966",
+ "seed": 20260809,
+ "protocol": "eval-protocol.md \u00a7E3 + \u00a70",
+ "data": {
+  "file": "/Users/ghaisan/Documents/Datathon/varuna/data/processed/dma/trajectories.parquet",
+  "rows_raw": 9555850,
+  "rows_filtered_4types": 6286187,
+  "region_filter": [
+   50.0,
+   63.5,
+   -12.0,
+   20.0
+  ],
+  "day": "2026-08-05 (DMA, 1 hari)",
+  "segments": 4541,
+  "segments_train": 3201,
+  "segments_test": 1340,
+  "mmsi_total": 1459,
+  "mmsi_train": 1021,
+  "mmsi_test": 438,
+  "segment_rule": "6 jam (jam UTC//6), valid bila >=30 fix & rentang >=3600s"
+ },
+ "label_definition": "Label LEMAH = ship_type terdaftar DMA: Fishing=1 vs Cargo/Tanker/Passenger=0. PROXY perilaku, BUKAN ground truth perilaku; 4wings GFW Natuna (15 baris) terlalu kecil utk label lemah berskala -> fallback konservatif, dicatat sesuai protokol E3. PLAFON: kapal ikan yang sedang transit tetap berlabel 1; metrik = KONKORDANSI dgn tipe terdaftar, bukan akurasi perilaku.",
+ "model": "HistGradientBoostingClassifier(random_state=20260809, early_stopping, val_frac=0.15)",
+ "features": [
+  "sog_mean",
+  "sog_std",
+  "sog_p10",
+  "sog_p25",
+  "sog_p50",
+  "sog_p75",
+  "sog_p90",
+  "sog_max",
+  "turn_mean",
+  "turn_p90",
+  "straightness",
+  "frac_stat",
+  "frac_day"
+ ],
+ "split": "by MMSI 70/30, default_rng(20260809) shuffle atas MMSI terurut",
+ "results": {
+  "concordance": 0.8753731343283582,
+  "kappa": 0.6780940544210642,
+  "baseline_majority": {
+   "agreement": 0.7111940298507463,
+   "kappa": 0.0
+  },
+  "baseline_random_stratified": {
+   "agreement": 0.5634328358208955,
+   "kappa": -0.03494439104764524
+  },
+  "per_class": {
+   "fishing": {
+    "precision": {
+     "frac": "266/312",
+     "p": 0.8525641025641025,
+     "wilson95": [
+      0.8089,
+      0.8876
+     ]
+    },
+    "recall": {
+     "frac": "266/387",
+     "p": 0.6873385012919897,
+     "wilson95": [
+      0.6395,
+      0.7315
+     ]
+    }
+   },
+   "transit": {
+    "precision": {
+     "frac": "907/1028",
+     "p": 0.882295719844358,
+     "wilson95": [
+      0.8612,
+      0.9006
+     ]
+    },
+    "recall": {
+     "frac": "907/953",
+     "p": 0.9517313746065058,
+     "wilson95": [
+      0.9362,
+      0.9636
+     ]
+    }
+   }
+  },
+  "confusion": {
+   "tn": 907,
+   "fp": 46,
+   "fn": 121,
+   "tp": 266
+  },
+  "train_curve_file": "/Users/ghaisan/Documents/Datathon/varuna/experiments/e3/train_curve.csv",
+  "n_iter": 48
+ }
+}

@@ -1,0 +1,66 @@
+{
+ "run_id": "e3-20260809",
+ "date": "2026-08-09",
+ "seed": 20260809,
+ "protocol": "protocol/eval-protocol.md §E3 + §0 (beku)",
+ "data": {
+  "file": "data/processed/dma/trajectories.parquet",
+  "coverage": "DMA AIS 2026-08-05 00:00-24:00 UTC (1 hari), 9.555.850 baris, 3.134 MMSI",
+  "filters_classifier": "ship_type in {Fishing,Cargo,Tanker,Passenger}; sog non-NaN; lat [50,63.5] lon [-12,20] (buang fix rusak spt lat=0); 6.685.135 baris tersisa",
+  "segment_rule": "segmen 6 jam = (MMSI, jam_UTC//6); valid bila >=30 fix dan rentang >=1 jam (pilihan konservatif, protokol tidak menetapkan minimum)",
+  "segments": {"total": 4472, "train": 3132, "test": 1340},
+  "mmsi": {"total": 1568, "train": 1098, "test": 470}
+ },
+ "label_definition": "KEPUTUSAN KONSERVATIF (fallback protokol E3): label lemah = ship_type terdaftar DMA — Fishing=1 (414 MMSI) vs Cargo/Tanker/Passenger=0 (proxy transit). 4wings GFW fishing effort yang tersedia hanya Natuna, 15 baris — terlalu kecil untuk label lemah berskala. PLAFON DINYATAKAN: label = tipe kapal terdaftar (proxy perilaku), bukan observasi perilaku; kapal ikan yang sedang transit tetap berlabel 1. Semua metrik = KONKORDANSI dengan tipe terdaftar, BUKAN akurasi perilaku.",
+ "model": {
+  "cls": "HistGradientBoostingClassifier(random_state=20260809, early_stopping=True, validation_fraction=0.15, scoring='loss')",
+  "n_iter": 48,
+  "features": ["sog_mean","sog_std","sog_p10","sog_p25","sog_p50","sog_p75","sog_p90","sog_max","turn_mean","turn_p90","straightness","frac_stat","frac_day"],
+  "feature_notes": "laju belok dari bearing antar-fix (hanya sog>0.5 kn, dt<=10 mnt, pindah>10 m); straightness = jarak lurus/panjang lintasan (NaN bila lintasan<0.5 km); frac_stat = proporsi sog<0.5 kn; frac_day = proporsi fix jam lokal UTC+2 [06,18) (Denmark musim panas)",
+  "train_curve": "experiments/e3/train_curve.csv"
+ },
+ "split": "BY MMSI 70/30, default_rng(20260809) shuffle atas daftar MMSI terurut (protokol §0.3, §0.8)",
+ "results_concordance": {
+  "concordance": 0.8754,
+  "kappa": 0.6781,
+  "baseline_majority": {"agreement": 0.7112, "kappa": 0.0},
+  "baseline_random_stratified": {"agreement": 0.5634, "kappa": -0.0349},
+  "per_class": {
+   "fishing": {
+    "precision": {"frac": "266/312", "p": 0.8526, "wilson95": [0.8089, 0.8876]},
+    "recall": {"frac": "266/387", "p": 0.6873, "wilson95": [0.6395, 0.7315]}
+   },
+   "transit": {
+    "precision": {"frac": "907/1028", "p": 0.8823, "wilson95": [0.8612, 0.9006]},
+    "recall": {"frac": "907/953", "p": 0.9517, "wilson95": [0.9362, 0.9636]}
+   }
+  },
+  "confusion_test": {"tn": 907, "fp": 46, "fn": 121, "tp": 266},
+  "detail_file": "experiments/e3/behavior_result.json"
+ },
+ "transshipment": {
+  "rule": "Miller: jarak antar kapal <=500 m, durasi kontinu >=2 jam, SOG <2 kn, >=10 km dari pelabuhan",
+  "implementation": "experiments/e3/transshipment.py — bin 10 mnt, posisi median per (kapal,bin), spatial hash ~500 m, run bin berturut-turut >=12",
+  "parity_suite": "12/12 PASS (6 positif, 6 negatif by-construction di sekitar tiap ambang; jalankan: python experiments/e3/transshipment.py)",
+  "port_distance_proxy": "data pelabuhan tidak tersedia -> PROXY jarak dari daratan >=10 km via global_land_mask grid 0.01 derajat + scipy distance_transform_edt; skala lon pakai cos(56 deg) sehingga galat skala +-15% di tepi grid lat 50/63.5 — DICATAT; dilaporkan tanpa klaim akurasi",
+  "real_events_dma": {
+   "n_events": 11,
+   "n_pairs": 8,
+   "n_events_with_fishing_vessel": 0,
+   "candidate_rows": 521306,
+   "note": "pasangan terdeteksi didominasi Other/Undefined/Cargo/Tanker/Tug (loitering berdampingan lepas pantai, kemungkinan bunkering/STS/anchoring); NOL melibatkan kapal Fishing terdaftar; hitungan mentah aturan, TANPA klaim akurasi (protokol E3)",
+   "events_file": "experiments/e3/transshipment_dma_events.json"
+  }
+ },
+ "scripts": [
+  "experiments/e3/train_behavior.py",
+  "experiments/e3/transshipment.py",
+  "experiments/e3/run_transshipment_dma.py"
+ ],
+ "deviations_and_notes": [
+  "GFW 4wings fishing effort (data/raw/gfw/4wings_fishing_effort.json) = Natuna, 1 entri agregat — tidak dipakai sebagai label; fallback tipe-kapal-terdaftar dipakai dan dinyatakan (sesuai jalur fallback protokol E3, varian: proxy tipe kapal DMA alih-alih is_fishing xView3 karena eksperimen ini pada trajektori AIS, bukan deteksi SAR).",
+  "scikit-learn 1.9.0 dan global-land-mask 1.0.0 dipasang ke .venv untuk run ini.",
+  "Data hanya 1 hari (2026-08-05): segmen 6 jam per MMSI maksimal 4; kurva latih = loss per iterasi HGB (train + val internal 15% dari train), disimpan di experiments/e3/train_curve.csv.",
+  "Siang/malam via offset tetap UTC+2 (CEST), bukan solar elevation — cukup untuk satu hari musim panas Denmark; dicatat sebagai penyederhanaan."
+ ]
+}
