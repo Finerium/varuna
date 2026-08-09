@@ -10,10 +10,11 @@
 // ponytail: kalau nanti core menerima akar suntikan (mis. bacaManifest(root)),
 // empat pembaca di bawah ini dihapus dan diganti pemanggilan core lagi.
 
-import { access, readFile, readdir } from "node:fs/promises";
-import { join } from "node:path";
+import { access, appendFile, mkdir, readFile, readdir } from "node:fs/promises";
+import { dirname, join } from "node:path";
 
 import { periksaBerkas, resolverGrounding } from "@varuna/core/grounding";
+import type { RuntimeStore } from "@varuna/core/store";
 import {
   ArtIdSchema,
   ArtifactSchema,
@@ -240,20 +241,53 @@ export async function chipPertama(n: number): Promise<Artifact[]> {
   return keluar;
 }
 
-/** Tulisan runtime (hasil patroli, aksi validasi, kalibrasi): append-only JSONL.
- *  packages/core/src/store.ts sengaja menyerahkan implementasinya ke jalur produk
- *  ini ("blobRuntimeStore: diisi di apps/web"). M0 hanya perlu jalur BACA — belum
- *  ada satu pun penulis, dan menyiapkan penulis sebelum ada yang menulis akan
- *  jadi perancah kosong.
- *  ponytail: filesystem, cukup untuk dev dan untuk membaca kosong di produksi;
- *  ganti ke @vercel/blob saat aksi validasi/patroli hidup di M1. */
-export async function bacaRuntime(kunci: string): Promise<unknown[]> {
-  const dasar = process.env.VARUNA_RUNTIME_DIR ?? join(process.cwd(), ".runtime");
-  const isi = await readFile(join(/* turbopackIgnore: true */ dasar, kunci), "utf8").catch(
-    () => "",
-  );
-  return isi
-    .split("\n")
-    .filter((b) => b.length > 0)
-    .map((b) => JSON.parse(b) as unknown);
+/** Akar tulisan runtime. Di Vercel hanya /tmp yang bisa ditulis, dan isinya
+ *  hidup selama instansi fungsi — cukup untuk satu rangkaian replay yang
+ *  langkah-langkahnya berdekatan, tidak untuk simpanan jangka panjang.
+ *  ponytail: filesystem, dengan langit-langit yang disebut di atas; naikkan ke
+ *  @vercel/blob dengan mengganti DUA fungsi di bawah — RuntimeStore adalah
+ *  antarmuka yang sama yang dipakai packages/core dan packages/agents. */
+const dirRuntime = (): string =>
+  process.env.VARUNA_RUNTIME_DIR ??
+  (process.env.VERCEL === undefined ? join(process.cwd(), ".runtime") : "/tmp/varuna-runtime");
+
+/** Tulisan runtime (state replay, jejak agen, hasil patroli, kalibrasi):
+ *  append-only JSONL. packages/core/src/store.ts sengaja menyerahkan
+ *  implementasinya ke jalur produk ini ("blobRuntimeStore: diisi di apps/web"). */
+export function gudangRuntime(): RuntimeStore {
+  const path = (kunci: string) => join(/* turbopackIgnore: true */ dirRuntime(), kunci);
+  return {
+    async append(kunci, rekaman) {
+      const p = path(kunci);
+      await mkdir(dirname(p), { recursive: true });
+      await appendFile(p, `${JSON.stringify(rekaman)}\n`, "utf8");
+    },
+    async read(kunci) {
+      const isi = await readFile(path(kunci), "utf8").catch(() => "");
+      return isi
+        .split("\n")
+        .filter((b) => b.length > 0)
+        .map((b) => JSON.parse(b) as unknown);
+    },
+  };
 }
+
+export const bacaRuntime = (kunci: string): Promise<unknown[]> => gudangRuntime().read(kunci);
+
+/** Separuh runtime dari resolver grounding (Bagian 1: "Indeks runtime ...
+ *  append-only, aturan hash sama"). Baris boleh menyebut satu art_id atau
+ *  sekumpulan; keduanya bentuk yang sama sahnya untuk indeks append-only. */
+export async function indeksGroundingRuntime(inv_id: string): Promise<string[]> {
+  if (!invSah(inv_id)) return [];
+  const baris = await bacaRuntime(`runtime/${inv_id}/grounding.jsonl`).catch(() => []);
+  return baris.flatMap((b) => {
+    const r = b as { art_id?: unknown; art_ids?: unknown };
+    if (typeof r.art_id === "string") return [r.art_id];
+    return Array.isArray(r.art_ids)
+      ? r.art_ids.filter((v): v is string => typeof v === "string")
+      : [];
+  });
+}
+
+/** Separuh statis: union art_id seluruh investigasi golden. */
+export const indeksGroundingStatis = (): Promise<string[]> => grounding();

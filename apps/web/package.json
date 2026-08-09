@@ -13,6 +13,7 @@
     "typecheck": "tsc --noEmit -p tsconfig.json"
   },
   "dependencies": {
+    "@varuna/agents": "workspace:*",
     "@varuna/core": "workspace:*",
     "next": "16.3.0",
     "react": "^19.2.0",

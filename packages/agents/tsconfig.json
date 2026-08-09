@@ -1,0 +1,9 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    // Sama alasannya dengan packages/core: modul diekspor sebagai TypeScript
+    // mentah, jadi impor relatifnya membawa ekstensi ".ts".
+    "allowImportingTsExtensions": true
+  },
+  "include": ["src/**/*.ts", "test/**/*.ts", "vitest.config.ts"]
+}

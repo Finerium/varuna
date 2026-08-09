@@ -46,6 +46,15 @@ function kumpulkan(nilai: unknown, kunci: string | null, keluar: string[]): void
 const takResolvable = (ids: string[], resolver: Resolver): string[] =>
   [...new Set(ids)].filter((id) => !resolver.resolve(id));
 
+/** Seluruh art_id yang disebut satu nilai (pemindaian kunci yang sama dengan
+ *  periksaEnvelope). Dipakai executor agen untuk MENURUNKAN `artifacts_cited`
+ *  dari `output`, bukan mempercayai daftar terpisah yang bisa berbeda darinya. */
+export function artIdsPada(nilai: unknown): string[] {
+  const keluar: string[] = [];
+  kumpulkan(nilai, null, keluar);
+  return [...new Set(keluar)];
+}
+
 /** Pelanggaran = keluaran `discarded`. Envelope bersih mempertahankan statusnya
  *  (envelope hasil satu perbaikan sah berstatus "retry_fixed", Bagian 2).
  *  Masukan tidak pernah dimutasi. */

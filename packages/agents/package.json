@@ -1,0 +1,26 @@
+{
+  "name": "@varuna/agents",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./agen": "./src/agen.ts",
+    "./executor": "./src/executor.ts",
+    "./mesin": "./src/mesin.ts"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "dependencies": {
+    "@openai/agents": "^0.14.3",
+    "@varuna/core": "workspace:*",
+    "zod": "^4.1.12"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "typescript": "^5.9.3",
+    "vitest": "^3.2.4"
+  }
+}

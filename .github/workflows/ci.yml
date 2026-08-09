@@ -1,0 +1,38 @@
+# CI VARUNA: typecheck, lint, tes, build — tanpa secrets.
+# Skrip root memakai `pnpm -r --if-present`, jadi workspace baru (mis. packages/agents)
+# otomatis ikut begitu punya skrip bernama sama.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Versi pnpm dibaca dari field packageManager di package.json
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Test
+        run: pnpm test
+
+      - name: Build
+        run: pnpm build
