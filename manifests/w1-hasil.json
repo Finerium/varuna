@@ -1,0 +1,362 @@
+{
+ "gfw": {
+  "registrasi": "Buat akun GFW gratis lalu buat token mandiri (self-service, instan — tanpa approval manual) di https://globalfishingwatch.org/our-apis/tokens. Alur: (1) register akun Global Fishing Watch, (2) buat \"API Access Token\" di halaman tokens (isi nama aplikasi/deskripsi), (3) setujui terms of use + kewajiban atribusi. Token dikirim sebagai header Authorization: Bearer. Base URL API: https://gateway.api.globalfishingwatch.org/. Sumber: https://globalfishingwatch.org/our-apis/documentation dan https://api-doc.globalfishingwatch.org/ (diakses 2026-08-09).",
+  "endpoint": "Semua bisa dipanggil dengan token gratis nonkomersial (API GFW memang hanya untuk nonkomersial). (a) Events API: GET/POST https://gateway.api.globalfishingwatch.org/v3/events — tipe event: encounters, loitering, port visits, fishing events, AIS-off/gaps; contoh: GET /v3/events?datasets[0]=public-global-encounters-events:latest&start-date=2024-01-01&end-date=2024-12-31. (b) 4Wings report: GET/POST https://gateway.api.globalfishingwatch.org/v3/4wings/report — dataset public-global-sar-presence:latest (deteksi kapal Sentinel-1 SAR, klasifikasi deep learning ala Paolo 2024, cakupan 2017 s.d. ~5 hari lalu; format CSV/JSON/TIF) dan public-global-fishing-effort:latest (AIS apparent fishing effort); region via geojson atau region-id. (c) Vessels: GET https://gateway.api.globalfishingwatch.org/v3/vessels/search (dataset public-global-vessel-identity:latest). Sumber: https://api-doc.globalfishingwatch.org/ + https://globalfishingwatch.org/platform-update/2024-may-global-fishing-watch-apis-new-dataset-in-4wings-api-featuring-vessel-detections-from-sentinel-1-sar/ (diakses 2026-08-09).",
+  "portal_download": "Portal: https://globalfishingwatch.org/data-download/datasets (halaman JS-rendered; FAQ merujuk juga https://globalfishingwatch.org/datasets-and-code/). Unduhan BUTUH login akun GFW biasa (bukan token API) — registrasi gratis. Dataset relevan: (1) Vessel Detections from Sentinel-1 SAR (rilis Mei 2024, field length_m, presence_score, matching_score, fishing_score + SAR footprints), (2) AIS Apparent Fishing Effort (fleet-daily/gridded), (3) Transshipment/encounters, (4) vessel identity, (5) fixed infrastructure (bulk download). Sumber: https://globalfishingwatch.org/platform-update/2024-may-data-download-portal-new-dataset-released-featuring-vessel-detections-from-sentinel-1-sar/ , https://globalfishingwatch.org/faqs/how-can-i-obtain-global-fishing-watch-data-or-code/ (diakses 2026-08-09).",
+  "lisensi": "CC BY-NC 4.0. Klausa atribusi (deed resmi, verbatim): \"You must give appropriate credit, provide a link to the license, and indicate if changes were made.\" Klausa nonkomersial: \"You may not use the material for commercial purposes.\" Syarat GFW tambahan saat buat token: \"Agree to the terms of use and attribute Global Fishing Watch in anything you publish.\" Sumber: https://creativecommons.org/licenses/by-nc/4.0/ dan https://api-doc.globalfishingwatch.org/ (diakses 2026-08-09).",
+  "rate_limit": "Token gratis: 50.000 request/hari dan 1.550.000 request/bulan; melebihi limit → HTTP 429 dengan header rate-limit di respons. Batas khusus 4wings report: hanya 1 report konkuren per token (\"Your application token is not currently enabled to perform more than one concurrent report... contact us at apis@globalfishingwatch.org\" untuk menaikkan). Sumber: https://api-doc.globalfishingwatch.org/ (bagian Rate Limits, diakses 2026-08-09).",
+  "catatan": "Verifikasi via WebFetch/WebSearch 2026-08-09; halaman tokens dan data-download portal adalah SPA sehingga isi form tidak bisa dibaca headless — alur registrasi disimpulkan dari dokumentasi resmi (self-service, tidak ada indikasi approval manual; permintaan khusus seperti concurrent report / kebutuhan komersial memang via email apis@globalfishingwatch.org). Angka 50k/hari & 1,55jt/bulan berasal dari hasil pencarian atas dokumen API resmi, belum terkonfirmasi ulang di halaman rate-limit mentah — cek ulang setelah login. API v3 adalah versi aktif; v2 sudah deprecated."
+ },
+ "janji": {
+  "janji": [
+   {
+    "kutipan": "korelasi lintas sensor dan penyusunan berkas dikerjakan lapisan \\emph{multi-agent} di atas OpenAI Agents SDK",
+    "bagian": "Abstrak",
+    "kategori": "fitur-produk",
+    "pemenuhan": "Bangun lapisan agen nyata di OpenAI Agents SDK; tunjukkan trace run demo yang memanggil korelasi sensor dan penyusunan berkas.",
+    "flag_revisi": ""
+   },
+   {
+    "kutipan": "status kandidat terkonfirmasi memerlukan minimal dua sensor independen dan pelanggaran zona",
+    "bagian": "Abstrak",
+    "kategori": "mekanisme",
+    "pemenuhan": "Unit test tabel kebenaran fungsi status server-side: (2 sensor + zona)=TERKONFIRMASI, kombinasi lain tidak.",
+    "flag_revisi": ""
+   },
+   {
+    "kutipan": "setiap klaim harus menunjuk artefak tercatat",
+    "bagian": "Abstrak",
+    "kategori": "mekanisme",
+    "pemenuhan": "Test validator grounding: berkas dengan klaim ber-artifact_id di luar indeks ditolak otomatis.",
+    "flag_revisi": ""
+   },
+   {
+    "kutipan": "bukti tidak memadai menghasilkan ABSTAIN",
+    "bagian": "Abstrak",
+    "kategori": "mekanisme",
+    "pemenuhan": "Test kasus bukti tunggal/berkonflik pada golden set menghasilkan status ABSTAIN, bukan tebakan.",
+    "flag_revisi": ""
+   },
+   {
+    "kutipan": "penutupan rantai penuh dari deteksi hingga umpan balik patroli",
+    "bagian": "Abstrak",
+    "kategori": "fitur-produk",
+    "pemenuhan": "Demo end-to-end satu investigasi: deteksi SAR -> berkas -> paket patroli -> hasil pemeriksaan masuk kembali ke sistem.",
+    "flag_revisi": ""
+   },
+   {
+    "kutipan": "arsitektur yang memisahkan persepsi deterministik dari penalaran agen sehingga model tidak dapat menghasilkan deteksi fiktif",
+    "bagian": "1",
+    "kategori": "mekanisme",
+    "pemenuhan": "Test adversarial: prompt agen diminta menambah deteksi baru; verifikasi tidak ada deteksi masuk Evidence Store tanpa keluaran tool T1.",
+    "flag_revisi": ""
+   },
+   {
+    "kutipan": "PASHA Gate, yang menghitung status bukti di sisi server dari minimal dua sensor independen",
+    "bagian": "1",
+    "kategori": "mekanisme",
+    "pemenuhan": "Implementasi fungsi status di server (bukan di prompt); test bahwa field status usulan agen diabaikan oleh server.",
+    "flag_revisi": ""
+   },
+   {
+    "kutipan": "alur tertutup dari deteksi ke penugasan patroli dan umpan balik hasil yang dirancang mengikuti hukum acara Indonesia",
+    "bagian": "1",
+    "kategori": "fitur-produk",
+    "pemenuhan": "Demo loop patroli (A9->A10) berjalan; berkas memuat rujukan pasal (UU 45/2009, Pasal 5 UU ITE) pada template.",
+    "flag_revisi": ""
+   },
+   {
+    "kutipan": "status dihitung deterministik di server, usulan agen hanya metadata",
+    "bagian": "3",
+    "kategori": "mekanisme",
+    "pemenuhan": "Test: dua run dengan usulan agen berbeda tapi bukti sama menghasilkan status identik.",
+    "flag_revisi": ""
+   },
+   {
+    "kutipan": "validasi manusia menjadi tahap terakhir sebelum tindakan",
+    "bagian": "3",
+    "kategori": "fitur-produk",
+    "pemenuhan": "Antrean validasi di Pusat Komando: tidak ada paket patroli terkirim tanpa klik persetujuan analis (test alur).",
+    "flag_revisi": ""
+   },
+   {
+    "kutipan": "Dataset xView3-SAR (991 citra Sentinel-1, 243.018 objek terverifikasi) melatih dan menguji detektor",
+    "bagian": "3.1",
+    "kategori": "data",
+    "pemenuhan": "Unduh xView3-SAR, jalankan pelatihan/fine-tune atau inferensi model pemenang pada subset; catat jumlah citra/objek yang benar-benar dipakai.",
+    "flag_revisi": ""
+   },
+   {
+    "kutipan": "Data AIS dan kejadian turunannya (\\mbox{\\emph{encounter}}, \\emph{loitering}, kunjungan pelabuhan) diambil dari Global Fishing Watch (GFW) API v3",
+    "bagian": "3.1",
+    "kategori": "data",
+    "pemenuhan": "Kode klien GFW API v3 berjalan dengan token nyata; simpan respons events sebagai artefak demo.",
+    "flag_revisi": ""
+   },
+   {
+    "kutipan": "citra radar Sentinel-1 terbuka dari Copernicus",
+    "bagian": "3.1",
+    "kategori": "data",
+    "pemenuhan": "Skrip unduh scene Sentinel-1 IW GRD dari Copernicus Data Space untuk area demo (Natuna) yang dieksekusi nyata.",
+    "flag_revisi": ""
+   },
+   {
+    "kutipan": "data cuaca dan laut dari Open-Meteo dan Copernicus Marine Service",
+    "bagian": "3.1",
+    "kategori": "data",
+    "pemenuhan": "Hanya bisa dipenuhi jika cuaca benar-benar dipakai (mis. konteks berkas/kelayakan patroli); jika tidak sempat, hapus penyebutan.",
+    "flag_revisi": "perlu-revisi-redaksi: cuaca-laut disebut sebagai sumber tapi tidak pernah dipakai di pipeline/agen manapun dalam paper; klaim menggantung — pakai nyata atau hapus"
+   },
+   {
+    "kutipan": "\\emph{Runtime} agen memakai OpenAI Agents SDK dan Responses API",
+    "bagian": "3.1",
+    "kategori": "fitur-produk",
+    "pemenuhan": "Kode agen mengimpor Agents SDK, berjalan di Responses API; buktikan lewat trace/log run demo.",
+    "flag_revisi": ""
+   },
+   {
+    "kutipan": "Detektor SAR (T1) mengikuti solusi pemenang xView3-SAR: arsitektur \\emph{encoder-decoder} gaya U-Net, tulang punggung EfficientNet-B4 dan B5, pusat objek sebagai \\emph{heatmap}, dan \\emph{ensembling}",
+    "bagian": "3.2",
+    "kategori": "mekanisme",
+    "pemenuhan": "Jalankan kode terbuka pemenang xView3 (atau reimplementasi satu backbone) dan inferensi pada scene demo.",
+    "flag_revisi": "perlu-revisi-redaksi: dua backbone + ensembling berat untuk semifinal; pertimbangkan melonggarkan jadi 'mengikuti arsitektur pemenang (U-Net + EfficientNet)' tanpa mengunci B4+B5+ensemble"
+   },
+   {
+    "kutipan": "target desain VARUNA diuji pada \\emph{holdout} xView3, performa dekat pantai dilaporkan terpisah",
+    "bagian": "3.2",
+    "kategori": "eksperimen-metrik",
+    "pemenuhan": "Evaluasi pada split public/validation xView3 (berlabel), pisahkan subset near-shore vs offshore; laporkan keduanya.",
+    "flag_revisi": "perlu-revisi-redaksi: label holdout/test xView3 tidak dirilis publik dan leaderboard kompetisi sudah tutup; ganti redaksi menjadi 'split validasi publik xView3'"
+   },
+   {
+    "kutipan": "Integritas AIS (T2) memakai tiga detektor anomali (jeda transmisi, pemalsuan posisi, ganti identitas)",
+    "bagian": "3.2",
+    "kategori": "fitur-produk",
+    "pemenuhan": "Implementasi tiga detektor rule-based + test pada lintasan sintetis: gap terdeteksi, lompatan posisi mustahil terdeteksi, MMSI swap terdeteksi.",
+    "flag_revisi": ""
+   },
+   {
+    "kutipan": "Klasifikasi perilaku (T3) memisahkan pola menangkap ikan dari transit dengan model temporal",
+    "bagian": "3.2",
+    "kategori": "fitur-produk",
+    "pemenuhan": "Latih model temporal sederhana pada data berlabel GFW (fishing effort) dan laporkan akurasi; atau revisi ke heuristik kecepatan/tortuosity jika waktu kurang.",
+    "flag_revisi": "perlu-revisi-redaksi (opsional): 'model temporal' tanpa spesifikasi; jika demo memakai heuristik, ubah redaksi agar tidak menjanjikan model terlatih"
+   },
+   {
+    "kutipan": "alih muatan memakai definisi operasional: dua kapal dalam radius 500 meter minimal dua jam pada kecepatan di bawah dua knot, sedikitnya 10 kilometer dari tempat berlabuh",
+    "bagian": "3.2",
+    "kategori": "mekanisme",
+    "pemenuhan": "Implementasi aturan deterministik + unit test kasus batas (499 m vs 501 m, 1,9 vs 2,1 knot, 1h59m vs 2h01m).",
+    "flag_revisi": ""
+   },
+   {
+    "kutipan": "Aturan zona (T4) bekerja deterministik pada batas ZEE dan WPPNRI",
+    "bagian": "3.2",
+    "kategori": "fitur-produk",
+    "pemenuhan": "Point-in-polygon dengan shapefile ZEE/WPPNRI resmi (Marine Regions / KKP) + test titik di dalam/luar zona.",
+    "flag_revisi": ""
+   },
+   {
+    "kutipan": "Evidence Store (T5) menyimpan artefak tiap investigasi dan menerbitkan indeks \\emph{grounding}-nya",
+    "bagian": "3.2",
+    "kategori": "fitur-produk",
+    "pemenuhan": "Implementasi store (folder/objek + manifest JSON per investigasi); test indeks memuat semua artefak yang dirujuk berkas.",
+    "flag_revisi": ""
+   },
+   {
+    "kutipan": "Tiap lintasan diinterpolasi ke waktu akuisisi; kandidat pasangan dibatasi ambang kelayakan jarak, kecepatan maksimum wajar dikali selisih waktu",
+    "bagian": "3.2",
+    "kategori": "mekanisme",
+    "pemenuhan": "Implementasi interpolasi + gating kelayakan; test lintasan sintetis yang seharusnya lolos/gugur gate.",
+    "flag_revisi": ""
+   },
+   {
+    "kutipan": "Biaya penugasan menggabungkan jarak ternormalisasi, kecocokan panjang kapal (estimasi SAR terhadap registrasi), dan konsistensi haluan; penugasannya diselesaikan algoritme Hungarian",
+    "bagian": "3.2",
+    "kategori": "mekanisme",
+    "pemenuhan": "Pakai scipy.optimize.linear_sum_assignment dengan matriks biaya 3 komponen; test kasus kecil dengan penugasan optimal diketahui.",
+    "flag_revisi": ""
+   },
+   {
+    "kutipan": "Deteksi tanpa pasangan AIS ditandai sebagai kandidat gelap (\\emph{dark candidate})",
+    "bagian": "3.2",
+    "kategori": "mekanisme",
+    "pemenuhan": "Test fusi: deteksi tanpa pasangan dalam gate kelayakan keluar berlabel dark_candidate.",
+    "flag_revisi": ""
+   },
+   {
+    "kutipan": "patroli menerima area prioritas berikut berkasnya, bukan titik tunggal",
+    "bagian": "3.2",
+    "kategori": "fitur-produk",
+    "pemenuhan": "Implementasi perhitungan area pencarian (pusat = observasi terakhir, radius = v_max x delta_t, dipotong haluan+zona); tampilkan poligon area di antarmuka Patroli.",
+    "flag_revisi": ""
+   },
+   {
+    "kutipan": "Lapisan agen berisi sebelas agen berpola \\emph{agents-as-tools}: orkestrator (A0) memanggil sepuluh spesialis (A1 sampai A10) sebagai \\emph{tool}",
+    "bagian": "3.3",
+    "kategori": "fitur-produk",
+    "pemenuhan": "Definisikan A0-A10 di Agents SDK dan buktikan lewat trace bahwa A0 memanggil spesialis sebagai tool; atau revisi jumlah agen jika sebagian digabung saat build.",
+    "flag_revisi": "perlu-revisi-redaksi (risiko): 11 agen adalah angka yang bisa diaudit; pastikan hitungan di kode persis 11 atau longgarkan redaksi"
+   },
+   {
+    "kutipan": "Seluruh keluaran berskema JSON dengan \\emph{structured outputs} ketat; keluaran gagal validasi mendapat satu kali perbaikan berdasarkan pesan galat dan dibuang bila tetap gagal",
+    "bagian": "3.3",
+    "kategori": "mekanisme",
+    "pemenuhan": "Semua agen pakai strict structured outputs; test jalur retry-sekali-lalu-buang dengan skema yang sengaja digagalkan.",
+    "flag_revisi": ""
+   },
+   {
+    "kutipan": "tiap investigasi terekam dengan \\emph{tracing} penuh untuk audit",
+    "bagian": "3.3",
+    "kategori": "fitur-produk",
+    "pemenuhan": "Aktifkan tracing Agents SDK; tunjukkan satu trace lengkap investigasi demo yang bisa diputar ulang.",
+    "flag_revisi": ""
+   },
+   {
+    "kutipan": "indeks \\emph{grounding} menolak klaim berartefak di luar daftar",
+    "bagian": "3.3",
+    "kategori": "mekanisme",
+    "pemenuhan": "Test negatif: berkas dengan referensi artefak fiktif ditolak gate sebelum sampai analis.",
+    "flag_revisi": ""
+   },
+   {
+    "kutipan": "dua sensor independen dan pelanggaran zona menghasilkan kandidat terkonfirmasi (meniru asas dua alat bukti hukum acara); satu sensor, atau dua sensor tanpa pelanggaran zona, terindikasi; bukti berkonflik atau kurang menghasilkan ABSTAIN",
+    "bagian": "3.3",
+    "kategori": "mekanisme",
+    "pemenuhan": "Unit test tabel status lengkap (semua kombinasi sensor x zona x konflik) pada fungsi server.",
+    "flag_revisi": ""
+   },
+   {
+    "kutipan": "deteksi SAR yang berimpit jeda transmisi jejak historisnya (T2) terhitung dua sensor independen",
+    "bagian": "3.3",
+    "kategori": "mekanisme",
+    "pemenuhan": "Implementasi uji kelayakan kinematik dari titik hilang sinyal ke posisi deteksi + test kasus layak/tak layak.",
+    "flag_revisi": ""
+   },
+   {
+    "kutipan": "Usia bukti ikut dihitung: bobot artefak meluruh; kandidat tanpa penguatan lintasan berikutnya turun status",
+    "bagian": "3.3",
+    "kategori": "mekanisme",
+    "pemenuhan": "Implementasi fungsi peluruhan + test: kandidat terkonfirmasi tanpa artefak baru setelah N hari turun ke terindikasi.",
+    "flag_revisi": ""
+   },
+   {
+    "kutipan": "Penyaring diksi menolak kata bernada putusan",
+    "bagian": "3.3",
+    "kategori": "mekanisme",
+    "pemenuhan": "Wordlist bahasa Indonesia (mis. 'terbukti bersalah', 'pelaku') + test berkas mengandung kata terlarang ditolak/ditandai.",
+    "flag_revisi": ""
+   },
+   {
+    "kutipan": "siklus cepat memproses aliran AIS per jam",
+    "bagian": "3.3",
+    "kategori": "fitur-produk",
+    "pemenuhan": "Scheduler per jam (cron/loop) yang menarik AIS dan memperbarui kandidat; tunjukkan dua siklus berturut di demo.",
+    "flag_revisi": ""
+   },
+   {
+    "kutipan": "deteksi diukur dengan F1 dan skor agregat xView3 pada \\emph{holdout} (target desain: F1 lepas pantai minimal 0,75)",
+    "bagian": "3.4",
+    "kategori": "eksperimen-metrik",
+    "pemenuhan": "Hitung F1 offshore dan skor agregat xView3 dengan metric script resmi xView3 pada split validasi publik; laporkan angka aktual vs target 0,75.",
+    "flag_revisi": "perlu-revisi-redaksi: kata 'holdout' — label test xView3 tidak publik; ganti ke split validasi publik agar bisa diuji"
+   },
+   {
+    "kutipan": "asosiasi dengan presisi dan \\emph{recall}",
+    "bagian": "3.4",
+    "kategori": "eksperimen-metrik",
+    "pemenuhan": "Buat ground-truth asosiasi (SAR-AIS berpasangan diketahui dari xView3/AIS matched) dan laporkan presisi/recall algoritme Hungarian.",
+    "flag_revisi": ""
+   },
+   {
+    "kutipan": "ABSTAIN pada rentang awal 10 sampai 25 persen",
+    "bagian": "3.4",
+    "kategori": "eksperimen-metrik",
+    "pemenuhan": "Ukur proporsi ABSTAIN pada golden set investigasi; laporkan angka dan bandingkan dengan rentang 10-25%.",
+    "flag_revisi": ""
+   },
+   {
+    "kutipan": "Satu syarat mutlak: rilis gagal bila satu klaim saja lolos tanpa artefak pendukung, berapa pun presisinya",
+    "bagian": "3.4",
+    "kategori": "eksperimen-metrik",
+    "pemenuhan": "Audit grounding otomatis di CI/harness: parse semua klaim berkas golden set, verifikasi 100% punya artefak; jadikan gate rilis demo.",
+    "flag_revisi": ""
+   },
+   {
+    "kutipan": "\\emph{Golden set} investigasi diputar ulang melalui \\emph{trace}; tiap perubahan \\emph{prompt}, ambang, atau model diuji regresi sebelum rilis",
+    "bagian": "3.4",
+    "kategori": "mekanisme",
+    "pemenuhan": "Susun golden set (5-10 investigasi berlabel) + skrip replay/regresi yang membandingkan status akhir terhadap ekspektasi.",
+    "flag_revisi": ""
+   },
+   {
+    "kutipan": "Demonstrasi menjalankan seluruh alur, termasuk umpan balik patroli, dari \\emph{seed} deterministik agar reprodusibel, dengan panggilan agen langsung ke model, bukan rekaman",
+    "bagian": "3.4",
+    "kategori": "komitmen-eksplisit",
+    "pemenuhan": "Skrip demo dengan seed tetap untuk data/skenario; agen dipanggil live. Verifikasi status akhir stabil antar-run (status deterministik di server walau narasi LLM bervariasi).",
+    "flag_revisi": "perlu-revisi-redaksi (nuansa): panggilan LLM live tidak deterministik; persempit klaim ke 'reprodusibel pada tingkat data, artefak, dan status' agar bisa diuji jujur"
+   },
+   {
+    "kutipan": "hasil pemeriksaan patroli menjadi masukan kalibrasi ambang (A10)",
+    "bagian": "3.4",
+    "kategori": "fitur-produk",
+    "pemenuhan": "Implementasi A10: input hasil pemeriksaan (benar/salah sasaran) mengubah satu ambang nyata (mis. ambang biaya asosiasi) dan tercatat di log; demokan sekali.",
+    "flag_revisi": ""
+   },
+   {
+    "kutipan": "Empat antarmuka melayani empat peran: Pusat Komando, dasbor analis dengan peta kandidat, status bukti, dan antrean validasi; Patroli, aplikasi lapangan penerima paket sasaran yang mengirim balik hasil pemeriksaan (A10); Konsol Skenario memutar ulang \\emph{golden set} untuk pelatihan dan demonstrasi; Portal Publik, statistik agregat tanpa identitas kapal sebelum berkekuatan hukum",
+    "bagian": "3.5",
+    "kategori": "fitur-produk",
+    "pemenuhan": "Bangun keempat antarmuka dalam satu web app; checklist fitur per antarmuka persis seperti klausanya (peta+status+antrean; kirim-balik hasil; replay golden set; agregat tanpa identitas).",
+    "flag_revisi": ""
+   },
+   {
+    "kutipan": "\\emph{worker} GPU mengolah citra tiap lintasan menjadi artefak di penyimpanan objek, agen berjalan pada Responses API",
+    "bagian": "3.5",
+    "kategori": "mekanisme",
+    "pemenuhan": "Worker inferensi (GPU lokal/Kaggle) menghasilkan artefak deteksi ke object storage; jika demo praproses batch, revisi redaksi 'tiap lintasan'.",
+    "flag_revisi": "perlu-revisi-redaksi (opsional): 'tiap lintasan' menyiratkan pipeline kontinu; untuk semifinal cukup worker yang berjalan on-demand pada scene demo"
+   },
+   {
+    "kutipan": "klien kompatibel-OpenAI memungkinkan migrasi \\emph{on-premise} ke model berbobot terbuka",
+    "bagian": "3.5",
+    "kategori": "mekanisme",
+    "pemenuhan": "Demokan satu run agen dengan base_url dialihkan ke server model berbobot terbuka (mis. vLLM/Ollama) tanpa mengubah kode agen.",
+    "flag_revisi": ""
+   },
+   {
+    "kutipan": "di semifinal tim membangun keempat antarmuka dan alur demo",
+    "bagian": "4 (Kesimpulan)",
+    "kategori": "komitmen-eksplisit",
+    "pemenuhan": "Ini komitmen paling eksplisit dan pasti diaudit juri: keempat antarmuka harus ada dan alur demo end-to-end harus jalan; jadikan definisi selesai (DoD) build semifinal.",
+    "flag_revisi": ""
+   }
+  ]
+ },
+ "sarfish": {
+  "status": "sukses",
+  "struktur": "/Users/ghaisan/Documents/Datathon/varuna/data/raw/sarfish/: README.md (14,557 B), .gitattributes (2,307 B), GRD/validation/S1B_IW_GRDH_1SDV_20200803T075721_..._033A.SAFE.zip (878,269,363 B, verifikasi ls -la, cocok dengan ukuran remote HF). Isi zip (unzip -l, 31 file, 1,697,826,092 B uncompressed): measurement/s1b-iw-grd-vh-..._SARFish.tiff (842,664,328 B), measurement/s1b-iw-grd-vv-..._SARFish.tiff (842,664,328 B), *_xView3_shoreline.npy (2,057,696 B), *_global_shoreline_vector.npy (3,847,264 B), annotation/*.xml (product annotation VH+VV), annotation/calibration/{calibration,noise}-*.xml, manifest.safe, preview/quick-look.png. File SLC (SLC/validation/...SAFE.zip, 3,765,751,298 B) SENGAJA TIDAK diunduh - tidak diperlukan untuk smoke test GRD dan berukuran 3.7 GB; bisa diunduh belakangan dengan snapshot_download allow_patterns=[\"SLC/*\"].",
+  "format_citra": "GRD (Ground Range Detected) Sentinel-1B IW, produk SAFE standar ESA. Dua band polarisasi: VH dan VV, masing-masing GeoTIFF UInt16 magnitude-detected, pixel spacing 10x10 m (sesuai README). Juga tersedia SLC (Complex Int16, 2.3x14.1 m) di repo tapi tidak diunduh. Scene: S1B_IW_GRDH_1SDV_20200803T075721 (partisi validation, 1 produk koinsiden GRD+SLC).",
+  "format_label": "TIDAK ADA file label di repo HF ini - repo hanya berisi citra. Label SARFish diturunkan dari xView3-SAR dan harus diunduh terpisah dari DIU (https://iuu.xview.us/download-links). Skema label (per README): partition, product_type {GRD,SLC}, scene_id (xView3 scene ID), detect_id, {product_type}_product_identifier, detect_lat, detect_lon, detect_scene_row, detect_scene_column, top/left/bottom/right (bbox bila tersedia), vessel_length_m (dari AIS bila tersedia), source {AIS, AIS/Manual, Manual}, is_vessel (bool), is_fishing (bool), global_shoreline_vector_distance_from_shore_km, xView3_shoreline_vector_distance_from_shore_km, confidence {HIGH,MEDIUM,LOW}. Jadi: ya ada is_vessel/is_fishing/panjang/koordinat/confidence/source korelasi AIS - tetapi di file label eksternal, bukan di sampel HF ini.",
+  "layak_smoke_test": "YA. Detektor juara xView3 mengharapkan input GRD VH+VV GeoTIFF UInt16 Sentinel-1 - persis yang ada di zip ini (s1b-iw-grd-vh/vv-*_SARFish.tiff, format SAFE lengkap dengan calibration/noise XML bila pipeline butuh normalisasi). Smoke test (model berjalan end-to-end dan menghasilkan deteksi masuk akal) bisa langsung dilakukan tanpa label. Catatan minor: (1) tiff bernama *_SARFish - piksel identik turunan GRD asli tapi verifikasi cepat dtype/shape dengan gdalinfo/rasterio saat ekstraksi; (2) evaluasi F1 kuantitatif butuh label DIU (akun iuu.xview.us sudah masuk rencana G2); (3) scene ini partisi validation SARFish sehingga label tersedia bila diunduh.",
+  "catatan": "Unduhan via huggingface_hub snapshot_download di venv scratchpad (pip sistem diblokir PEP 668). allow_patterns=[\"README.md\",\".gitattributes\",\"GRD/*\"] - SLC 3.7 GB dilewati secara sengaja (tidak relevan untuk detektor GRD); total terpakai disk ~878 MB, sisa disk 124 GB. Zip belum diekstrak (butuh ~1.7 GB tambahan saat ekstraksi; unzip -l sudah memverifikasi integritas daftar isi). Venv sekali pakai: /private/tmp/claude-501/.../scratchpad/hfenv."
+ },
+ "model": {
+  "status": "PARTIAL: kedua repo ter-clone + seluruh analisis kode/README selesai; traced_ensemble.jit MASIH diunduh di background (gh release download, task bufibach3; ~61 MB dari 1.244 MB saat laporan dipaksa keluar). sha256 dan uji torch.jit.load CPU belum bisa dijalankan sampai unduhan selesai — skrip uji sudah siap.",
+  "bobot": "Target: /Users/ghaisan/Documents/Datathon/varuna/models/xview3-first-place/weights/traced_ensemble.jit — ukuran resmi dari GitHub API release 1.1 = 1.304.877.218 bytes (~1,3 GB); saat laporan ls -la menunjukkan 61.356.672 bytes (unduhan berjalan). Asset kedua SUDAH selesai: 1128_b5_b4_vs2_fliplr_test__config_0.300_vsl_0.338_fsh_0.350_step_1536_tta_fliplr.yaml (307 bytes, terverifikasi cat: path ensemble jit + inference tile_size 2048/step 1536/fp16/batch 1 + thresholds 0.3/0.338/0.35). Hanya 2 asset di release 1.1, tidak ada file lain.",
+  "sha256": "BELUM DIHITUNG — file belum utuh. Setelah selesai jalankan: shasum -a 256 /Users/ghaisan/Documents/Datathon/varuna/models/xview3-first-place/weights/traced_ensemble.jit lalu cocokkan ukuran = 1304877218 bytes. Catatan: GitHub API mengembalikan digest=null untuk asset ini, jadi tidak ada sha256 resmi pembanding; sha256 lokal akan jadi baseline provenance kita.",
+  "input_spec": "Input: tensor (batch, 2, 2048, 2048) fp16 di GPU. Kanal = [vh, vv] — URUTAN VH DULU (docker_inference.py: channels=[\"vh\",\"vv\"]). Sumber: VH_dB.tif dan VV_dB.tif dari scene GRD xView3 (nilai dB, 10 m/pixel; xview3/dataset/io.py channel_name_to_file_name). Normalisasi: SigmoidNormalization(midpoint=-20, temperature=0.18) → sigmoid((x_dB - (-20)) * 0.18) menghasilkan rentang [0..1] (xview3/dataset/normalization.py); piksel missing/NaN diisi 0. Tiling: 2048x2048 dengan step 1536 (overlap 512), prediksi diakumulasi antar-tile; TTA fliplr SUDAH terkompilasi di dalam traced ensemble. Output: peta stride-2 CENTERNET_OUTPUT_{OBJECTNESS,VESSEL,FISHING}_MAP + SIZE + OFFSET; decode via MultilabelCircleNetCoder(image_size=(2048,2048), output_stride=2, max_objects=2048); thresholds final: objectness 0.300, is_vessel 0.338, is_fishing 0.350. Perintah inference standalone: python docker_inference.py --image_folder <dir> --scene_ids <id,..> --output out.csv --config <yaml release>. Reproduksi penuh: XVIEW3_DIR=... python submit_multilabel_ensemble.py configs/inference/1128_b5_b4_vs2_fliplr.yaml",
+  "split_training_juara": "KUNCI untuk klaim kontaminasi: SEMUA 12 model ensemble dilatih memakai split VALIDATION xView3 sebagai data training. Rincian dari scripts/*.sh + configs/dataset/ + xview3/dataset/splitters/: (1) b4_unet_s2 & v2s_unet_s2 (8 model) → dataset=leaky_valid_4fold → ValidationOnlySplitter: training HANYA dari validation.csv, dibagi StratifiedGroupKFold 4-fold (group=scene_id, stratify=distance_from_shore<2km) — sengaja \"leaky\" antar lokasi geografis; (2) b5_unet_s2 (4 model) → dataset=full_4fold → FullDatasetWithHoldoutSplitter: validation.csv + train.csv (minus holdout = 1 scene per lokasi dari train, dipakai tuning hyperparameter/threshold). README eksplisit: \"The training dataset was not used in the training of the models at all\" (berlaku untuk b4/v2s; train dianggap terlalu noisy) dan mengakui data leak geografis antara train/validation/public test (~42 lokasi unik, scene lokasi sama muncul lintas split). IMPLIKASI: evaluasi model juara ini pada split train ATAU validation xView3 = terkontaminasi; hanya scene public test / holdout (atau data eksternal) yang bersih.",
+  "torch_load_cpu": "BELUM DIUJI — menunggu unduhan selesai. Persiapan sudah beres: venv dengan torch 2.13.0 (CPU) di /private/tmp/claude-501/-Users-ghaisan-Documents-Datathon/8aa7dc64-e926-4305-b5b6-5e4a3f3b577a/scratchpad/torchenv; skrip uji load-only di scratchpad/load_test.py (torch.jit.load map_location=cpu, print jumlah parameter + graph ok, TANPA inference). Jalankan setelah file utuh. Catatan risiko: jit ditrace dengan torch 1.10 — load di 2.13 biasanya bisa (TorchScript backward-compatible) tapi jika gagal, fallback pin torch<2 di venv terpisah. docker_inference.py hardcode map_location=\"cuda\" — untuk CPU harus diganti.",
+  "kebutuhan_compute": "Torch resmi: environment.yml → python 3.9.2, torch==1.10.0+cu113, torchvision==0.11.1+cu113 (README menyebut PyTorch 1.9 saat training). Training: 2x RTX 3090, DDP/FP16/SyncBN, ~6 jam/fold (B4, V2S), ~9 jam/fold (B5). Tracing ensemble: butuh GPU 24 GB (README; bisa dilewati karena kita unduh traced jit siap pakai). Inference: ensemble 12 model + fliplr TTA hingga ~12 menit per scene di GPU, tile 2048 batch 1 fp16; docker resmi: ekhvedchenyateam/xview3:72. Estimasi VRAM inference satu tile fp16 jauh di bawah 24 GB, tapi CPU-only akan sangat lambat (12 model x TTA per tile).",
+  "catatan": "Path: repo juara /Users/ghaisan/Documents/Datathon/varuna/models/xview3-first-place (clone depth 1, verified ls: README.md, docker_inference.py, submit_multilabel_ensemble.py, configs/, xview3/, scripts/); repo metrik resmi /Users/ghaisan/Documents/Datathon/varuna/models/xview3-reference (reference/metric.py — perintah resmi: python reference/metric.py --inference_file pred.csv --label_file gt.csv --distance_tolerance 200 --shore_tolerance 2 --drop_low_detect --costly_dist; juga inference.py model referensi + train_reference.ipynb). Skor juara: public LB 0.603, holdout 0.617 (agregat). Arsitektur: CircleNet (CenterNet+U-Net, stride 2), ensemble 12 = {B4,B5,V2S} x 4 fold. gh auth aktif (akun Finerium) — unduhan release via gh berjalan; ketika task background bufibach3 selesai, verifikasi: (a) ls -la = 1304877218 bytes, (b) shasum -a 256, (c) scratchpad/torchenv/bin/python scratchpad/load_test.py. Monitor progres bdf8yj2qp juga aktif (lapor tiap ~200MB, timeout 60 menit)."
+ },
+ "eez": {
+  "status": "sukses",
+  "file": "/Users/ghaisan/Documents/Datathon/varuna/data/raw/eez/idn_eez_v12.shp (27,168,292 B) + .shx/.dbf/.prj/.cst; arsip asli /Users/ghaisan/Documents/Datathon/varuna/data/raw/eez/idn_eez_v12_shapezip.zip (19,247,225 B); metadata SOURCE.txt",
+  "format": "ESRI Shapefile (SHAPE-ZIP dari WFS GeoServer Marine Regions), CRS:84 / WGS84 lon-lat (di-request ulang eksplisit agar sumbu tidak tertukar lat/lon)",
+  "indonesia_ada": "ya - 1 fitur polygon: mrgid=8492 'Indonesian Exclusive Economic Zone', iso_ter1=IDN, territory1=Indonesia, pol_type=200NM, area_km2=6019205; 6151 ring, 1.696.471 titik; bbox lon 92.05..141.40, lat -13.94..7.78 (cocok Indonesia)",
+  "lisensi": "CC-BY 4.0 - Flanders Marine Institute (2023), Maritime Boundaries Geodatabase v12, doi:10.14284/632",
+  "catatan": "Form unduh marineregions.org dilewati: jalur WFS resmi geo.vliz.be berhasil (sumber sama, layer live = rilis World EEZ v12). GeoJSON penuh gagal 2x (timeout lalu IncompleteRead di 2.3MB) - server memutus stream besar; SHAPE-ZIP terkompresi berhasil utuh (zip testzip=None). Verifikasi via parsing header SHP/DBF stdlib (bukan GDAL). Trap yang sudah dibereskan: WFS 2.0 EPSG:4326 default urn lat/lon - unduhan final pakai srsName=CRS:84 sehingga x=lon, y=lat benar. Hanya polygon 200NM utama (mrgid 8492); joint-regime area (mis. dengan Australia) tidak disertakan - tambah filter iso_ter1='IDN' pada layer eez jika perlu."
+ }
+}
