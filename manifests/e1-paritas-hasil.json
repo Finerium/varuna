@@ -1,0 +1,303 @@
+{
+ "id": "e1-paritas",
+ "tanggal": "2026-08-09",
+ "tujuan": "Membuktikan rantai praproses SAR sendiri (tanpa SNAP) menghasilkan raster yang sepadan dengan raster resmi xView3, supaya scene CDSE baru boleh dimasukkan ke detektor yang dilatih di xView3.",
+ "pasangan": {
+  "xview3_scene": "0bc18737319f2ce6p",
+  "esa_twin": "S1B_IW_GRDH_1SDV_20201014T062014_20201014T062039_023805_02D3C1_C2DF",
+  "sumber_pasangan": "manifests/e1-paritas.txt"
+ },
+ "skrip": {
+  "path": "scripts/sar_grd_to_xview3.py",
+  "perintah_proses": "varuna/.venv/bin/python scripts/sar_grd_to_xview3.py proses <SAFE.zip> <outdir> --ref <VH_dB.tif resmi>",
+  "perintah_banding": "varuna/.venv/bin/python scripts/sar_grd_to_xview3.py banding <punyaku.tif> <resmi.tif> --cari-geseran 8",
+  "swakaji": "scripts/sar_grd_to_xview3.py uji",
+  "pustaka": "rasterio 1.5.1 (GDAL 3.12.4), numpy 2.5.1, scipy 1.18.0; TANPA SNAP"
+ },
+ "format_raster_resmi_terverifikasi": {
+  "dtype": "float16",
+  "nodata": -32768.0,
+  "lebar": 30217,
+  "tinggi": 22598,
+  "crs": "EPSG:32631",
+  "transform": [
+   10.0,
+   0.0,
+   203402.1998339714,
+   0.0,
+   -10.0,
+   6793708.525079013
+  ],
+  "tiled": false,
+  "blok": [
+   1,
+   30217
+  ],
+  "kompresi": "None",
+  "tags": {
+   "AREA_OR_POINT": "Area"
+  },
+  "catatan": "Header dibaca langsung dengan rasterio dari scene resmi. KOREKSI atas asumsi awal: dtype float16, BUKAN float32. nodata -32768 benar. Raster striped (blockysize=1), tanpa tiling dan tanpa kompresi. Keluaran skrip meniru semua ini persis."
+ },
+ "konfigurasi_terpilih": {
+  "skala_derau": {
+   "VH": 0.5,
+   "VV": 1.0,
+   "HV": 0.5,
+   "HH": 1.0
+  },
+  "halus_derau_px": 64,
+  "operator_derau": "multiplikatif: sigma0 = DN^2/A^2 * (1 - k*N_lokal/T_lokal), rerata lokal kotak 64x64 px atas piksel valid, lantai rasio 0.05",
+  "alasan": "Pengurangan derau per piksel (k=1, cara baku) membuat 44 persen piksel VH di atas laut jadi negatif: VH scene ini berada di sekitar NESZ (sigma0 total -25.75 dB vs NESZ -26.88 dB pada baris 8000). Raster resmi xView3 tidak punya lubang dan ENL-nya utuh (3.95 pada petak laut 1024^2, bandingkan VV resmi 4.19), jadi xView3 jelas tidak mengurangi derau per piksel lalu memangkas. Operator multiplikatif membetulkan tingkat rerata tanpa merusak tekstur dan tanpa kehilangan satu piksel pun.",
+  "kalibrasi_k": {
+   "metode": "sapu k pada 12 pita x 256 baris (4.2e7 piksel per k) memakai raster k=0 + raster derau; perintah `sapu-derau`",
+   "mae_db_per_k_halus64": {
+    "VH": {
+     "0": 2.918,
+     "0.2": 2.314,
+     "0.3": 2.058,
+     "0.4": 1.87,
+     "0.45": 1.817,
+     "0.5": 1.802,
+     "0.55": 1.837,
+     "0.6": 1.937,
+     "0.7": 2.422,
+     "0.8": 3.449,
+     "1.0": 6.723
+    },
+    "VV": {
+     "0": 1.461,
+     "0.2": 1.416,
+     "0.3": 1.395,
+     "0.4": 1.376,
+     "0.5": 1.358,
+     "0.6": 1.343,
+     "0.7": 1.329,
+     "0.8": 1.317,
+     "1.0": 1.3
+    }
+   },
+   "terpilih": {
+    "VH": 0.5,
+    "VV": 1.0
+   },
+   "catatan": "VV: k=1 (LUT derau ESA apa adanya) memang optimum -> LUT ESA benar untuk ko-pol. VH: optimum di k=0.5, LUT ESA melebihkan daya derau kanal silang di atas laut. k=0.5 adalah parameter TERPASANG pada satu scene pembanding; belum divalidasi silang pada scene kedua.",
+   "kepekaan_sisi_kotak": "MAE VH pada k=0.5 = 1.8268 / 1.8056 / 1.8016 / 1.8018 / 1.8025 dB untuk sisi kotak 16 / 32 / 64 / 128 / 256 px -> praktis tidak peka; 64 dipilih sebagai default."
+  }
+ },
+ "penyelarasan": {
+  "cara": "Grid disamakan DI HULU, bukan dengan me-resample raster resmi: `proses --ref` mengambil CRS + transform + ukuran raster resmi apa adanya sebagai grid tujuan warp TPS. Raster resmi tidak pernah disentuh/di-reproject, jadi metrik dihitung piksel-lawan-piksel pada grid yang identik bit-per-bit di header.",
+  "grid": {
+   "crs": "EPSG:32631",
+   "transform": [
+    10.0,
+    0.0,
+    203402.1998339714,
+    0.0,
+    -10.0,
+    6793708.525079013
+   ],
+   "lebar": 30217,
+   "tinggi": 22598,
+   "spasi_m": 10.0
+  },
+  "geokoding_punyaku": "geolocationGrid (210 titik) sebagai GCP -> GDAL METHOD=GCP_TPS, resample bilinear di domain LINEAR lalu 10*log10; transformer aproksimasi GDAL toleransi 0.125 px",
+  "sisa_registrasi_px": {
+   "geseran_terbaik_petak_tengah_1024": [
+    1,
+    5
+   ],
+   "geseran_kasar_3_petak_4096_downsample8": [
+    0,
+    8
+   ],
+   "tafsir": "sisa ~5-8 px (50-80 m) hampir seluruhnya lintas-lintasan (arah range). Besarnya cocok dengan beda tinggi permukaan acuan: undulasi geoid EGM96 di Laut Utara ~ +45 m, dan 45/tan(38.5 derajat) = 56 m = 5.6 px. geolocationGrid ESA memberi height ~ 0.00035 m (elipsoidal), sedangkan rantai bergaya SNAP/Range-Doppler menggeokode pada geoid. TIDAK dikoreksi di run ini: koreksi butuh model geoid (pyproj + grid EGM96 tidak terpasang di venv). Jalur naik: geser titik geolocationGrid sejauh N/tan(incidenceAngle) di arah range sebelum dijadikan GCP.",
+   "dampak": "metrik dilaporkan dua kali: dengan geseran (utama) dan tanpa geseran"
+  }
+ },
+ "metrik": {
+  "VH": {
+   "dengan_geseran": {
+    "n_piksel_valid_bersama": 424477934,
+    "n_valid_punyaku": 424553120,
+    "n_valid_resmi": 424498555,
+    "pearson_r": 0.679331,
+    "mae_db": 1.778681,
+    "bias_median_db": 0.283631,
+    "bias_mean_db": 0.235159,
+    "persen_dalam_1db": 34.37769,
+    "overlap_histogram": 0.958451,
+    "mean_db_punyaku": -29.413184,
+    "mean_db_resmi": -29.648344,
+    "sd_db_punyaku": 2.82131,
+    "sd_db_resmi": 2.731805,
+    "geser_baris_kolom": [
+     1,
+     5
+    ]
+   },
+   "tanpa_geseran": {
+    "n_piksel_valid_bersama": 424393318,
+    "n_valid_punyaku": 424553120,
+    "n_valid_resmi": 424498555,
+    "pearson_r": 0.611413,
+    "mae_db": 1.922098,
+    "bias_median_db": 0.206935,
+    "bias_mean_db": 0.234759,
+    "persen_dalam_1db": 33.305686,
+    "overlap_histogram": 0.958451,
+    "mean_db_punyaku": -29.413812,
+    "mean_db_resmi": -29.648571,
+    "sd_db_punyaku": 2.821149,
+    "sd_db_resmi": 2.731876,
+    "geser_baris_kolom": [
+     0,
+     0
+    ]
+   },
+   "penyelarasan_terpakai": {
+    "geseran_baris_kolom": [
+     1,
+     5
+    ],
+    "r_pada_geseran": 0.19152186670021157,
+    "sisi_petak": 1024,
+    "rentang_cari_px": 8
+   }
+  },
+  "VV": {
+   "dengan_geseran": {
+    "n_piksel_valid_bersama": 424477934,
+    "n_valid_punyaku": 424553120,
+    "n_valid_resmi": 424498555,
+    "pearson_r": 0.879256,
+    "mae_db": 1.289904,
+    "bias_median_db": 0.155788,
+    "bias_mean_db": 0.181266,
+    "persen_dalam_1db": 51.654956,
+    "overlap_histogram": 0.982522,
+    "mean_db_punyaku": -18.75202,
+    "mean_db_resmi": -18.933287,
+    "sd_db_punyaku": 3.474436,
+    "sd_db_resmi": 3.564999,
+    "geser_baris_kolom": [
+     1,
+     5
+    ]
+   },
+   "tanpa_geseran": {
+    "n_piksel_valid_bersama": 424393318,
+    "n_valid_punyaku": 424553120,
+    "n_valid_resmi": 424498555,
+    "pearson_r": 0.720264,
+    "mae_db": 2.076783,
+    "bias_median_db": 0.149833,
+    "bias_mean_db": 0.179361,
+    "persen_dalam_1db": 30.575629,
+    "overlap_histogram": 0.982522,
+    "mean_db_punyaku": -18.753025,
+    "mean_db_resmi": -18.932385,
+    "sd_db_punyaku": 3.473966,
+    "sd_db_resmi": 3.564606,
+    "geser_baris_kolom": [
+     0,
+     0
+    ]
+   },
+   "penyelarasan_terpakai": {
+    "geseran_baris_kolom": [
+     1,
+     5
+    ],
+    "r_pada_geseran": 0.8824330266462174,
+    "sisi_petak": 1024,
+    "rentang_cari_px": 8
+   }
+  }
+ },
+ "ringkas": {
+  "VH": {
+   "pearson_r": 0.6793,
+   "mae_db": 1.7787,
+   "bias_median_db": 0.2836,
+   "persen_dalam_1db": 34.378,
+   "overlap_histogram": 0.9585
+  },
+  "VV": {
+   "pearson_r": 0.8793,
+   "mae_db": 1.2899,
+   "bias_median_db": 0.1558,
+   "persen_dalam_1db": 51.655,
+   "overlap_histogram": 0.9825
+  }
+ },
+ "ukuran_raster": {
+  "punyaku": {
+   "VH": {
+    "lebar": 30217,
+    "tinggi": 22598,
+    "dtype": "float16",
+    "nodata": -32768.0,
+    "crs": "EPSG:32631",
+    "piksel_nodata": 258290646,
+    "fraksi_nodata": 0.378257
+   },
+   "VV": {
+    "lebar": 30217,
+    "tinggi": 22598,
+    "dtype": "float16",
+    "nodata": -32768.0,
+    "crs": "EPSG:32631",
+    "piksel_nodata": 258290646,
+    "fraksi_nodata": 0.378257
+   }
+  },
+  "resmi": {
+   "VH": {
+    "lebar": 30217,
+    "tinggi": 22598,
+    "dtype": "float16",
+    "nodata": -32768.0,
+    "crs": "EPSG:32631"
+   },
+   "VV": {
+    "lebar": 30217,
+    "tinggi": 22598,
+    "dtype": "float16",
+    "nodata": -32768.0,
+    "crs": "EPSG:32631"
+   }
+  }
+ },
+ "sha256": {
+  "punyaku": {
+   "VH": "fe1d5f168e44a5cd65cf363194df960861f8a084476ba7db2a5e3b73536574da",
+   "VV": "20c38686e7cf6dd25a10de7a456ef4f88c9f0292ff34629564032a820ea63cdd"
+  },
+  "resmi": {
+   "VH": "185a415cf20c925379907eb1db93957c8e155306586829731948902982b2eb80",
+   "VV": "ac17ca87dcaf10a0c73ad324f7b7de1bb10650406a5ea6a429536ecb9546d92a"
+  },
+  "catatan": "Raster ada di luar repo (data/ ter-gitignore). Punyaku dihasilkan ulang persis oleh perintah `proses` di atas dari zip CDSE; resmi dari data/raw/xview3/scenes/0bc18737319f2ce6p.tar.gz."
+ },
+ "sisa_ketidakcocokan": {
+  "VH_korelasi_piksel": "pearson r VH 0.679 vs VV 0.879. Bukan salah registrasi (VV pada geseran yang sama r=0.88). Sebabnya: fluktuasi piksel VH punyaku masih didominasi speckle DERAU (derau 62-77 persen dari daya total), sedangkan VH resmi tampak sudah dibersihkan derau secara statistik sehingga fluktuasinya berasal dari SINYAL. Distribusi tetap sepadan (overlap histogram 0.958, bias median 0.28 dB), realisasi per piksel tidak.",
+  "batas_yang_diterima": "Untuk memberi makan detektor xView3 yang dinormalkan sigmoid pada level dB, yang menentukan adalah level dan bentuk distribusi, bukan realisasi speckle. Jalur naik kalau ternyata kurang: denoiser kanal silang yang benar (mis. metode NERSC/Park) menggantikan operator rasio.",
+  "belum_diuji": [
+   "k=0.5 belum divalidasi silang pada scene xView3 kedua",
+   "koreksi tinggi geoid belum diterapkan"
+  ]
+ },
+ "penerapan": {
+  "denmark": {
+   "keluaran": [
+    "data/processed/denmark/VH_dB.tif",
+    "data/processed/denmark/VV_dB.tif",
+    "data/processed/denmark/meta.json"
+   ],
+   "misi": "S1C (satelit baru; scene 2026-08-05)",
+   "paritas_format_annotation_s1c": "Diperiksa terhadap S1B kembaran: tata letak SAFE, nama file annotation/calibration/noise, skema calibrationVector (azimuthTime,line,pixel,sigmaNought,betaNought,gamma,dn), noiseRangeVectorList + noiseAzimuthVectorList (3 vektor azimut per swath IW1/IW2/IW3 menutup seluruh rentang azimut), dan geolocationGrid 210 titik SEMUANYA identik. Satu-satunya tambahan: direktori annotation/rfi/ (laporan RFI, informatif, tidak dipakai rantai kalibrasi). absoluteCalibrationConstant berbeda (S1C 0.8995 vs S1B 1.393) tetapi itu field informatif; LUT sigmaNought sudah memuatnya. Tidak ada penanganan khusus S1C yang diperlukan.",
+   "hasil": "28584x20615 float16 EPSG:32632, nodata -32768; median VH -31.0 dB, VV -17.4 dB; 27.9 persen piksel nodata = sudut bbox UTM di luar swath yang miring (petak radar 263x167 km di dalam bbox 286x206 km), bukan lubang di dalam swath."
+  }
+ }
+}
