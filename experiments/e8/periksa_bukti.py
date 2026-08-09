@@ -189,9 +189,28 @@ def sapu_permukaan():
     }
 
 
+def snapshot():
+    """Korpus hidup (fleet lain menulis paralel): sapuan WAJIB berstempel commit+waktu,
+    kalau tidak angkanya tidak dapat direproduksi minggu depan."""
+    commit = subprocess.run(
+        ["git", "rev-parse", "--short", "HEAD"], capture_output=True, text=True, cwd=AKAR
+    ).stdout.strip()
+    kotor = subprocess.run(
+        ["git", "status", "--porcelain"], capture_output=True, text=True, cwd=AKAR
+    ).stdout.strip()
+    return {
+        "commit": commit,
+        "pohon_kerja_kotor": bool(kotor),
+        "disapu_pada": subprocess.run(
+            ["date", "-u", "+%Y-%m-%dT%H:%M:%SZ"], capture_output=True, text=True
+        ).stdout.strip(),
+    }
+
+
 def kumpulkan():
     return {
         "akar_repo": "varuna",
+        "snapshot": snapshot(),
         "golden_demo": {
             **sapu_artefak(f"{GOLDEN}/investigations"),
             "grounding": sapu_grounding(f"{GOLDEN}/investigations"),

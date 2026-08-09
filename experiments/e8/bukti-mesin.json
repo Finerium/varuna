@@ -1,5 +1,10 @@
 {
  "akar_repo": "varuna",
+ "snapshot": {
+  "commit": "5a12c5b",
+  "pohon_kerja_kotor": true,
+  "disapu_pada": "2026-08-09T15:10:46Z"
+ },
  "golden_demo": {
   "n_artefak": 39,
   "hash_reproduksi_ok": 39,
@@ -80,17 +85,21 @@
   }
  },
  "e5_goldenset": {
-  "n_artefak": 28,
-  "hash_reproduksi_ok": 28,
+  "n_artefak": 32,
+  "hash_reproduksi_ok": 32,
   "hash_reproduksi_gagal": 0,
   "tipe": {
-   "sar_detection": 28
+   "sar_detection": 30,
+   "ais_track_segment": 2
   },
   "union_kunci": [
    "art_id",
+   "created_at",
    "hash_sha256",
    "inv_id",
+   "observed_at",
    "payload",
+   "sintetis",
    "source",
    "t_tulis",
    "type"

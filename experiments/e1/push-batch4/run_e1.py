@@ -169,48 +169,29 @@ def run_scene(model, box_coder, normalization, scene_dir):
     return df
 
 
-def main(manifest_path):
-    """manifest: baris 'scene_id<TAB>url_presigned' (dibuat lokal dari public.txt)."""
+def main_dataset(scene_dir, scene_id):
+    """Varian E4 Denmark: scene sudah preprocessed (paritas-terverifikasi,
+    manifests/e1-paritas-hasil.json) dan terpasang sebagai dataset Kaggle.
+    Tidak ada unduhan scene; konfigurasi inferensi identik dengan E1."""
+    import pandas as pd
     setup()
     model, box_coder, normalization = build_runtime()
-    rows = [l.strip().split("\t") for l in open(manifest_path) if "\t" in l]
-    run_meta = {"scenes": [], "config": {"tile": TILE_SIZE, "step": TILE_STEP,
-                "fp16": True, "tta": "fliplr(traced)", "thresholds": THRESHOLDS}}
-    gagal = []
-    for sid, url in rows:
-        out_csv = PRED_DIR / f"{sid}.csv"
-        if out_csv.exists():
-            print(sid, "sudah ada, lewati"); continue
-        t0 = time.time()
-        tgz = SCENES_DIR / f"{sid}.tar.gz"
-        try:
-            fetch(url, tgz)
-        except Exception as e:
-            print(f"GAGAL-UNDUH {sid}: {e}; lanjut scene berikutnya", flush=True)
-            gagal.append(sid); continue
-        with tarfile.open(tgz) as t:
-            t.extractall(SCENES_DIR)
-        tgz.unlink()
-        t_dl = time.time() - t0
-        t1 = time.time()
-        df = run_scene(model, box_coder, normalization, SCENES_DIR / sid)
-        t_inf = time.time() - t1
-        df.to_csv(out_csv, index=False)
-        shutil.rmtree(SCENES_DIR / sid, ignore_errors=True)
-        gc.collect()
-        run_meta["scenes"].append({"scene": sid, "n_det": len(df),
-                                   "t_unduh_s": round(t_dl, 1), "t_infer_s": round(t_inf, 1)})
-        print(f"{sid}: {len(df)} deteksi, unduh {t_dl:.0f}s, infer {t_inf:.0f}s", flush=True)
-        json.dump(run_meta, open(WORK / "run_manifest.json", "w"), indent=1)
-    print("E1 KERNEL SELESAI; gagal-unduh:", gagal)
+    t0 = time.time()
+    df = run_scene(model, box_coder, normalization, scene_dir)
+    t_inf = time.time() - t0
+    df["scene_id"] = scene_id
+    out_csv = PRED_DIR / f"{scene_id}.csv"
+    df.to_csv(out_csv, index=False)
+    meta = {"scene": scene_id, "sumber": str(scene_dir), "n_det": len(df),
+            "t_inferensi_s": round(t_inf, 1),
+            "config": {"tile": TILE_SIZE, "step": TILE_STEP, "fp16": True,
+                        "tta": "fliplr(traced)", "thresholds": THRESHOLDS},
+            "catatan": "scene S1C 2026-08-05T17:16Z, preprocessing sar_grd_to_xview3.py"}
+    (WORK / "run_manifest_dk.json").write_text(json.dumps(meta, indent=1))
+    print("SELESAI", meta, flush=True)
 
-
-SMOKE_TSV = "05bc615a9b0e1159t\thttps://xview3downloads.xview.us/train/05bc615a9b0e1159t.tar.gz?Expires=1786264036&Signature=KkKqsIIgNR~iOOjc85R07jWUYop~7zkFUFbT9Z2LKLOjERESjWJz0asQixZEZ643V1s8IShz7i89BIA9xzu4Hezt9LS~gIMkqzEGoVUo38aYprLX92siMEo-GvzrvHXrPTIl2ytB4TBhDKH99SV2sVvU1Pa1ILcqQWgP-C0e4Ipqo-S9tWzmekR4YzaQRBmkyrnBs5l0Yecn8sJN~ijc4vNCz4Ve4bn5gQmUGKOAZh2HkqRYsTT7g48k0Lz81G-~e8~cjOMc~pBxfVyj~tFDNQsw-n4BJ3n5iwhHbC4FN0BlOX~LyYojXGoehv5Xy54vpAnGcG97HzRWV2lBdnL6yg__&Key-Pair-Id=APKAIKGDJB5C3XUL2DXQ\n"
-FULL_TSV = "8bac7ec905895b12p\thttps://xview3downloads.xview.us/public/8bac7ec905895b12p.tar.gz?Expires=1786288363&Signature=QcSErxY7yJ9FB3hA2ovobRgyEAbY-LGwXhx0jkVTxMz6BwC5ugNgRIta0tvMxNNtK8UKCUGs-WeQhsONYywmzz7YFtYIZ5alrLKLPsJcTbb9XpovDKISkCASNN46KT-~1t7lTUeZynJ5R7uUwVFbuUBc~WGDXG3MD-TICJuN2lRYsPab51O1-7UWRiEpC4QbmAm4ckPb2jicMzTPYBWL0N0~9iH6EtjXBuZg1~WXLmIi1ihhYcQoDeu8dijIx6MLGNoFqfCqmv0yPkonniU56ewzAVihxAa8DyJoIANMdnKd5t1vwjPYETDaPK1HrTjJ53kcAuikrnxO9OhZsUCHtg__&Key-Pair-Id=APKAIKGDJB5C3XUL2DXQ\n679f1af0ae91e23ep\thttps://xview3downloads.xview.us/public/679f1af0ae91e23ep.tar.gz?Expires=1786288363&Signature=NenfoxZg7iqOThpspIATdVT-8WLM2uEVu-0Wbsy4CI-O1wF9GjaAj23SKWmVzyCPoZmhBBE3LpDzF1Qrqcj8W1uKwZ54pBk0VV61s~kb-2p1IAkas9nVbSMHK-w1HNUpbeh4No-wgg~l~gri5wIOMYgl35s4Vd96RmGNVCfGlvOni0v8pqSK3f11RCxb4wEfmQZixULR8pG99r9TkNWpIp0jfb-XTWVqApyRhLJrX9G-7SMbTt108r3-BqP74W~RdW~aIyvopWS0XTxvGE~dDwwt6~Ij5QSsH8hCkhYTD0s5ttE~bjMt9-KUv50SiOIO18IFdMT0H81Zka~~gl7n7g__&Key-Pair-Id=APKAIKGDJB5C3XUL2DXQ\n0e815a40b2fbdc76p\thttps://xview3downloads.xview.us/public/0e815a40b2fbdc76p.tar.gz?Expires=1786288363&Signature=hKdi~9bizLPDX3A8KMrG8U8jI6eAJEoULJwqy~zVRpZChehaJ5aqBfokwj9~6OEZTcGCl-sSwyysZIHlJeSpkOopKqgbKPOibxeFLx5o85VRhk2hh3WUT~nXHTra4RUo~E7xVST9m0mlcXNeUCYEu~2Xkx~~7uxnIwJGPQCUvdQPsGMTsQdqbBYosrFrutfNaJUwb9yIZ8KIM9V4457ruX7401iKY0t0bgPckl4mEBpbY~R7Ud~peoJtZOT-Zp6TJtmueqP~JyjbeOZ6ueWGeLDjoAlr0COtS0b94RVyqr12oxooC~aqJzsxHzDHMOqEzrOLazmFWVXueeBceiFbXg__&Key-Pair-Id=APKAIKGDJB5C3XUL2DXQ\nf9db277f662e8bcap\thttps://xview3downloads.xview.us/public/f9db277f662e8bcap.tar.gz?Expires=1786288364&Signature=McSPDpxXtXcAxxqK9tEFP4Q7zohZ36iB1ArbidBYPBX7deB4jOYFAj8ht06Ug9LLjhV8dwOsUMxva2orLq4UDLx47Y-SrJX2~kXdijPTlr0N9yY0dCGLIW3ojxWkbm1RFlSLNQlNg~LIOUbmyjcXAbBVWHVINS6tJYIfCE9nt~yA9AkAQZ~7tDqBtK~41ANm9K0zuHp9TYtU3puxzEfpIe28f6z2VbfU~F93ZRL2aAsLqq9TAatyZvTwv66anmJ1Y-wgAuoHT1D1-jO~n2OuTVdD1uA1bOSnx9hDKdA4~YYN6U3O8UsnEjCd1YuseDFt8Wo0SS7AyVdsW35~mwlqPA__&Key-Pair-Id=APKAIKGDJB5C3XUL2DXQ\nebbbee77e0b8bfbdp\thttps://xview3downloads.xview.us/public/ebbbee77e0b8bfbdp.tar.gz?Expires=1786288364&Signature=RIAxuqzc3Lfr2pWdahTLG30GQXul6l4QlZwdL794iKKDT8Z5uUKzmjp31WcSFYzche4IYJ4Tg8aOpVxtpQnlU3TLLFp0Ox3jfErve2MHJVqA9ZqguNpvmjPNfEgRw8HftnbwZxsS64fqMc9OCH5HIx8vzAmynl9NVp2i4TvMqIqw-RPSF4sryGd0lWWsXai2CxNJ12wfmwQEx4wq9t3-M8wz-r2UXYFZYLNvZrHZdsgc-COqbIyC4su2Vzcl~sOUtn8vCTdtGi9RIS9WXTM5d5QHHB605xMxdVmGONy1OD6dZ0~9rfnMkvETRtFv9pYbu5DZ9LxBYsPTEfEBMOW5Pw__&Key-Pair-Id=APKAIKGDJB5C3XUL2DXQ\nf9e403da040d714cp\thttps://xview3downloads.xview.us/public/f9e403da040d714cp.tar.gz?Expires=1786288364&Signature=M-2Nvg2nk16KIPV6pVa7dWADd4sjq-~i3SKsm2EhgRsnbFgoUL8MUDNzq6Or2XBdX~Hd69Cam8LcL-yiW3wzF7mCCTl7sbva4Tkf9xCHswx5Vn9jymXDD2AhYWVrL0D6m~ESdY8-FnMkga7OCGu1igr4IoyU~vJ~5dIwrfJHf-w3OTTr3Ye6-pfaozkoFJKQTmToTYYiuDFdSYbd4vGmnsnY47qVE74fXf8hD9-p0xM~7xDHZVFdYRIF4szNFMM3RTFMuthnngdfSLSOamPjzxvWDZaWiy0pAtbSctsGUeVCVpZi~UPUkJtlArY7CxLm6aM2WRhrkHd2hmg2CG8K1g__&Key-Pair-Id=APKAIKGDJB5C3XUL2DXQ\n8decb780ddc167b9p\thttps://xview3downloads.xview.us/public/8decb780ddc167b9p.tar.gz?Expires=1786288363&Signature=NsX7eewarBcsOsbtAaLkuxrL5q57w5IFMmkyjG~jX9tZD~uP9il4gwpPp2fdY~AiqDDzGiz25g3dR9oUvvP7xnFJqA9NzSw9Uz20d1-3aMtu4lFXvwgwenHsj2Rs2OgotvaAWsXwoOj8TmJ7KTlbm~gK52EaIU4t4izX96uWZYcqfpdw3lkDHX51EwS1jf7ucsdPD-nXGh~KQiwtqE5v4J44MYepo0~G2w4xuR6WpmZ0MFDw5Pouh5fRUp3QkLDyu8Kk~kKVdNuOpI9~ckC85w2v1HEkxnZScp0cR7VfptnvHoWZaSvhDFUloh9AtT0tBgnkq3Kid9HbJ1Me41mP1Q__&Key-Pair-Id=APKAIKGDJB5C3XUL2DXQ\nec00f105aafbade6p\thttps://xview3downloads.xview.us/public/ec00f105aafbade6p.tar.gz?Expires=1786288364&Signature=bghtXWGUs7txaKKEZR47SED~7xxZ8N6iLeAyIU0FuBRyaKTVc9TWwLJ0H~4CZSpg2AgRVm-ERnPa5jOwPYgFqnvfbuUkYeGHgngEIfS1Icf~7RHbAH2EMNhoxiYHoKlN2Tz49te2LFDKfun5LaZw4uHzcVSMaZJeDF15qLH1xfVVaQrSH15Eb~aGBZHIHMgzTQQhNKzP5Rl3DQQXyDKnIt1NwcmyJRKz4HzbDjuFNMUbCrFM2-LwmSWP-y3Maf9T5CMWxKa3mh24ry1c830aw1g0jJ5NN3YuqH96EFSsySMFrt7H4EKXf--9h0QxxnR7q4ZnyzB-FCOmxzQsaXQ2JQ__&Key-Pair-Id=APKAIKGDJB5C3XUL2DXQ\nb771e72b21c08775p\thttps://xview3downloads.xview.us/public/b771e72b21c08775p.tar.gz?Expires=1786288363&Signature=ha39pdpzhQXnpV0BSe69~nWjKirs~iDDABgACEAmO4pgT9XL~KeSKtOFU77q9MUuoSwLSlaVxuXDC9GWXM7s9yhwHORAoPtCdtV4nEFSvSuBtcpQ7lI42xdUV2J9U1ct5krBkzf7XTfWZG-7Diapj9vE4QiQw7cIJJi8cg3Q61whr2EhpRJJf3btC~0xFOm2KQMMY9iLvM7-z806cEdGwKzpm7KmZT2d8aAE0LtuoqvHTzI-iwhyh~G7Zau06XajLpBkrRhnGD5LZ6Sjf0wteSmLNzrH4uNot~en8PkSx9vgfjTcFbf0saFdbcW41TDv6H9LOyPovageJjMMjQYlqg__&Key-Pair-Id=APKAIKGDJB5C3XUL2DXQ\n3a0fff47ada3e269p\thttps://xview3downloads.xview.us/public/3a0fff47ada3e269p.tar.gz?Expires=1786288363&Signature=q7pAonTRZ7lDA5aq6VEPhr0pAorrFAHChBFJ0X5IRCzfm22aZv3ZiIWq8pM~4C7csF9w18343LwnCFIY-Br6qPsKbV2JH50zMv4fPNY4XzA6GxW6oMu3T9RQ5-QsfkNL2U3JGol4yulMOs2saF~0iOEcrLLGEXhPY6yN8T-6Sbx6aglzWIg3-wPsOAN-aN6UzeDzjPzq5H36sV77uHiVq7h2zRgJ-Fjm~oAdwBfajcv5Jsz3txhxD3kqSIswi~6YCi9bkp0cnCe850PHP-IbxGxf753PJS8UJRBPHUPNKoMs0~EO53cjCYknqWhxzXlHPy8qIzvxuohx7tgQFkzx~Q__&Key-Pair-Id=APKAIKGDJB5C3XUL2DXQ\n"
-RUN_MODE = "FULL"  # SMOKE | FULL
 
 if __name__ == "__main__":
-    mpath = WORK / "scene_manifest.tsv"
-    WORK.mkdir(parents=True, exist_ok=True)
-    mpath.write_text(SMOKE_TSV if RUN_MODE == "SMOKE" else FULL_TSV)
-    main(str(mpath))
+    PRED_DIR.mkdir(parents=True, exist_ok=True)
+    dataset = pathlib.Path("/kaggle/input/varuna-denmark-s1c-20260805")
+    main_dataset(dataset, "dk-s1c-20260805")
