@@ -1,6 +1,9 @@
 data/
 models/
-experiments/
+experiments/*
+!experiments/e5
+experiments/e5/*
+!experiments/e5/thresholds.lock.json
 manifests/
 protocol/
 scripts/
