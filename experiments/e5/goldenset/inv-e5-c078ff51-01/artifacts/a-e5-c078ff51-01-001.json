@@ -1,0 +1,19 @@
+{
+ "art_id": "a-e5-c078ff51-01-001",
+ "type": "sar_detection",
+ "inv_id": "inv-e5-c078ff51-01",
+ "t_tulis": "2026-08-09T11:00:00Z",
+ "payload": {
+  "scene_id": "c078ff51eb54a68fp",
+  "row": 16122.0,
+  "col": 16908.0,
+  "objectness_p": 0.8520759,
+  "vessel_p": 0.79055727,
+  "fishing_p": 0.7692451,
+  "length_m_est": 29.773735
+ },
+ "source": {
+  "provenance": "Deteksi E1 nyata (experiments/e1/results/batch/c078ff51eb54a68fp.csv, ambang objectness 0.3, tile 2048/stride 1536, fp16, TTA fliplr). Scene historis dataset xView3 direplay untuk evaluasi E5; usia bukti dihitung sejak ingest."
+ },
+ "hash_sha256": "4d782e183ce22124e5da3dd29493b1c9bab88ecf04060f9b8a8c39b443799bc6"
+}
