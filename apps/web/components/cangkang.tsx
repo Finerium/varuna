@@ -31,32 +31,36 @@ export async function Cangkang({
       <a className="lewati" href="#isi">
         Lompat ke isi
       </a>
-      <header className="pita">
-        <div className="deret">
-          <Link href="/" className="pita__tanda" style={{ textDecoration: "none" }}>
-            VARUNA
-          </Link>
-          <nav className="pita__jalur" aria-label="Surface">
-            {JALUR.map((j) => (
-              <Link key={j.href} href={j.href} aria-current={j.href === aktif ? "page" : undefined}>
-                {j.nama}
-              </Link>
-            ))}
-          </nav>
-        </div>
-        <p className="eyebrow">
-          {peran === null ? "peran belum dipilih" : `peran: ${LABEL_PERAN[peran]}`}
+      <header className="pita pita--surface">
+        <Link href="/" className="merek" aria-label="VARUNA, ke beranda">
+          <span className="merek__glif" aria-hidden="true" />
+          <span className="merek__nama">VARUNA</span>
+        </Link>
+        <nav className="navsurf" aria-label="Surface">
+          {JALUR.map((j) => (
+            <Link
+              key={j.href}
+              className="navsurf__tautan"
+              href={j.href}
+              aria-current={j.href === aktif ? "page" : undefined}
+            >
+              {j.nama}
+            </Link>
+          ))}
+        </nav>
+        <p className={`peranpil${peran === null ? " peranpil--kosong" : ""}`}>
+          {peran === null ? "peran belum dipilih" : LABEL_PERAN[peran]}
         </p>
       </header>
       <main className="isi" id="isi">
-        <p className="eyebrow" style={{ marginBottom: "var(--r-2)" }}>
-          {register}
-        </p>
+        <p className="register">{register}</p>
         {children}
       </main>
-      <footer className="kaki">
-        M0 — kerangka hidup. Angka yang tampil hanya datang dari Evidence Store; yang belum ada
-        dinyatakan kosong, bukan diisi contoh.
+      <footer className="kaki kaki--surface">
+        <span className="redup">
+          Angka yang tampil hanya datang dari Evidence Store; yang belum ada dinyatakan kosong, bukan
+          diisi contoh.
+        </span>
       </footer>
     </div>
   );

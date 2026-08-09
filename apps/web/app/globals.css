@@ -1144,3 +1144,75 @@ html[data-gerak="hidup"] [data-gerak-masuk] {
   max-width: 60ch;
   font-size: 0.78rem;
 }
+
+/* ============================================================
+   CHROME SURFACE — nav bersama premium (Cangkang), selaras Entry.
+   ============================================================ */
+.pita--surface {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  align-items: center;
+  gap: clamp(0.75rem, 3vw, 2rem);
+  background: color-mix(in srgb, var(--ink-1) 84%, transparent);
+  backdrop-filter: blur(12px) saturate(120%);
+}
+.merek {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  text-decoration: none;
+  color: var(--teks);
+}
+.navsurf {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(0.4rem, 1.6vw, 1.4rem);
+  margin-right: auto;
+}
+.navsurf__tautan {
+  font-family: var(--font-display);
+  font-size: 0.82rem;
+  letter-spacing: 0.02em;
+  color: var(--teks-redup);
+  text-decoration: none;
+  padding: 0.3rem 0;
+  border-bottom: 1.5px solid transparent;
+  transition: color 180ms ease, border-color 180ms ease;
+}
+.navsurf__tautan:hover,
+.navsurf__tautan:focus-visible {
+  color: var(--teks);
+}
+.navsurf__tautan[aria-current="page"] {
+  color: var(--teks);
+  border-color: var(--amber);
+}
+.peranpil {
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--teks);
+  padding: 0.32rem 0.7rem;
+  border: 1px solid var(--glass-rim-redup);
+  border-radius: 999px;
+  white-space: nowrap;
+}
+.peranpil--kosong {
+  color: var(--teks-redup);
+}
+.register {
+  font-family: var(--font-display);
+  font-size: 0.74rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--teks-redup);
+  margin: 0 0 var(--r-4);
+}
+.kaki--surface {
+  display: flex;
+}
+.kaki--surface .redup {
+  max-width: 70ch;
+}

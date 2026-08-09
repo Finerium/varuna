@@ -1,0 +1,175 @@
+/* Surface "masuk peran". Prefiks ent- ; nol warna di luar tokens.css.
+ *
+ * /enter/{peran} adalah route handler: ia memasang cookie lalu mengalihkan di
+ * server, jadi tidak pernah ada halaman antara yang bisa didandani. Yang tersisa
+ * untuk dikerjakan surface ini ada di dua sisi klik — kejelasan sebelum
+ * (peran mendarat di mana, mengerjakan apa) dan umpan balik sesudah (navigasi
+ * dokumen penuh yang bisa memakan sedetik dua detik di server dingin). */
+
+.ent-rak {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.7rem;
+  width: min(100%, 54rem);
+  margin-inline: auto;
+  text-align: left;
+}
+
+@media (min-width: 720px) {
+  .ent-rak {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Kartu yang tidak diklik meredup saat satu sudah dibuka: fokus pindah ke yang
+   sedang berjalan. Opacity saja — tidak ada isi yang hilang. */
+.ent-rak[data-sibuk] .ent-kartu:not([data-membuka]) {
+  opacity: 0.5;
+}
+
+.ent-kartu {
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    "nama panah"
+    "tujuan panah"
+    "ket ket";
+  align-items: start;
+  gap: 0.1rem 0.9rem;
+  padding: 0.9rem 0.95rem 1rem;
+  border: 1px solid var(--glass-rim-redup);
+  border-radius: var(--radius-kecil);
+  background: linear-gradient(180deg, var(--ink-2) 0%, var(--ink-1) 100%);
+  box-shadow: inset 0 1px 0 var(--taktil-atas);
+  color: var(--teks);
+  text-decoration: none;
+  transition:
+    transform 220ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 220ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 220ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.ent-kartu:hover,
+.ent-kartu:focus-visible {
+  transform: translateY(-2px);
+  border-color: var(--glass-rim);
+}
+
+/* Jalur utama juri. Amber tetap sinyal tipis: satu garis 2px yang memudar dan
+   satu afiks panah seukuran jempol — bukan bidang latar. */
+.ent-kartu[data-utama]::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 2px;
+  background: var(--amber);
+  -webkit-mask-image: linear-gradient(90deg, #000 0%, #000 34%, transparent 100%);
+  mask-image: linear-gradient(90deg, #000 0%, #000 34%, transparent 100%);
+}
+
+.ent-kartu[data-utama]:hover,
+.ent-kartu[data-utama]:focus-visible {
+  border-color: var(--amber);
+}
+
+.ent-kartu__nama {
+  grid-area: nama;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1rem;
+  letter-spacing: 0.01em;
+}
+
+.ent-kartu__tujuan {
+  grid-area: tujuan;
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--teks-redup);
+}
+
+.ent-kartu__ket {
+  grid-area: ket;
+  margin-top: 0.6rem;
+  font-size: 0.82rem;
+  line-height: 1.45;
+  color: var(--teks-redup);
+}
+
+.ent-kartu__panah {
+  grid-area: panah;
+  align-self: center;
+  display: grid;
+  place-items: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border: 1px solid var(--glass-rim-redup);
+  border-radius: 999px;
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  line-height: 1;
+  color: var(--teks-redup);
+  transition:
+    transform 220ms cubic-bezier(0.22, 1, 0.36, 1),
+    color 220ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 220ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.ent-kartu[data-utama] .ent-kartu__panah {
+  background: var(--amber);
+  border-color: var(--amber);
+  color: var(--teks-terang);
+}
+
+.ent-kartu:hover .ent-kartu__panah,
+.ent-kartu:focus-visible .ent-kartu__panah {
+  transform: translateX(3px);
+  color: var(--amber);
+  border-color: var(--amber);
+}
+
+.ent-kartu[data-utama]:hover .ent-kartu__panah,
+.ent-kartu[data-utama]:focus-visible .ent-kartu__panah {
+  color: var(--teks-terang);
+}
+
+/* Laju: satu-satunya hal yang bergerak setelah klik. Keadaan akhirnya penuh,
+   jadi killswitch reduced-motion global (globals.css) yang memangkas durasi
+   animasi jadi 0.01ms menghasilkan garis utuh seketika — bukan garis hilang. */
+.ent-kartu__laju {
+  position: absolute;
+  inset: auto 0 0;
+  height: 2px;
+  background: var(--amber);
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
+.ent-kartu[data-membuka] .ent-kartu__laju {
+  animation: ent-laju 1100ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes ent-laju {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* Warta untuk pembaca layar: garis amber itu dekorasi, kalimat inilah isinya. */
+.ent-warta {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}

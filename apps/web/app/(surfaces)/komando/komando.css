@@ -1,0 +1,581 @@
+/* Pusat Komando — lapisan visual surface ini SAJA (prefiks kmd-, nol tabrakan).
+ * Semua nilai warna datang dari tokens.css; tidak ada satu pun literal warna di
+ * berkas ini. Amber tetap satu-satunya warna sinyal — dipakai untuk status
+ * terkonfirmasi, aturan yang terpenuhi, dan afiks panah kartu; tidak pernah
+ * sebagai latar luas. ABSTAIN memakai slate berongga, sama seperti kosakata
+ * beku di globals.css, supaya penolakan menyimpulkan tidak terbaca sebagai
+ * alarm.
+ *
+ * Gerak: hanya transform + opacity, jadi aman terhadap prefers-reduced-motion
+ * (globals.css sudah memangkas durasinya) dan tanpa gerak isi tetap utuh. */
+
+.kmd {
+  display: grid;
+  gap: clamp(var(--r-4), 4vw, var(--r-5));
+}
+
+/* --- Kepala surface: eyebrow pil, judul satu aksen amber, angka besar ----- */
+
+.kmd-kepala {
+  display: grid;
+  gap: var(--r-3);
+  justify-items: start;
+}
+
+.kmd-mata {
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--teks-redup);
+  padding: 0.36rem 0.85rem;
+  border: 1px solid var(--glass-rim-redup);
+  border-radius: 999px;
+}
+
+.kmd-mata__glif {
+  color: var(--amber);
+}
+
+.kmd-judul {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1.9rem, 1.05rem + 2.8vw, 3.15rem);
+  line-height: 1.04;
+  letter-spacing: -0.02em;
+  max-width: 21ch;
+  margin: 0;
+  text-wrap: balance;
+}
+
+.kmd-judul__aksen {
+  color: var(--amber);
+}
+
+.kmd-sub {
+  max-width: 66ch;
+  color: var(--teks-redup);
+  font-size: clamp(0.98rem, 0.94rem + 0.25vw, 1.1rem);
+  line-height: 1.62;
+}
+
+/* Angka besar: hitungan antrean menurut status yang SUDAH diputus server.
+   Warnanya mengikuti kosakata status, bukan dekorasi. */
+.kmd-angka {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--r-4) clamp(var(--r-3), 4vw, var(--r-5));
+  width: min(100%, 54rem);
+  margin: var(--r-2) 0 0;
+  padding: clamp(var(--r-3), 2.5vw, var(--r-4)) 0 0;
+  border-top: 1px solid var(--glass-rim-redup);
+}
+
+@media (min-width: 760px) {
+  .kmd-angka {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.kmd-angka__sel {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.kmd-angka__nilai {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1.9rem, 1.3rem + 2vw, 2.9rem);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--teks);
+}
+
+.kmd-angka__nilai--terkonfirmasi {
+  color: var(--amber);
+}
+.kmd-angka__nilai--terindikasi {
+  color: var(--amber-redup-teks);
+}
+.kmd-angka__nilai--abstain {
+  color: var(--slate);
+}
+
+.kmd-angka__ket {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--teks-redup);
+}
+
+/* --- Papan dua kolom ------------------------------------------------------ */
+
+.kmd-papan {
+  display: grid;
+  gap: clamp(var(--r-3), 2.2vw, var(--r-4));
+  align-items: start;
+}
+
+.kmd-kolom {
+  display: grid;
+  gap: clamp(var(--r-3), 2.2vw, var(--r-4));
+  align-content: start;
+  min-width: 0;
+}
+
+@media (min-width: 1100px) {
+  .kmd-papan {
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+    gap: clamp(var(--r-4), 2.4vw, var(--r-5));
+  }
+
+  /* Berkas melekat saat kolom kiri (peta + antrean) digulir; gulirnya sendiri
+     dibatasi ke dalam panel supaya kepala surface tidak ikut terdorong. */
+  .kmd-samping {
+    position: sticky;
+    top: 4.75rem;
+    max-height: calc(100dvh - 6.5rem);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+}
+
+/* --- Panel glass ---------------------------------------------------------- */
+
+.kmd-panel {
+  background: var(--glass);
+  border: 1px solid var(--glass-rim-redup);
+  border-radius: var(--radius);
+  backdrop-filter: blur(14px) saturate(115%);
+  padding: clamp(var(--r-3), 2vw, var(--r-4));
+  min-width: 0;
+}
+
+.kmd-panel--rim {
+  border-color: var(--glass-rim);
+  box-shadow: var(--bayang-panel);
+}
+
+.kmd-panel__kepala {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--r-2) var(--r-3);
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: clamp(var(--r-3), 1.6vw, var(--r-4));
+  padding-bottom: var(--r-3);
+  border-bottom: 1px solid var(--glass-rim-redup);
+}
+
+.kmd-panel__judul {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1.05rem, 0.98rem + 0.45vw, 1.35rem);
+  line-height: 1.15;
+  letter-spacing: -0.012em;
+  margin: 0;
+}
+
+.kmd-mata-kecil {
+  font-family: var(--font-display);
+  font-size: 0.68rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--amber-redup-teks);
+  margin: 0 0 0.35rem;
+}
+
+.kmd-hitung {
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--teks-redup);
+  white-space: nowrap;
+}
+
+/* --- Meta mono kecil (dipakai kartu antrean dan fakta berkas) ------------- */
+
+.kmd-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--r-3) clamp(var(--r-3), 2.2vw, var(--r-4));
+  margin: 0;
+}
+
+.kmd-fakta {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(8.5rem, 1fr));
+  gap: var(--r-3);
+  margin: 0;
+}
+
+.kmd-sel {
+  display: grid;
+  gap: 0.18rem;
+  min-width: 0;
+}
+
+.kmd-ket {
+  font-family: var(--font-display);
+  font-size: 0.66rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--teks-redup);
+}
+
+.kmd-nilai {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 0.88rem;
+  letter-spacing: 0.01em;
+  color: var(--teks);
+  overflow-wrap: anywhere;
+}
+
+/* --- Kartu antrean -------------------------------------------------------- */
+
+.kmd-antrean {
+  display: grid;
+  gap: var(--r-3);
+}
+
+.kmd-kartu {
+  position: relative;
+  display: grid;
+  gap: var(--r-3);
+  padding: clamp(var(--r-3), 1.6vw, var(--r-4));
+  background: var(--ink-1);
+  border: 1px solid var(--glass-rim-redup);
+  border-radius: var(--radius);
+  box-shadow: inset 0 1px 0 var(--taktil-atas);
+  transition:
+    transform 220ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 220ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.kmd-kartu:hover {
+  transform: translateY(-2px);
+  border-color: var(--glass-rim);
+}
+
+.kmd-kartu:focus-within {
+  border-color: var(--amber);
+}
+
+/* Baris yang sedang terbuka: rim amber + pita tipis, bukan latar amber. */
+.kmd-kartu--pilih {
+  border-color: var(--amber);
+}
+
+.kmd-kartu--pilih::before {
+  content: "";
+  position: absolute;
+  left: -1px;
+  top: var(--r-3);
+  bottom: var(--r-3);
+  width: 2px;
+  border-radius: 2px;
+  background: var(--amber);
+}
+
+.kmd-kartu__atas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--r-2) var(--r-3);
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.kmd-kartu__id {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1rem, 0.95rem + 0.4vw, 1.2rem);
+  letter-spacing: -0.01em;
+  color: var(--teks);
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+
+/* Seluruh kartu jadi sasaran klik tanpa menyarangkan tautan: satu lapisan
+   transparan milik tautan judul. Nama aksesibelnya tetap pendek (inv_id saja).
+   ponytail: konsekuensinya teks di dalam kartu tidak bisa diseleksi; id yang
+   sama tersedia untuk disalin di panel berkas. */
+.kmd-kartu__id::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius);
+}
+
+.kmd-kartu__id::after {
+  content: "→";
+  color: var(--amber);
+  opacity: 0;
+  transform: translateX(-0.25rem);
+  transition:
+    opacity 200ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 200ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.kmd-kartu:hover .kmd-kartu__id::after,
+.kmd-kartu:focus-within .kmd-kartu__id::after,
+.kmd-kartu--pilih .kmd-kartu__id::after {
+  opacity: 1;
+  transform: none;
+}
+
+.kmd-kartu__sinyal {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--r-2);
+}
+
+/* --- Panel berkas --------------------------------------------------------- */
+
+.kmd-berkas {
+  display: grid;
+  gap: clamp(var(--r-3), 1.8vw, var(--r-4));
+}
+
+.kmd-berkas__id {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1.3rem, 1.1rem + 1vw, 1.9rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  overflow-wrap: anywhere;
+}
+
+.kmd-bagian {
+  display: grid;
+  gap: var(--r-3);
+  padding-top: clamp(var(--r-3), 1.8vw, var(--r-4));
+  border-top: 1px solid var(--glass-rim-redup);
+}
+
+/* Chip artefak: tautan langsung ke jalur audit /api/artifacts/<id>. */
+.kmd-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--r-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.kmd-chip {
+  display: inline-block;
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  letter-spacing: 0.03em;
+  color: var(--teks-redup);
+  text-decoration: none;
+  padding: 0.28rem 0.65rem;
+  background: var(--ink-2);
+  border: 1px solid var(--glass-rim-redup);
+  border-radius: 999px;
+  transition:
+    transform 180ms cubic-bezier(0.22, 1, 0.36, 1),
+    color 180ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 180ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.kmd-chip:hover,
+.kmd-chip:focus-visible {
+  color: var(--teks);
+  border-color: var(--amber);
+  transform: translateY(-1px);
+}
+
+/* --- Daftar aturan server -------------------------------------------------- */
+
+.kmd-aturan {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.kmd-aturan__baris {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: var(--r-2) var(--r-3);
+  align-items: center;
+  padding: 0.65rem 0;
+  border-top: 1px solid var(--glass-rim-redup);
+}
+
+.kmd-aturan__baris:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+/* Terpenuhi = suar amber padat; belum = suar slate berongga. Katanya tetap
+   ditulis di sebelah kanan, jadi tidak ada informasi yang hanya lewat warna. */
+.kmd-aturan__suar {
+  width: 9px;
+  height: 9px;
+}
+
+.kmd-aturan__baris--ya .kmd-aturan__suar {
+  background: var(--amber);
+}
+
+.kmd-aturan__baris--tidak .kmd-aturan__suar {
+  box-shadow: inset 0 0 0 1.5px var(--slate);
+}
+
+.kmd-aturan__nama {
+  font-family: var(--font-display);
+  font-size: 0.92rem;
+  letter-spacing: 0.01em;
+  color: var(--teks);
+  overflow-wrap: anywhere;
+}
+
+.kmd-aturan__baris--tidak .kmd-aturan__nama {
+  color: var(--teks-redup);
+}
+
+.kmd-aturan__kanan {
+  display: grid;
+  gap: 0.15rem;
+  justify-items: end;
+  text-align: right;
+}
+
+.kmd-aturan__kata {
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--amber-redup-teks);
+  white-space: nowrap;
+}
+
+.kmd-aturan__baris--tidak .kmd-aturan__kata {
+  color: var(--slate);
+}
+
+.kmd-aturan__artefak {
+  font-family: var(--font-display);
+  font-size: 0.66rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--teks-redup);
+  white-space: nowrap;
+}
+
+/* --- Blok ABSTAIN --------------------------------------------------------- */
+
+.kmd-abstain {
+  display: grid;
+  gap: var(--r-2);
+  padding: var(--r-3) 0 var(--r-3) var(--r-3);
+  border-left: 2px solid var(--slate);
+}
+
+/* --- Penolakan grounding: keadaan, bukan berkas yang diam-diam hilang ------ */
+
+.kmd-tolak {
+  display: grid;
+  gap: var(--r-2);
+  padding: clamp(var(--r-3), 2vw, var(--r-4));
+  background: var(--ink-1);
+  border: 1px dashed var(--slate);
+  border-radius: var(--radius);
+}
+
+.kmd-tolak__mata {
+  font-family: var(--font-display);
+  font-size: 0.68rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--slate);
+}
+
+.kmd-tolak__kalimat {
+  font-family: var(--font-display);
+  font-size: 1.02rem;
+  line-height: 1.35;
+  color: var(--teks);
+}
+
+.kmd-tolak__sebab {
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: var(--teks-redup);
+  overflow-wrap: anywhere;
+}
+
+/* --- Klaim berlapis (<details> native, tanpa JavaScript) ------------------- */
+
+.kmd-klaim {
+  background: var(--ink-1);
+  border: 1px solid var(--glass-rim-redup);
+  border-radius: var(--radius-kecil);
+}
+
+.kmd-klaim + .kmd-klaim {
+  margin-top: var(--r-2);
+}
+
+.kmd-klaim__ringkas {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: var(--r-2) var(--r-3);
+  align-items: start;
+  padding: var(--r-3);
+  cursor: pointer;
+  font-size: 0.92rem;
+  line-height: 1.5;
+  list-style: none;
+}
+
+.kmd-klaim__ringkas::-webkit-details-marker {
+  display: none;
+}
+
+.kmd-klaim__ringkas::after {
+  content: "+";
+  font-family: var(--font-display);
+  color: var(--amber);
+  line-height: 1;
+}
+
+.kmd-klaim[open] .kmd-klaim__ringkas::after {
+  content: "−";
+}
+
+.kmd-klaim__no {
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  color: var(--amber-redup-teks);
+  padding-top: 0.2rem;
+}
+
+.kmd-klaim__isi {
+  padding: 0 var(--r-3) var(--r-3);
+}
+
+/* --- Jejak audit ----------------------------------------------------------- */
+
+.kmd-jejak {
+  display: grid;
+  gap: var(--r-1);
+  padding-top: var(--r-3);
+  border-top: 1px solid var(--glass-rim-redup);
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  letter-spacing: 0.03em;
+  color: var(--teks-redup);
+  overflow-wrap: anywhere;
+}

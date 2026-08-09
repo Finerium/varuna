@@ -1,0 +1,587 @@
+/* Konsol Skenario — lapis visual surface ini SAJA (blueprint 7.4: dense saat
+   diam, ekspresif saat replay berjalan). Semua kelas berprefiks `kns-` supaya
+   nol tabrakan dengan surface lain; semua warna dari tokens.css, tanpa satu pun
+   nilai baru. Amber tetap satu-satunya warna sinyal: ia hanya menandai langkah
+   yang sungguh hidup, tidak pernah jadi latar luas.
+
+   Chrome bersama (pita, kaki, .panel, .status, .taktil) dipakai apa adanya —
+   berkas ini cuma menambah delta, tidak menimpanya. */
+
+/* --- Kepala surface: hero tertahan, bukan pitch ----------------------- */
+
+.kns-kepala {
+  position: relative;
+  display: grid;
+  gap: var(--r-3);
+  padding-bottom: clamp(1.5rem, 4vh, 2.5rem);
+  margin-bottom: clamp(1.5rem, 4vh, 2.5rem);
+  border-bottom: 1px solid var(--glass-rim-redup);
+  overflow: clip;
+}
+
+/* Grid maritim yang sangat halus, memudar sebelum menyentuh teks. Dekorasi
+   murni: tanpa dukungan mask ia tetap tak mengubah keterbacaan. */
+.kns-kepala::before {
+  content: "";
+  position: absolute;
+  inset: -60% -12% auto 34%;
+  height: 240%;
+  background-image:
+    linear-gradient(var(--glass-rim-redup) 1px, transparent 1px),
+    linear-gradient(90deg, var(--glass-rim-redup) 1px, transparent 1px);
+  background-size: 56px 56px;
+  -webkit-mask-image: radial-gradient(66% 58% at 80% 34%, #000 0%, transparent 72%);
+  mask-image: radial-gradient(66% 58% at 80% 34%, #000 0%, transparent 72%);
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+.kns-kepala > * {
+  position: relative;
+}
+
+.kns-mata {
+  justify-self: start;
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--teks-redup);
+  padding: 0.35rem 0.85rem;
+  border: 1px solid var(--glass-rim-redup);
+  border-radius: 999px;
+}
+
+.kns-mata span {
+  color: var(--amber);
+}
+
+.kns-judul {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1.85rem, 3.4vw, 2.95rem);
+  line-height: 1.04;
+  letter-spacing: -0.02em;
+  max-width: 22ch;
+  margin: 0;
+  text-wrap: balance;
+}
+
+.kns-aksen {
+  color: var(--amber);
+}
+
+.kns-sub {
+  max-width: 64ch;
+  font-size: clamp(0.98rem, 1.1vw, 1.08rem);
+  line-height: 1.6;
+  color: var(--teks-redup);
+}
+
+/* Strip angka: hanya nilai yang benar-benar mengikat kontrak. */
+.kns-angka {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.9rem clamp(1.25rem, 4vw, 3rem);
+  margin: var(--r-2) 0 0;
+}
+
+.kns-angka div {
+  padding-left: clamp(1.25rem, 4vw, 3rem);
+  border-left: 1px solid var(--glass-rim-redup);
+}
+
+.kns-angka div:first-child {
+  padding-left: 0;
+  border-left: 0;
+}
+
+.kns-nilai {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1.3rem, 2.2vw, 1.8rem);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+.kns-ket {
+  margin: 0.4rem 0 0;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--teks-redup);
+}
+
+/* --- Papan dua kolom -------------------------------------------------- */
+
+.kns-papan {
+  display: grid;
+  gap: clamp(var(--r-3), 2vw, var(--r-4));
+  align-items: start;
+}
+
+@media (min-width: 1080px) {
+  .kns-papan {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  }
+}
+
+/* Panggung: .panel bersama + rim atas yang menandai panel hidup. */
+.kns-teater {
+  position: relative;
+  overflow: clip;
+  padding: clamp(var(--r-3), 2.2vw, var(--r-4));
+}
+
+.kns-teater::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--glass-rim), transparent);
+  pointer-events: none;
+}
+
+.kns-isi {
+  display: grid;
+  gap: var(--r-3);
+}
+
+/* --- Jalur keadaan run ------------------------------------------------ */
+
+.kns-jalur {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--r-2) var(--r-3);
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: var(--r-3);
+  border-bottom: 1px solid var(--glass-rim-redup);
+}
+
+.kns-hidup {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-family: var(--font-display);
+  font-size: 0.74rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--teks-redup);
+}
+
+.kns-hidup[data-nyala="ya"] {
+  color: var(--amber);
+}
+
+.kns-suar {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: transparent;
+  box-shadow: inset 0 0 0 1.5px currentColor;
+  flex: none;
+  position: relative;
+}
+
+.kns-hidup[data-nyala="ya"] .kns-suar {
+  background: currentColor;
+  box-shadow: none;
+}
+
+.kns-cacah {
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--teks-redup);
+  font-variant-numeric: tabular-nums;
+}
+
+/* --- Linimasa vertikal A0-A10 ---------------------------------------- */
+
+.kns-rel {
+  position: relative;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+}
+
+/* Garis waktu: satu garis kontinu di belakang simpul, memudar di kedua ujung
+   supaya ia membaca sebagai sumbu waktu, bukan border. */
+.kns-rel::before {
+  content: "";
+  position: absolute;
+  left: 6px;
+  top: 1.15rem;
+  bottom: 1.15rem;
+  width: 1px;
+  background: linear-gradient(
+    180deg,
+    transparent,
+    var(--glass-rim) 12%,
+    var(--glass-rim) 88%,
+    transparent
+  );
+  pointer-events: none;
+}
+
+.kns-langkah {
+  position: relative;
+  display: grid;
+  grid-template-columns: 13px minmax(0, 1fr) auto;
+  gap: 0.2rem var(--r-3);
+  align-items: center;
+  padding: 0.6rem 0;
+}
+
+.kns-node {
+  grid-column: 1;
+  grid-row: 1;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: var(--ink-0);
+  box-shadow: inset 0 0 0 1.5px var(--slate);
+  position: relative;
+}
+
+/* Sedang berjalan / diperbaiki: rim amber, belum padat. */
+.kns-langkah[data-fase="start"] .kns-node,
+.kns-langkah[data-fase="retry"] .kns-node {
+  box-shadow: inset 0 0 0 2px var(--amber);
+}
+
+/* Sudah menghasilkan keluaran: simpul padat, satu titik cahaya. */
+.kns-langkah[data-fase="output"] .kns-node,
+.kns-langkah[data-fase="done"] .kns-node {
+  background: var(--amber);
+  box-shadow: 0 0 12px -2px var(--amber);
+}
+
+/* Dibuang: bukan sinyal, jadi bukan amber — rim terang dan inti gelap. */
+.kns-langkah[data-fase="discarded"] .kns-node {
+  background: var(--ink-2);
+  box-shadow: inset 0 0 0 2px var(--teks);
+}
+
+.kns-identitas {
+  grid-column: 2;
+  grid-row: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-width: 0;
+}
+
+.kns-agen {
+  flex: none;
+  min-width: 2.7rem;
+  text-align: center;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  font-variant-numeric: tabular-nums;
+  color: var(--teks-redup);
+  border: 1px solid var(--glass-rim-redup);
+  border-radius: var(--radius-kecil);
+  padding: 0.14rem 0.4rem;
+}
+
+.kns-langkah[data-jalan="ya"] .kns-agen {
+  color: var(--teks);
+  border-color: var(--glass-rim);
+}
+
+.kns-peran {
+  min-width: 0;
+  font-size: 0.9rem;
+  color: var(--teks-redup);
+  overflow-wrap: anywhere;
+}
+
+.kns-langkah[data-jalan="ya"] .kns-peran {
+  color: var(--teks);
+}
+
+.kns-fase {
+  grid-column: 3;
+  grid-row: 1;
+  justify-self: end;
+  white-space: nowrap;
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--teks-redup);
+  border: 1px dashed var(--glass-rim-redup);
+  border-radius: 999px;
+  padding: 0.14rem 0.6rem;
+}
+
+.kns-fase--aktif {
+  color: var(--amber);
+  border-style: solid;
+  border-color: color-mix(in srgb, var(--amber) 50%, transparent);
+}
+
+.kns-fase--sedia {
+  color: var(--teks);
+  border-style: solid;
+  border-color: var(--glass-rim-redup);
+}
+
+/* Langkah yang dibuang: rim penuh dan rapat, tanpa warna sinyal kedua. */
+.kns-fase--cacat {
+  color: var(--teks);
+  border-style: solid;
+  border-color: var(--glass-rim);
+}
+
+.kns-jejak {
+  grid-column: 2 / -1;
+  grid-row: 2;
+  min-width: 0;
+  font-family: var(--font-display);
+  font-size: 0.68rem;
+  letter-spacing: 0.03em;
+  color: var(--teks-redup);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (max-width: 560px) {
+  .kns-langkah {
+    grid-template-columns: 13px minmax(0, 1fr);
+  }
+
+  .kns-fase {
+    grid-column: 2;
+    grid-row: 2;
+    justify-self: start;
+  }
+
+  .kns-jejak {
+    grid-row: 3;
+  }
+}
+
+/* --- Penutup run: status server, bukan simpulan agen ------------------ */
+
+.kns-penutup {
+  display: grid;
+  gap: var(--r-2);
+  padding: var(--r-3);
+  background: var(--ink-2);
+  border: 1px solid var(--glass-rim-redup);
+  border-radius: var(--radius-kecil);
+}
+
+.kns-label {
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--teks-redup);
+}
+
+.kns-vonis {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--r-2) var(--r-3);
+  align-items: baseline;
+}
+
+.kns-catatan {
+  font-size: 0.86rem;
+  line-height: 1.55;
+  color: var(--teks-redup);
+  max-width: 64ch;
+}
+
+/* --- Kegagalan jujur -------------------------------------------------- */
+
+.kns-gagal {
+  position: relative;
+  display: grid;
+  gap: var(--r-2);
+  padding: calc(var(--r-3) + 4px) var(--r-3) var(--r-3);
+  background: var(--ink-2);
+  border: 1px dashed var(--glass-rim);
+  border-radius: var(--radius-kecil);
+  overflow: hidden;
+}
+
+/* Pita bahaya: tekstur, bukan warna sinyal baru (blueprint 7.2). */
+.kns-gagal::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 4px;
+  background: repeating-linear-gradient(-45deg, transparent 0 4px, var(--glass-rim) 4px 5px);
+  pointer-events: none;
+}
+
+.kns-gagal__judul {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  color: var(--teks);
+}
+
+.kns-gagal__isi {
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--teks-redup);
+  max-width: 64ch;
+}
+
+/* --- Kendali taktil --------------------------------------------------- */
+
+.kns-kendali {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--r-3);
+  align-items: center;
+}
+
+/* Satu tombol amber: aksi utama panggung, bukan latar. Selektor memakai elemen
+   supaya menang atas .taktil tanpa menyentuh globals.css. */
+button.kns-mulai {
+  background: var(--amber);
+  border-color: var(--amber);
+  color: var(--teks-terang);
+}
+
+button.kns-mulai:hover:not(:disabled),
+button.kns-mulai:focus-visible:not(:disabled) {
+  background: color-mix(in srgb, var(--amber) 88%, white);
+  border-color: color-mix(in srgb, var(--amber) 88%, white);
+}
+
+button.kns-mulai:disabled {
+  background: var(--ink-2);
+  border-color: var(--glass-rim-redup);
+  color: var(--teks-redup);
+}
+
+.kns-nota {
+  flex: 1 1 22ch;
+  min-width: 0;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: var(--teks-redup);
+}
+
+/* --- Pemilih kasus ---------------------------------------------------- */
+
+.kns-daftar {
+  display: grid;
+  gap: var(--r-2);
+}
+
+.kns-kasus {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.3rem var(--r-3);
+  align-items: center;
+  padding: var(--r-3);
+  background: var(--ink-1);
+  border: 1px solid var(--glass-rim-redup);
+  border-radius: var(--radius-kecil);
+  text-decoration: none;
+  color: var(--teks);
+  transition:
+    transform 200ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 200ms cubic-bezier(0.22, 1, 0.36, 1),
+    background 200ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.kns-kasus:hover,
+.kns-kasus:focus-visible {
+  transform: translateX(3px);
+  background: var(--ink-2);
+  border-color: var(--glass-rim);
+}
+
+/* Rail amber setipis mungkin: penanda pilihan, bukan bidang warna. */
+.kns-kasus[aria-current="true"] {
+  background: var(--ink-2);
+  border-color: var(--glass-rim);
+  box-shadow: inset 3px 0 0 var(--amber);
+}
+
+.kns-kasus__id {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.98rem;
+  word-break: break-word;
+}
+
+.kns-kasus__id::after {
+  content: " →";
+  color: var(--amber);
+  opacity: 0;
+  transition: opacity 180ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.kns-kasus:hover .kns-kasus__id::after,
+.kns-kasus:focus-visible .kns-kasus__id::after,
+.kns-kasus[aria-current="true"] .kns-kasus__id::after {
+  opacity: 1;
+}
+
+.kns-kasus > .status {
+  justify-self: end;
+}
+
+.kns-kasus__meta {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2rem var(--r-3);
+  font-size: 0.8rem;
+  color: var(--teks-redup);
+}
+
+.kns-terpilih {
+  padding-top: var(--r-2);
+  font-size: 0.82rem;
+  line-height: 1.55;
+  color: var(--teks-redup);
+}
+
+/* --- Gerak: hanya transform + opacity, hanya kalau gerak diizinkan ----- */
+
+@media (prefers-reduced-motion: no-preference) {
+  .kns-hidup[data-nyala="ya"] .kns-suar::after,
+  .kns-langkah[data-fase="start"] .kns-node::after {
+    content: "";
+    position: absolute;
+    inset: -5px;
+    border-radius: 50%;
+    background: currentColor;
+    opacity: 0.28;
+    pointer-events: none;
+    animation: kns-denyut 1800ms cubic-bezier(0.22, 1, 0.36, 1) infinite;
+  }
+
+  .kns-langkah[data-fase="start"] .kns-node::after {
+    background: var(--amber);
+  }
+
+  @keyframes kns-denyut {
+    0% {
+      transform: scale(0.35);
+      opacity: 0.34;
+    }
+    70%,
+    100% {
+      transform: scale(1);
+      opacity: 0;
+    }
+  }
+}

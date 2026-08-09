@@ -1,0 +1,446 @@
+/* Lapis visual Portal Publik. Semua warna, font, dan ritme dari tokens.css —
+   tidak ada nilai warna baru di sini. Prefiks prt- dipakai tanpa kecuali supaya
+   berkas ini tidak pernah menyentuh surface lain yang berbagi globals.css.
+
+   Gerak: hanya transform dan opacity, dan hanya lewat atribut yang sudah
+   didukung components/gerak.tsx (data-garis, data-angka). Tanpa JavaScript atau
+   dengan prefers-reduced-motion, halaman ini utuh — hanya diam. */
+
+.prt {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(2rem, 6vh, 3.5rem);
+  max-width: 1120px;
+  margin: 0 auto;
+  /* Sengaja TANPA overflow: clip di sini. Kartu penutup rata dengan tepi kolom,
+     dan klip apa pun akan memotong cincin fokusnya. Latar grid hero karena itu
+     dibuat tidak pernah melebar keluar kolom. */
+}
+
+/* --- HERO --------------------------------------------------------------- */
+.prt-wira {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: clamp(0.9rem, 2.4vh, 1.4rem);
+  padding: clamp(1.25rem, 5vh, 3.5rem) 0 clamp(0.5rem, 2vh, 1.5rem);
+}
+
+/* Grid maritim yang nyaris tak terlihat, memudar ke bawah — sama bahasanya
+   dengan hero Entry, hanya lebih tenang karena ini halaman baca. */
+.prt-wira::before {
+  content: "";
+  position: absolute;
+  inset: -25% 0 auto;
+  height: 150%;
+  background-image:
+    linear-gradient(var(--glass-rim-redup) 1px, transparent 1px),
+    linear-gradient(90deg, var(--glass-rim-redup) 1px, transparent 1px);
+  background-size: 64px 64px;
+  -webkit-mask-image: radial-gradient(110% 62% at 50% 8%, #000 0%, transparent 70%);
+  mask-image: radial-gradient(110% 62% at 50% 8%, #000 0%, transparent 70%);
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+.prt-wira > * {
+  position: relative;
+}
+
+.prt-mata {
+  font-family: var(--font-display);
+  font-size: 0.74rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--teks-redup);
+  padding: 0.4rem 0.85rem;
+  border: 1px solid var(--glass-rim-redup);
+  border-radius: 999px;
+}
+
+.prt-mata span {
+  color: var(--amber);
+}
+
+.prt-judul {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(2.1rem, 5.6vw, 3.9rem);
+  line-height: 1.03;
+  letter-spacing: -0.022em;
+  max-width: 17ch;
+  text-wrap: balance;
+}
+
+/* Satu-satunya aksen amber di headline. */
+.prt-judul__aksen {
+  color: var(--amber);
+}
+
+.prt-sub {
+  max-width: 58ch;
+  font-size: clamp(0.98rem, 1.3vw, 1.12rem);
+  line-height: 1.62;
+  color: var(--teks-redup);
+}
+
+.prt-kontrol {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 0.9rem;
+  align-items: center;
+  justify-content: center;
+  margin-top: clamp(0.4rem, 1.5vh, 1rem);
+}
+
+.prt-cap {
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  color: var(--teks-redup);
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+/* --- ANGKA AGREGAT ------------------------------------------------------- */
+.prt-angka {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(1.1rem, 3.5vh, 2rem);
+}
+
+/* column-reverse: keterangan tetap mendahului angka di DOM (pembaca layar
+   mendengar apa yang dihitung sebelum cacahnya), angka tetap di atas di layar. */
+.prt-total {
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.prt-total__n {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(4.5rem, 17vw, 10.5rem);
+  line-height: 0.82;
+  letter-spacing: -0.045em;
+  /* tabular-nums: lebar angka tidak berubah saat count-up berjalan, jadi tidak
+     ada teks di sekitarnya yang bergeser. */
+  font-variant-numeric: tabular-nums;
+}
+
+.prt-total__ket {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 0.76rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--teks-redup);
+  line-height: 1.5;
+}
+
+.prt-pecah {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(0.5rem, 2.5vw, 2rem);
+  width: min(100%, 44rem);
+  margin: 0;
+  padding-top: clamp(1rem, 3vh, 1.5rem);
+  border-top: 1px solid var(--glass-rim-redup);
+}
+
+.prt-sel {
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  gap: 0.5rem;
+  padding-inline: 0.4rem;
+  text-align: center;
+}
+
+.prt-sel + .prt-sel {
+  border-left: 1px solid var(--glass-rim-redup);
+}
+
+.prt-sel dt,
+.prt-sel dd {
+  margin: 0;
+}
+
+.prt-sel__n {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1.7rem, 4.2vw, 2.5rem);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+/* --- KEPALA SEKSI -------------------------------------------------------- */
+.prt-kepala {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--r-2) var(--r-3);
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: clamp(0.5rem, 2vh, 1rem);
+}
+
+.prt-kepala__judul {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1.3rem, 2.6vw, 1.9rem);
+  letter-spacing: -0.015em;
+}
+
+/* Keadaan kosong bersama, hanya dibatasi panjang barisnya supaya kalimat
+   kontraknya tetap terbaca di layar lebar. */
+.prt-kosong {
+  max-width: 72ch;
+}
+
+/* --- RINCIAN PER ZONA ---------------------------------------------------- */
+.prt-daftar {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.prt-baris {
+  display: grid;
+  gap: clamp(0.8rem, 2.5vw, 1.75rem);
+  padding: clamp(1.2rem, 3.5vw, 2rem) 0;
+  border-top: 1px solid var(--glass-rim-redup);
+}
+
+.prt-baris__nama {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1.15rem, 2.4vw, 1.55rem);
+  letter-spacing: -0.01em;
+  overflow-wrap: anywhere;
+}
+
+.prt-baris__ket {
+  margin-top: 0.35rem;
+  font-size: 0.86rem;
+  line-height: 1.5;
+  color: var(--teks-redup);
+  max-width: 42ch;
+}
+
+.prt-baris__kanan {
+  display: grid;
+  gap: 0.75rem;
+  align-content: start;
+}
+
+.prt-baris__total {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+.prt-baris__n {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1.6rem, 3.6vw, 2.2rem);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+.prt-baris__unit {
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--teks-redup);
+}
+
+/* Meter proporsi: 3 px, murni data — bukan bidang warna. Amber tetap sinyal,
+   ABSTAIN tetap slate netral. Cacahnya sudah tertulis sebagai teks di bawahnya,
+   jadi meter ini aria-hidden. */
+.prt-meter {
+  display: flex;
+  gap: 2px;
+  height: 3px;
+  width: 100%;
+  /* Dibatasi supaya tetap terbaca sebagai meter, bukan garis pemisah berwarna:
+     amber tidak boleh melebar jadi bidang. */
+  max-width: 18rem;
+  min-width: 8rem;
+}
+
+.prt-meter__ruas {
+  display: block;
+  min-width: 3px;
+}
+
+.prt-meter__ruas--terkonfirmasi {
+  background: var(--amber);
+}
+
+.prt-meter__ruas--terindikasi {
+  background: var(--amber-redup);
+}
+
+.prt-meter__ruas--abstain {
+  background: var(--slate);
+  opacity: 0.7;
+}
+
+.prt-rinci {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem clamp(1rem, 3vw, 2rem);
+  margin: 0;
+}
+
+.prt-rinci__sel {
+  display: flex;
+  align-items: baseline;
+  gap: 0.55rem;
+}
+
+.prt-rinci__sel dt,
+.prt-rinci__sel dd {
+  margin: 0;
+}
+
+.prt-rinci__n {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.05rem;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (min-width: 880px) {
+  .prt-baris {
+    grid-template-columns: minmax(0, 1fr) minmax(20rem, 26rem);
+    align-items: start;
+  }
+}
+
+/* --- PENUTUP: jaminan nol identitas + paritas API ------------------------ */
+.prt-tutup {
+  display: grid;
+  gap: clamp(1rem, 3vw, 1.75rem);
+}
+
+.prt-jaminan {
+  display: grid;
+  gap: var(--r-2);
+  align-content: start;
+  padding: clamp(1.1rem, 3vw, 1.75rem);
+}
+
+.prt-jaminan__kalimat {
+  font-family: var(--font-display);
+  font-size: clamp(1.02rem, 1.6vw, 1.2rem);
+  line-height: 1.45;
+  max-width: 40ch;
+}
+
+.prt-larik {
+  list-style: none;
+  margin: 0.2rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1.1rem;
+  font-size: 0.88rem;
+  color: var(--teks-redup);
+}
+
+.prt-larik li::before {
+  content: "×";
+  color: var(--slate);
+  margin-right: 0.4rem;
+}
+
+.prt-jaminan__nota {
+  margin-top: 0.4rem;
+  font-size: 0.86rem;
+  color: var(--teks-redup);
+}
+
+/* Kartu dengan afiks panah amber — bahasanya sama dengan kartu jelajah Entry. */
+.prt-kartu {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: clamp(1.1rem, 3vw, 1.75rem);
+  background: var(--ink-1);
+  border: 1px solid var(--glass-rim-redup);
+  border-radius: var(--radius);
+  text-decoration: none;
+  color: var(--teks);
+  transition:
+    background 200ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 200ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.prt-kartu:hover,
+.prt-kartu:focus-visible {
+  background: var(--ink-2);
+  border-color: var(--glass-rim);
+}
+
+.prt-kartu__nama {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.08rem;
+}
+
+.prt-kartu__nama::after {
+  content: " →";
+  color: var(--amber);
+}
+
+.prt-kartu__ket {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--teks-redup);
+}
+
+@media (min-width: 880px) {
+  .prt-tutup {
+    grid-template-columns: 1.35fr 1fr;
+    align-items: stretch;
+  }
+}
+
+/* --- SUMBER DATA --------------------------------------------------------- */
+.prt-sumber {
+  display: grid;
+  gap: var(--r-2);
+  justify-items: start;
+  padding-bottom: var(--r-3);
+}
+
+.prt-sumber__larik {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.prt-sumber__butir {
+  font-family: var(--font-display);
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  color: var(--teks-redup);
+  border: 1px solid var(--glass-rim-redup);
+  border-radius: 999px;
+  padding: 0.28rem 0.7rem;
+  overflow-wrap: anywhere;
+}

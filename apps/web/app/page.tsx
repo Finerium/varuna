@@ -9,13 +9,9 @@ import { GerakEntry } from "@/components/gerak";
 import { ChipSar } from "@/components/tampil";
 import { chipPertama } from "@/lib/gudang";
 
-export const dynamic = "force-dynamic";
+import { KartuPeran } from "./enter/kartu-peran";
 
-const PERAN = [
-  { href: "/enter/analis", nama: "Analis", ket: "Pusat Komando" },
-  { href: "/enter/patroli", nama: "Kru Patroli", ket: "aplikasi lapangan" },
-  { href: "/enter/publik", nama: "Publik", ket: "Portal agregat" },
-] as const;
+export const dynamic = "force-dynamic";
 
 const BUKTI = [
   { angka: "0,854", ket: "F1 deteksi lepas pantai" },
@@ -94,15 +90,7 @@ export default async function Entry() {
           </p>
 
           <div className="masuk" data-gerak-masuk="">
-            <div className="masuk__pil">
-              {PERAN.map((p) => (
-                // Anchor penuh, bukan Link: rute memasang cookie peran lalu mengalihkan.
-                <a key={p.href} className="pil" href={p.href}>
-                  <span className="pil__nama">{p.nama}</span>
-                  <span className="pil__ket">{p.ket}</span>
-                </a>
-              ))}
-            </div>
+            <KartuPeran />
             <p className="masuk__nota">Akun uji untuk juri tersedia di tiap peran.</p>
           </div>
 
@@ -161,7 +149,9 @@ export default async function Entry() {
           </Link>
           <Link className="jelajah__kartu" href="/konsol">
             <span className="jelajah__nama">Konsol Skenario</span>
-            <span className="jelajah__ket">Orkestrasi agen diputar ulang, langkah demi langkah.</span>
+            <span className="jelajah__ket">
+              Orkestrasi agen diputar ulang, langkah demi langkah.
+            </span>
           </Link>
           <Link className="jelajah__kartu" href="/portal">
             <span className="jelajah__nama">Portal Publik</span>

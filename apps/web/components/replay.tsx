@@ -10,16 +10,31 @@
 // Kegagalan panggilan model tampil apa adanya beserta tombol ulang (V13):
 // mengulang MENGULANG LANGKAH YANG SAMA dengan token yang sama, bukan memulai
 // dari awal diam-diam.
+//
+// Kelas visual berprefiks `kns-` dan hidup di app/(surfaces)/konsol/konsol.css:
+// komponen ini hanya dipakai Konsol, jadi lapis visualnya ikut ke sana.
 
 import { useAnimate } from "motion/react-mini";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import { gerakHidup } from "@/lib/gerak";
 
-/** Urutan agen kontrak Bagian 2. Ditulis di sini, BUKAN diimpor dari
- *  @varuna/agents: paket itu menarik SDK agen ke dalam bundel peramban padahal
- *  yang dibutuhkan komponen ini cuma sebelas label. */
-const ID_AGEN = ["A0", "A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8", "A9", "A10"] as const;
+/** Rantai agen kontrak Bagian 2 beserta peran ringkasnya. Ditulis di sini,
+ *  BUKAN diimpor dari @varuna/agents: paket itu menarik SDK agen ke dalam bundel
+ *  peramban padahal yang dibutuhkan komponen ini cuma sebelas label. */
+const AGEN = [
+  { id: "A0", peran: "Orkestrator" },
+  { id: "A1", peran: "Penyiap akuisisi" },
+  { id: "A2", peran: "Pemilih deteksi" },
+  { id: "A3", peran: "Pemeriksa anomali AIS" },
+  { id: "A4", peran: "Pengasosiasi lintasan" },
+  { id: "A5", peran: "Pengelas perilaku" },
+  { id: "A6", peran: "Pemeriksa silang" },
+  { id: "A7", peran: "Penyusun berkas" },
+  { id: "A8", peran: "Pemeriksa diksi" },
+  { id: "A9", peran: "Penyusun usulan paket" },
+  { id: "A10", peran: "Pengusul kalibrasi" },
+] as const;
 
 type Fase = "start" | "output" | "retry" | "discarded" | "done";
 
@@ -45,6 +60,25 @@ const KATA_FASE: Record<Fase, string> = {
   done: "run ditutup",
 };
 
+/** Bobot visual fase: amber hanya untuk langkah yang sedang hidup, rim penuh
+ *  untuk yang sudah menetap, rim rapat untuk yang dibuang. */
+const KELAS_FASE: Record<Fase, string> = {
+  start: "kns-fase kns-fase--aktif",
+  output: "kns-fase kns-fase--sedia",
+  retry: "kns-fase kns-fase--aktif",
+  discarded: "kns-fase kns-fase--cacat",
+  done: "kns-fase kns-fase--sedia",
+};
+
+/** Kosakata tampil status BEKU (contracts.md Bagian 7). Peta tiga baris ini
+ *  ditulis ulang di sini, sama alasannya dengan AGEN: mengimpor components/tampil
+ *  menarik @varuna/core ke bundel peramban demi satu label. */
+const LABEL_STATUS: Record<string, string> = {
+  terkonfirmasi: "terkonfirmasi",
+  terindikasi: "terindikasi",
+  abstain: "ABSTAIN",
+};
+
 /** Pembaca SSE minimal: cukup untuk `event:` + `data:` satu baris, yang memang
  *  satu-satunya bentuk yang dikirim rute replay. */
 async function* peristiwa(res: Response): AsyncGenerator<{ event: string; data: unknown }> {
@@ -68,9 +102,9 @@ async function* peristiwa(res: Response): AsyncGenerator<{ event: string; data: 
   }
 }
 
-/** Satu-satunya gerak di Konsol, dan ia menandai perubahan yang SUNGGUH terjadi:
- *  badge fase muncul saat langkah agen berpindah fase. Bukan animasi saat halaman
- *  dibuka — di surface operasional tidak ada scroll-theater.
+/** Satu-satunya gerak bawaan JavaScript di Konsol, dan ia menandai perubahan yang
+ *  SUNGGUH terjadi: badge fase muncul saat langkah agen berpindah fase. Bukan
+ *  animasi saat halaman dibuka — di surface operasional tidak ada scroll-theater.
  *
  *  Motion dipakai lewat `motion/react-mini`, bukan `motion/react`: yang dibutuhkan
  *  cuma satu transisi opacity+transform, dan varian mini menjalankannya di WAAPI.
@@ -83,7 +117,7 @@ async function* peristiwa(res: Response): AsyncGenerator<{ event: string; data: 
  *  dijalankan pada pergantian berikutnya, jadi hidrasi cocok dan tidak ada isi
  *  yang bergantung pada JS untuk muncul. reduced-motion (bendera lib/gerak.ts):
  *  badge yang sama persis, langsung. */
-function Fase({ kata, cacat }: { kata: string; cacat: boolean }) {
+function Fase({ kata, kelas }: { kata: string; kelas: string }) {
   const [ruang, animasikan] = useAnimate<HTMLSpanElement>();
   const pernah = useRef(false);
 
@@ -101,7 +135,7 @@ function Fase({ kata, cacat }: { kata: string; cacat: boolean }) {
   }, [kata, animasikan, ruang]);
 
   return (
-    <span ref={ruang} className={`keadaan${cacat ? " keadaan--error" : ""}`}>
+    <span ref={ruang} className={kelas}>
       {kata}
     </span>
   );
@@ -191,42 +225,87 @@ export function Replay({ inv }: { inv: string | null }) {
     [...langkah].reverse().find((l) => l.agent === agen);
   const penutupRun = [...langkah].reverse().find((l) => l.phase === "done");
 
+  // Satu kalimat keadaan run, dibaca dari state yang sama dengan tombolnya.
+  const keadaan =
+    gagal !== null
+      ? "run terhenti"
+      : berjalan
+        ? "live · model dipanggil"
+        : selesai
+          ? "run selesai"
+          : inv === null
+            ? "menunggu kasus"
+            : "siaga";
+
   return (
-    <div className="tumpuk">
-      <ol className="tumpuk tumpuk--rapat" style={{ listStyle: "none", margin: 0, padding: 0 }}>
-        {ID_AGEN.map((a) => {
-          const l = terakhirPer(a);
+    <div className="kns-isi">
+      <div className="kns-jalur">
+        <span className="kns-hidup" data-nyala={berjalan ? "ya" : "tidak"} aria-live="polite">
+          <span className="kns-suar" aria-hidden="true" />
+          {keadaan}
+        </span>
+        <span className="kns-cacah">{langkah.length} langkah tercatat</span>
+      </div>
+
+      <ol className="kns-rel" aria-label="Linimasa agen A0 sampai A10">
+        {AGEN.map((a) => {
+          const l = terakhirPer(a.id);
           return (
-            <li key={a} className="baris" style={{ padding: "var(--r-2) 0" }}>
-              <span className="baris__utama">{a}</span>
+            <li
+              key={a.id}
+              className="kns-langkah"
+              data-fase={l?.phase ?? "kosong"}
+              data-jalan={l === undefined ? "tidak" : "ya"}
+            >
+              <span className="kns-node" aria-hidden="true" />
+              <span className="kns-identitas">
+                <span className="kns-agen">{a.id}</span>
+                <span className="kns-peran">{a.peran}</span>
+              </span>
               <Fase
                 kata={l === undefined ? "belum dijalankan" : KATA_FASE[l.phase]}
-                cacat={l?.phase === "discarded"}
+                kelas={l === undefined ? "kns-fase" : KELAS_FASE[l.phase]}
               />
+              {l !== undefined && (
+                <span className="kns-jejak" title={l.trace_ref}>
+                  jejak {l.trace_ref}
+                </span>
+              )}
             </li>
           );
         })}
       </ol>
 
       {penutupRun?.pasha != null && (
-        <p className="redup">
-          Status dihitung server dari artefak yang dikutip replay: {penutupRun.pasha.status} (
-          {penutupRun.pasha.sensors_independent} modalitas independen).{" "}
-          {penutupRun.diff !== null &&
-            `Dibanding berkas tersimpan: status ${penutupRun.diff.status_sama ? "sama" : "berbeda"}, himpunan artefak ${penutupRun.diff.artefak_sama ? "sama" : "berbeda"}.`}
-        </p>
-      )}
-
-      {gagal !== null && (
-        <div className="kosong" role="alert">
-          <p className="kosong__kalimat">Langkah ini tidak selesai.</p>
-          <p>{gagal}</p>
+        <div className="kns-penutup">
+          <p className="kns-label">Status dihitung server dari artefak yang dikutip replay</p>
+          <p className="kns-vonis">
+            <span className={`status status--${penutupRun.pasha.status}`}>
+              {LABEL_STATUS[penutupRun.pasha.status] ?? penutupRun.pasha.status}
+            </span>
+            <span className="redup">
+              {penutupRun.pasha.sensors_independent} modalitas independen
+            </span>
+          </p>
+          {penutupRun.diff !== null && (
+            <p className="kns-catatan">
+              Dibanding berkas tersimpan: status {penutupRun.diff.status_sama ? "sama" : "berbeda"},
+              himpunan artefak {penutupRun.diff.artefak_sama ? "sama" : "berbeda"}.
+            </p>
+          )}
         </div>
       )}
 
-      <div className="deret">
+      {gagal !== null && (
+        <div className="kns-gagal" role="alert">
+          <p className="kns-gagal__judul">Langkah ini tidak selesai.</p>
+          <p className="kns-gagal__isi">{gagal}</p>
+        </div>
+      )}
+
+      <div className="kns-kendali">
         <button
-          className="taktil"
+          className="taktil kns-mulai"
           type="button"
           onClick={jalankan}
           disabled={inv === null || berjalan || (selesai && gagal === null)}
@@ -244,9 +323,9 @@ export function Replay({ inv }: { inv: string | null }) {
             Mulai dari awal
           </button>
         )}
-        <p className="redup" style={{ fontSize: "0.82rem", flex: "1 1 18ch" }}>
+        <p className="kns-nota">
           {inv === null
-            ? "Pilih satu kasus di sebelah kanan; replay berjalan pada satu investigasi."
+            ? "Pilih satu kasus di panel sebelah; replay berjalan pada satu investigasi."
             : `Tiap langkah adalah satu panggilan model yang sungguh berjalan pada ${inv}. Tidak ada rekaman kalengan yang bisa diputar sebagai gantinya.`}
         </p>
       </div>
