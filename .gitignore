@@ -1,0 +1,8 @@
+data/
+models/*/weights/
+*.jit
+*.zip
+*.tif
+*.SAFE/
+__pycache__/
+.DS_Store
