@@ -225,4 +225,28 @@ publik dan dilaporkan apa adanya (tercapai atau tidak).
 
 ## Amandemen
 
-(kosong pada v1)
+### A1 — E4 Asosiasi (9 Agu 2026, setelah pull data W2, SEBELUM run E4/E5)
+Temuan: API publik GFW tidak menyediakan lintasan titik AIS; resolusi terhalus =
+bucket jam per kapal per sel 4wings (dikonfirmasi empiris, manifests/w2). Konsekuensi:
+(i) Evaluasi asosiasi utama pindah ke pasangan scene Sentinel-1 Denmark 5 Agu 2026
+    (CDSE, katalog manifests/cdse-katalog-denmark.json) x lintasan titik DMA hari sama
+    (data/processed/dma/trajectories.parquet). GT pasangan: adjudikasi ganda §0.5,
+    n >= 30; kontrol negatif shuffle tetap berlaku.
+(ii) Jalur "GT korelasi xView3" untuk asosiasi DIBATALKAN sebagai eksperimen
+     input-penuh: tanpa lintasan AIS sebagai masukan, Hungarian tidak dapat dijalankan
+     pada scene xView3. Label source=ais/manual xView3 tetap dipakai sebagai konteks
+     level-label (proporsi kandidat gelap), bukan evaluasi asosiasi.
+(iii) Di Natuna, kesesuaian deteksi-AIS dilaporkan hanya level bucket jam-sel,
+      dilabeli "proksi kasar" (bukan metrik klaim).
+
+### A2 — E1 recall-proksi (9 Agu 2026)
+Kondisi bawaan protokol terpicu (AIS titik jendela akuisisi tak tersedia):
+recall-proksi titik DIBATALKAN, diganti statistik kesesuaian bucket jam-sel
+(deskriptif). Sesuai klausa kondisional E1 yang sudah beku.
+
+### A3 — T4 zona WPPNRI (9 Agu 2026)
+Sumber batas WPPNRI resmi (satupeta.kkp.go.id) tidak terjangkau dari jaringan saat
+ini. T4 demo memakai ZEE Marine Regions v12 (CC-BY, terverifikasi) + proxy WPP 711
+bbox terdokumentasi. Masuk tabel Deviasi paper; produksi tetap mensyaratkan batas
+WPPNRI resmi.
+
