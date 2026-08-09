@@ -6,3 +6,11 @@ models/*/weights/
 *.SAFE/
 __pycache__/
 .DS_Store
+
+# proses & besar (build run)
+e1_work/
+*.BADSHA
+*.aside
+.vercel/
+node_modules/
+.next/
