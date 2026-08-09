@@ -945,14 +945,16 @@ html[data-gerak="hidup"] [data-gerak-masuk] {
 
 /* --- strip bukti mini --------------------------------------- */
 .buktimini {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: clamp(1.5rem, 5vw, 3.5rem);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(0.75rem, 3vw, 2.5rem);
   margin: clamp(2.5rem, 6vh, 4rem) 0 0;
   padding: 1.4rem 0 0;
   border-top: 1px solid var(--glass-rim-redup);
-  width: min(100%, 42rem);
+  width: min(100%, 44rem);
+}
+.buktimini__sel + .buktimini__sel {
+  border-left: 1px solid var(--glass-rim-redup);
 }
 .buktimini__sel {
   text-align: center;
