@@ -1,0 +1,12 @@
+{
+  "eksperimen": "E10 biaya token agen (metered)",
+  "metode": "instrumentasi Responses API usage di executor replay -> SSE; driver stabilitas.py --base localhost (server ter-instrumentasi) + kunci API hidup",
+  "model": "OPENAI_API_KEY hidup (Responses API)",
+  "sampel": "2 investigasi demo x 1 replay; metering awal, bukan set penuh",
+  "per_investigasi": [
+    {"inv_id": "inv-natuna-20260805-01", "token_in": 21747, "token_out": 746, "requests": 17},
+    {"inv_id": "inv-x3-3bc01ebc-01", "token_in": 19862, "token_out": 849, "requests": 17}
+  ],
+  "ringkas": "~20-22 ribu token masukan + ~750-850 token keluaran per investigasi, ~17 panggilan model (A0 + sub-agen lintas langkah pause-persist)",
+  "catatan": "sampel kecil; angka menyeluruh menunggu putaran metered pada set lebih besar. Biaya GPU deteksi terpisah: 1910 dtk/scene P100 (smoke E1)."
+}
