@@ -1,0 +1,30 @@
+{
+ "eksperimen": "E10",
+ "sub": "biaya-token-replay",
+ "mode": "rencana (nol biaya model)",
+ "base": "http://127.0.0.1:3117",
+ "seed": 20260809,
+ "instrumentasi": "TERPASANG: executor.ts menangkap usage Responses API per run (A0 dan tiap sub-agen); SSE membawanya di `usage` peristiwa penutup dan tiap agent_step; replay_client.kumpulkan_token menjumlahkannya. Diuji di packages/agents/test/executor.test.ts dan replay_client.py --check.",
+ "inv_terjangkau": "3/3",
+ "target": [
+  {
+   "inv_id": "inv-natuna-20260805-01",
+   "kasus": "going-dark",
+   "http_get": 200,
+   "http_replay": 503
+  },
+  {
+   "inv_id": "inv-x3-3bc01ebc-01",
+   "kasus": "abstain",
+   "http_get": 200,
+   "http_replay": 503
+  },
+  {
+   "inv_id": "inv-x3-570f8bf7-01",
+   "kasus": "patroli",
+   "http_get": 200,
+   "http_replay": 503
+  }
+ ],
+ "catatan": "http_replay 503 = OPENAI_API_KEY belum ada di lingkungan server. Jalankan server dengan kunci lalu `--jalan-live` untuk menulis manifests/e10-token.json; manifest itu sengaja TIDAK dibuat selama belum ada angka terukur."
+}

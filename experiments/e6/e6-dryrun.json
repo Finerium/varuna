@@ -1,0 +1,1547 @@
+{
+ "eksperimen": "E6",
+ "mode": "dry-run",
+ "protokol": "freeze-eval-v1 @0bc9af9",
+ "now": "2026-08-09T11:00:00Z",
+ "thresholds": {
+  "usia_max_h": 144,
+  "ambang_kn": 50,
+  "konflik_jendela_jam": 6
+ },
+ "sumber_inv": "goldenset-scan",
+ "n_inv": 73,
+ "seed": 20260809,
+ "cek_reproduksi": {
+  "fusi_penuh_cocok_status_tersimpan": {
+   "frac": "73/73",
+   "p": 1.0,
+   "wilson95": [
+    0.95,
+    1.0
+   ]
+  },
+  "gagal": [],
+  "catatan": "fusi penuh WAJIB mereproduksi status_server tersimpan; gagal = defect data/gerbang."
+ },
+ "per_lengan": {
+  "sar_saja": {
+   "distribusi_status": {
+    "terkonfirmasi": 0,
+    "terindikasi": 72,
+    "abstain": 1
+   },
+   "terkonfirmasi_tercapai": {
+    "frac": "0/73",
+    "p": 0.0,
+    "wilson95": [
+     0.0,
+     0.05
+    ]
+   },
+   "kandidat_tercapai": {
+    "frac": "72/73",
+    "p": 0.9863,
+    "wilson95": [
+     0.9264,
+     0.9976
+    ]
+   }
+  },
+  "ais_saja": {
+   "distribusi_status": {
+    "terkonfirmasi": 0,
+    "terindikasi": 2,
+    "abstain": 71
+   },
+   "terkonfirmasi_tercapai": {
+    "frac": "0/73",
+    "p": 0.0,
+    "wilson95": [
+     0.0,
+     0.05
+    ]
+   },
+   "kandidat_tercapai": {
+    "frac": "2/73",
+    "p": 0.0274,
+    "wilson95": [
+     0.0075,
+     0.0945
+    ]
+   }
+  },
+  "fusi_penuh": {
+   "distribusi_status": {
+    "terkonfirmasi": 0,
+    "terindikasi": 72,
+    "abstain": 1
+   },
+   "terkonfirmasi_tercapai": {
+    "frac": "0/73",
+    "p": 0.0,
+    "wilson95": [
+     0.0,
+     0.05
+    ]
+   },
+   "kandidat_tercapai": {
+    "frac": "72/73",
+    "p": 0.9863,
+    "wilson95": [
+     0.9264,
+     0.9976
+    ]
+   }
+  }
+ },
+ "nilai_fusi": {
+  "kandidat_fusi_penuh": {
+   "frac": "72/73",
+   "p": 0.9863,
+   "wilson95": [
+    0.9264,
+    0.9976
+   ]
+  },
+  "terlewat_saat_buang_AIS": {
+   "inv": [
+    "inv-e5-sint-02"
+   ],
+   "frac": "1/72",
+   "p": 0.0139,
+   "wilson95": [
+    0.0025,
+    0.0746
+   ]
+  },
+  "terlewat_saat_buang_SAR": {
+   "inv": [
+    "inv-e5-0bc18737-01",
+    "inv-e5-0bc18737-02",
+    "inv-e5-0e815a40-01",
+    "inv-e5-0e815a40-02",
+    "inv-e5-1c904ce3-01",
+    "inv-e5-1c904ce3-02",
+    "inv-e5-2afbfbcc-01",
+    "inv-e5-2afbfbcc-02",
+    "inv-e5-3a0fff47-01",
+    "inv-e5-3a0fff47-02",
+    "inv-e5-3bc01ebc-01",
+    "inv-e5-3bc01ebc-02",
+    "inv-e5-4f1ac441-01",
+    "inv-e5-4f1ac441-02",
+    "inv-e5-55281e89-01",
+    "inv-e5-55281e89-02",
+    "inv-e5-570f8bf7-01",
+    "inv-e5-570f8bf7-02",
+    "inv-e5-583ae138-01",
+    "inv-e5-583ae138-02",
+    "inv-e5-5af616b1-01",
+    "inv-e5-5af616b1-02",
+    "inv-e5-679f1af0-01",
+    "inv-e5-679f1af0-02",
+    "inv-e5-6ed43019-01",
+    "inv-e5-6ed43019-02",
+    "inv-e5-7dd2a5a4-01",
+    "inv-e5-7dd2a5a4-02",
+    "inv-e5-860e65f9-01",
+    "inv-e5-860e65f9-02",
+    "inv-e5-8bac7ec9-01",
+    "inv-e5-8bac7ec9-02",
+    "inv-e5-8decb780-01",
+    "inv-e5-8decb780-02",
+    "inv-e5-8e8df9a7-01",
+    "inv-e5-8e8df9a7-02",
+    "inv-e5-93cd69e7-01",
+    "inv-e5-93cd69e7-02",
+    "inv-e5-97e4833c-01",
+    "inv-e5-97e4833c-02",
+    "inv-e5-9afdf1b6-01",
+    "inv-e5-9afdf1b6-02",
+    "inv-e5-aad0cc0c-01",
+    "inv-e5-aad0cc0c-02",
+    "inv-e5-b5857d9d-01",
+    "inv-e5-b5857d9d-02",
+    "inv-e5-b771e72b-01",
+    "inv-e5-b771e72b-02",
+    "inv-e5-c078ff51-01",
+    "inv-e5-c078ff51-02",
+    "inv-e5-cd67e528-01",
+    "inv-e5-cd67e528-02",
+    "inv-e5-cf10d2ab-01",
+    "inv-e5-cf10d2ab-02",
+    "inv-e5-dff6047c-01",
+    "inv-e5-dff6047c-02",
+    "inv-e5-ebbbee77-01",
+    "inv-e5-ebbbee77-02",
+    "inv-e5-ec00f105-01",
+    "inv-e5-ec00f105-02",
+    "inv-e5-ed7647ea-01",
+    "inv-e5-ed7647ea-02",
+    "inv-e5-f7246508-01",
+    "inv-e5-f7246508-02",
+    "inv-e5-f77492d9-01",
+    "inv-e5-f77492d9-02",
+    "inv-e5-f9db277f-01",
+    "inv-e5-f9db277f-02",
+    "inv-e5-f9e403da-01",
+    "inv-e5-f9e403da-02",
+    "inv-e5-sint-01"
+   ],
+   "frac": "71/72",
+   "p": 0.9861,
+   "wilson95": [
+    0.9254,
+    0.9975
+   ]
+  },
+  "kandidat_khusus_fusi": {
+   "inv": [],
+   "frac": "0/72",
+   "p": 0.0,
+   "wilson95": [
+    0.0,
+    0.0507
+   ]
+  },
+  "terkonfirmasi_khusus_fusi": {
+   "inv": [],
+   "frac": "0/73",
+   "p": 0.0,
+   "wilson95": [
+    0.0,
+    0.05
+   ]
+  },
+  "catatan": "kandidat_khusus_fusi = kandidat (non-ABSTAIN) yang HANYA muncul di fusi penuh (kedua lengan tunggal ABSTAIN); pada PASHA satu deteksi tunggal sudah 'terindikasi', jadi angka ini menyorot kasus di mana tak satu pun modalitas berdiri sendiri. terkonfirmasi_khusus_fusi menangkap nilai-tambah yang lebih lunak: konfirmasi (2 sensor + pelanggaran zona) yang hanya dicapai saat kedua modalitas hadir."
+ },
+ "pimpin_dengan": {
+  "lengan_terkonfirmasi_terlemah": "sar_saja",
+  "laju_terkonfirmasi_per_lengan": {
+   "sar_saja": 0.0,
+   "ais_saja": 0.0,
+   "fusi_penuh": 0.0
+  },
+  "modalitas_paling_menyakitkan_bila_dibuang": "buang_SAR",
+  "laju_terlewat": {
+   "buang_AIS": 0.0139,
+   "buang_SAR": 0.9861
+  }
+ },
+ "per_inv": [
+  {
+   "inv_id": "inv-e5-0bc18737-01",
+   "n_artefak": 1,
+   "arm": {
+    "sar_saja": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    },
+    "ais_saja": {
+     "status": "abstain",
+     "n_artefak": 0
+    },
+    "fusi_penuh": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    }
+   }
+  },
+  {
+   "inv_id": "inv-e5-0bc18737-02",
+   "n_artefak": 1,
+   "arm": {
+    "sar_saja": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    },
+    "ais_saja": {
+     "status": "abstain",
+     "n_artefak": 0
+    },
+    "fusi_penuh": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    }
+   }
+  },
+  {
+   "inv_id": "inv-e5-0e815a40-01",
+   "n_artefak": 1,
+   "arm": {
+    "sar_saja": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    },
+    "ais_saja": {
+     "status": "abstain",
+     "n_artefak": 0
+    },
+    "fusi_penuh": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    }
+   }
+  },
+  {
+   "inv_id": "inv-e5-0e815a40-02",
+   "n_artefak": 1,
+   "arm": {
+    "sar_saja": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    },
+    "ais_saja": {
+     "status": "abstain",
+     "n_artefak": 0
+    },
+    "fusi_penuh": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    }
+   }
+  },
+  {
+   "inv_id": "inv-e5-1c904ce3-01",
+   "n_artefak": 1,
+   "arm": {
+    "sar_saja": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    },
+    "ais_saja": {
+     "status": "abstain",
+     "n_artefak": 0
+    },
+    "fusi_penuh": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    }
+   }
+  },
+  {
+   "inv_id": "inv-e5-1c904ce3-02",
+   "n_artefak": 1,
+   "arm": {
+    "sar_saja": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    },
+    "ais_saja": {
+     "status": "abstain",
+     "n_artefak": 0
+    },
+    "fusi_penuh": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    }
+   }
+  },
+  {
+   "inv_id": "inv-e5-2afbfbcc-01",
+   "n_artefak": 1,
+   "arm": {
+    "sar_saja": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    },
+    "ais_saja": {
+     "status": "abstain",
+     "n_artefak": 0
+    },
+    "fusi_penuh": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    }
+   }
+  },
+  {
+   "inv_id": "inv-e5-2afbfbcc-02",
+   "n_artefak": 1,
+   "arm": {
+    "sar_saja": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    },
+    "ais_saja": {
+     "status": "abstain",
+     "n_artefak": 0
+    },
+    "fusi_penuh": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    }
+   }
+  },
+  {
+   "inv_id": "inv-e5-3a0fff47-01",
+   "n_artefak": 1,
+   "arm": {
+    "sar_saja": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    },
+    "ais_saja": {
+     "status": "abstain",
+     "n_artefak": 0
+    },
+    "fusi_penuh": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    }
+   }
+  },
+  {
+   "inv_id": "inv-e5-3a0fff47-02",
+   "n_artefak": 1,
+   "arm": {
+    "sar_saja": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    },
+    "ais_saja": {
+     "status": "abstain",
+     "n_artefak": 0
+    },
+    "fusi_penuh": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    }
+   }
+  },
+  {
+   "inv_id": "inv-e5-3bc01ebc-01",
+   "n_artefak": 1,
+   "arm": {
+    "sar_saja": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    },
+    "ais_saja": {
+     "status": "abstain",
+     "n_artefak": 0
+    },
+    "fusi_penuh": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    }
+   }
+  },
+  {
+   "inv_id": "inv-e5-3bc01ebc-02",
+   "n_artefak": 1,
+   "arm": {
+    "sar_saja": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    },
+    "ais_saja": {
+     "status": "abstain",
+     "n_artefak": 0
+    },
+    "fusi_penuh": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    }
+   }
+  },
+  {
+   "inv_id": "inv-e5-4f1ac441-01",
+   "n_artefak": 1,
+   "arm": {
+    "sar_saja": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    },
+    "ais_saja": {
+     "status": "abstain",
+     "n_artefak": 0
+    },
+    "fusi_penuh": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    }
+   }
+  },
+  {
+   "inv_id": "inv-e5-4f1ac441-02",
+   "n_artefak": 1,
+   "arm": {
+    "sar_saja": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    },
+    "ais_saja": {
+     "status": "abstain",
+     "n_artefak": 0
+    },
+    "fusi_penuh": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    }
+   }
+  },
+  {
+   "inv_id": "inv-e5-55281e89-01",
+   "n_artefak": 1,
+   "arm": {
+    "sar_saja": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    },
+    "ais_saja": {
+     "status": "abstain",
+     "n_artefak": 0
+    },
+    "fusi_penuh": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    }
+   }
+  },
+  {
+   "inv_id": "inv-e5-55281e89-02",
+   "n_artefak": 1,
+   "arm": {
+    "sar_saja": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    },
+    "ais_saja": {
+     "status": "abstain",
+     "n_artefak": 0
+    },
+    "fusi_penuh": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    }
+   }
+  },
+  {
+   "inv_id": "inv-e5-570f8bf7-01",
+   "n_artefak": 1,
+   "arm": {
+    "sar_saja": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    },
+    "ais_saja": {
+     "status": "abstain",
+     "n_artefak": 0
+    },
+    "fusi_penuh": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    }
+   }
+  },
+  {
+   "inv_id": "inv-e5-570f8bf7-02",
+   "n_artefak": 1,
+   "arm": {
+    "sar_saja": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    },
+    "ais_saja": {
+     "status": "abstain",
+     "n_artefak": 0
+    },
+    "fusi_penuh": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    }
+   }
+  },
+  {
+   "inv_id": "inv-e5-583ae138-01",
+   "n_artefak": 1,
+   "arm": {
+    "sar_saja": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    },
+    "ais_saja": {
+     "status": "abstain",
+     "n_artefak": 0
+    },
+    "fusi_penuh": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    }
+   }
+  },
+  {
+   "inv_id": "inv-e5-583ae138-02",
+   "n_artefak": 1,
+   "arm": {
+    "sar_saja": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    },
+    "ais_saja": {
+     "status": "abstain",
+     "n_artefak": 0
+    },
+    "fusi_penuh": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    }
+   }
+  },
+  {
+   "inv_id": "inv-e5-5af616b1-01",
+   "n_artefak": 1,
+   "arm": {
+    "sar_saja": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    },
+    "ais_saja": {
+     "status": "abstain",
+     "n_artefak": 0
+    },
+    "fusi_penuh": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    }
+   }
+  },
+  {
+   "inv_id": "inv-e5-5af616b1-02",
+   "n_artefak": 1,
+   "arm": {
+    "sar_saja": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    },
+    "ais_saja": {
+     "status": "abstain",
+     "n_artefak": 0
+    },
+    "fusi_penuh": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    }
+   }
+  },
+  {
+   "inv_id": "inv-e5-679f1af0-01",
+   "n_artefak": 1,
+   "arm": {
+    "sar_saja": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    },
+    "ais_saja": {
+     "status": "abstain",
+     "n_artefak": 0
+    },
+    "fusi_penuh": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    }
+   }
+  },
+  {
+   "inv_id": "inv-e5-679f1af0-02",
+   "n_artefak": 1,
+   "arm": {
+    "sar_saja": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    },
+    "ais_saja": {
+     "status": "abstain",
+     "n_artefak": 0
+    },
+    "fusi_penuh": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    }
+   }
+  },
+  {
+   "inv_id": "inv-e5-6ed43019-01",
+   "n_artefak": 1,
+   "arm": {
+    "sar_saja": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    },
+    "ais_saja": {
+     "status": "abstain",
+     "n_artefak": 0
+    },
+    "fusi_penuh": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    }
+   }
+  },
+  {
+   "inv_id": "inv-e5-6ed43019-02",
+   "n_artefak": 1,
+   "arm": {
+    "sar_saja": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    },
+    "ais_saja": {
+     "status": "abstain",
+     "n_artefak": 0
+    },
+    "fusi_penuh": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    }
+   }
+  },
+  {
+   "inv_id": "inv-e5-7dd2a5a4-01",
+   "n_artefak": 1,
+   "arm": {
+    "sar_saja": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    },
+    "ais_saja": {
+     "status": "abstain",
+     "n_artefak": 0
+    },
+    "fusi_penuh": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    }
+   }
+  },
+  {
+   "inv_id": "inv-e5-7dd2a5a4-02",
+   "n_artefak": 1,
+   "arm": {
+    "sar_saja": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    },
+    "ais_saja": {
+     "status": "abstain",
+     "n_artefak": 0
+    },
+    "fusi_penuh": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    }
+   }
+  },
+  {
+   "inv_id": "inv-e5-860e65f9-01",
+   "n_artefak": 1,
+   "arm": {
+    "sar_saja": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    },
+    "ais_saja": {
+     "status": "abstain",
+     "n_artefak": 0
+    },
+    "fusi_penuh": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    }
+   }
+  },
+  {
+   "inv_id": "inv-e5-860e65f9-02",
+   "n_artefak": 1,
+   "arm": {
+    "sar_saja": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    },
+    "ais_saja": {
+     "status": "abstain",
+     "n_artefak": 0
+    },
+    "fusi_penuh": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    }
+   }
+  },
+  {
+   "inv_id": "inv-e5-8bac7ec9-01",
+   "n_artefak": 1,
+   "arm": {
+    "sar_saja": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    },
+    "ais_saja": {
+     "status": "abstain",
+     "n_artefak": 0
+    },
+    "fusi_penuh": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    }
+   }
+  },
+  {
+   "inv_id": "inv-e5-8bac7ec9-02",
+   "n_artefak": 1,
+   "arm": {
+    "sar_saja": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    },
+    "ais_saja": {
+     "status": "abstain",
+     "n_artefak": 0
+    },
+    "fusi_penuh": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    }
+   }
+  },
+  {
+   "inv_id": "inv-e5-8decb780-01",
+   "n_artefak": 1,
+   "arm": {
+    "sar_saja": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    },
+    "ais_saja": {
+     "status": "abstain",
+     "n_artefak": 0
+    },
+    "fusi_penuh": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    }
+   }
+  },
+  {
+   "inv_id": "inv-e5-8decb780-02",
+   "n_artefak": 1,
+   "arm": {
+    "sar_saja": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    },
+    "ais_saja": {
+     "status": "abstain",
+     "n_artefak": 0
+    },
+    "fusi_penuh": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    }
+   }
+  },
+  {
+   "inv_id": "inv-e5-8e8df9a7-01",
+   "n_artefak": 1,
+   "arm": {
+    "sar_saja": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    },
+    "ais_saja": {
+     "status": "abstain",
+     "n_artefak": 0
+    },
+    "fusi_penuh": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    }
+   }
+  },
+  {
+   "inv_id": "inv-e5-8e8df9a7-02",
+   "n_artefak": 1,
+   "arm": {
+    "sar_saja": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    },
+    "ais_saja": {
+     "status": "abstain",
+     "n_artefak": 0
+    },
+    "fusi_penuh": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    }
+   }
+  },
+  {
+   "inv_id": "inv-e5-93cd69e7-01",
+   "n_artefak": 1,
+   "arm": {
+    "sar_saja": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    },
+    "ais_saja": {
+     "status": "abstain",
+     "n_artefak": 0
+    },
+    "fusi_penuh": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    }
+   }
+  },
+  {
+   "inv_id": "inv-e5-93cd69e7-02",
+   "n_artefak": 1,
+   "arm": {
+    "sar_saja": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    },
+    "ais_saja": {
+     "status": "abstain",
+     "n_artefak": 0
+    },
+    "fusi_penuh": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    }
+   }
+  },
+  {
+   "inv_id": "inv-e5-97e4833c-01",
+   "n_artefak": 1,
+   "arm": {
+    "sar_saja": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    },
+    "ais_saja": {
+     "status": "abstain",
+     "n_artefak": 0
+    },
+    "fusi_penuh": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    }
+   }
+  },
+  {
+   "inv_id": "inv-e5-97e4833c-02",
+   "n_artefak": 1,
+   "arm": {
+    "sar_saja": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    },
+    "ais_saja": {
+     "status": "abstain",
+     "n_artefak": 0
+    },
+    "fusi_penuh": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    }
+   }
+  },
+  {
+   "inv_id": "inv-e5-9afdf1b6-01",
+   "n_artefak": 1,
+   "arm": {
+    "sar_saja": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    },
+    "ais_saja": {
+     "status": "abstain",
+     "n_artefak": 0
+    },
+    "fusi_penuh": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    }
+   }
+  },
+  {
+   "inv_id": "inv-e5-9afdf1b6-02",
+   "n_artefak": 1,
+   "arm": {
+    "sar_saja": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    },
+    "ais_saja": {
+     "status": "abstain",
+     "n_artefak": 0
+    },
+    "fusi_penuh": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    }
+   }
+  },
+  {
+   "inv_id": "inv-e5-aad0cc0c-01",
+   "n_artefak": 1,
+   "arm": {
+    "sar_saja": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    },
+    "ais_saja": {
+     "status": "abstain",
+     "n_artefak": 0
+    },
+    "fusi_penuh": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    }
+   }
+  },
+  {
+   "inv_id": "inv-e5-aad0cc0c-02",
+   "n_artefak": 1,
+   "arm": {
+    "sar_saja": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    },
+    "ais_saja": {
+     "status": "abstain",
+     "n_artefak": 0
+    },
+    "fusi_penuh": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    }
+   }
+  },
+  {
+   "inv_id": "inv-e5-b5857d9d-01",
+   "n_artefak": 1,
+   "arm": {
+    "sar_saja": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    },
+    "ais_saja": {
+     "status": "abstain",
+     "n_artefak": 0
+    },
+    "fusi_penuh": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    }
+   }
+  },
+  {
+   "inv_id": "inv-e5-b5857d9d-02",
+   "n_artefak": 1,
+   "arm": {
+    "sar_saja": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    },
+    "ais_saja": {
+     "status": "abstain",
+     "n_artefak": 0
+    },
+    "fusi_penuh": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    }
+   }
+  },
+  {
+   "inv_id": "inv-e5-b771e72b-01",
+   "n_artefak": 1,
+   "arm": {
+    "sar_saja": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    },
+    "ais_saja": {
+     "status": "abstain",
+     "n_artefak": 0
+    },
+    "fusi_penuh": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    }
+   }
+  },
+  {
+   "inv_id": "inv-e5-b771e72b-02",
+   "n_artefak": 1,
+   "arm": {
+    "sar_saja": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    },
+    "ais_saja": {
+     "status": "abstain",
+     "n_artefak": 0
+    },
+    "fusi_penuh": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    }
+   }
+  },
+  {
+   "inv_id": "inv-e5-c078ff51-01",
+   "n_artefak": 1,
+   "arm": {
+    "sar_saja": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    },
+    "ais_saja": {
+     "status": "abstain",
+     "n_artefak": 0
+    },
+    "fusi_penuh": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    }
+   }
+  },
+  {
+   "inv_id": "inv-e5-c078ff51-02",
+   "n_artefak": 1,
+   "arm": {
+    "sar_saja": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    },
+    "ais_saja": {
+     "status": "abstain",
+     "n_artefak": 0
+    },
+    "fusi_penuh": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    }
+   }
+  },
+  {
+   "inv_id": "inv-e5-cd67e528-01",
+   "n_artefak": 1,
+   "arm": {
+    "sar_saja": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    },
+    "ais_saja": {
+     "status": "abstain",
+     "n_artefak": 0
+    },
+    "fusi_penuh": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    }
+   }
+  },
+  {
+   "inv_id": "inv-e5-cd67e528-02",
+   "n_artefak": 1,
+   "arm": {
+    "sar_saja": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    },
+    "ais_saja": {
+     "status": "abstain",
+     "n_artefak": 0
+    },
+    "fusi_penuh": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    }
+   }
+  },
+  {
+   "inv_id": "inv-e5-cf10d2ab-01",
+   "n_artefak": 1,
+   "arm": {
+    "sar_saja": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    },
+    "ais_saja": {
+     "status": "abstain",
+     "n_artefak": 0
+    },
+    "fusi_penuh": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    }
+   }
+  },
+  {
+   "inv_id": "inv-e5-cf10d2ab-02",
+   "n_artefak": 1,
+   "arm": {
+    "sar_saja": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    },
+    "ais_saja": {
+     "status": "abstain",
+     "n_artefak": 0
+    },
+    "fusi_penuh": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    }
+   }
+  },
+  {
+   "inv_id": "inv-e5-dff6047c-01",
+   "n_artefak": 1,
+   "arm": {
+    "sar_saja": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    },
+    "ais_saja": {
+     "status": "abstain",
+     "n_artefak": 0
+    },
+    "fusi_penuh": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    }
+   }
+  },
+  {
+   "inv_id": "inv-e5-dff6047c-02",
+   "n_artefak": 1,
+   "arm": {
+    "sar_saja": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    },
+    "ais_saja": {
+     "status": "abstain",
+     "n_artefak": 0
+    },
+    "fusi_penuh": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    }
+   }
+  },
+  {
+   "inv_id": "inv-e5-ebbbee77-01",
+   "n_artefak": 1,
+   "arm": {
+    "sar_saja": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    },
+    "ais_saja": {
+     "status": "abstain",
+     "n_artefak": 0
+    },
+    "fusi_penuh": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    }
+   }
+  },
+  {
+   "inv_id": "inv-e5-ebbbee77-02",
+   "n_artefak": 1,
+   "arm": {
+    "sar_saja": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    },
+    "ais_saja": {
+     "status": "abstain",
+     "n_artefak": 0
+    },
+    "fusi_penuh": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    }
+   }
+  },
+  {
+   "inv_id": "inv-e5-ec00f105-01",
+   "n_artefak": 1,
+   "arm": {
+    "sar_saja": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    },
+    "ais_saja": {
+     "status": "abstain",
+     "n_artefak": 0
+    },
+    "fusi_penuh": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    }
+   }
+  },
+  {
+   "inv_id": "inv-e5-ec00f105-02",
+   "n_artefak": 1,
+   "arm": {
+    "sar_saja": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    },
+    "ais_saja": {
+     "status": "abstain",
+     "n_artefak": 0
+    },
+    "fusi_penuh": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    }
+   }
+  },
+  {
+   "inv_id": "inv-e5-ed7647ea-01",
+   "n_artefak": 1,
+   "arm": {
+    "sar_saja": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    },
+    "ais_saja": {
+     "status": "abstain",
+     "n_artefak": 0
+    },
+    "fusi_penuh": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    }
+   }
+  },
+  {
+   "inv_id": "inv-e5-ed7647ea-02",
+   "n_artefak": 1,
+   "arm": {
+    "sar_saja": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    },
+    "ais_saja": {
+     "status": "abstain",
+     "n_artefak": 0
+    },
+    "fusi_penuh": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    }
+   }
+  },
+  {
+   "inv_id": "inv-e5-f7246508-01",
+   "n_artefak": 1,
+   "arm": {
+    "sar_saja": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    },
+    "ais_saja": {
+     "status": "abstain",
+     "n_artefak": 0
+    },
+    "fusi_penuh": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    }
+   }
+  },
+  {
+   "inv_id": "inv-e5-f7246508-02",
+   "n_artefak": 1,
+   "arm": {
+    "sar_saja": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    },
+    "ais_saja": {
+     "status": "abstain",
+     "n_artefak": 0
+    },
+    "fusi_penuh": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    }
+   }
+  },
+  {
+   "inv_id": "inv-e5-f77492d9-01",
+   "n_artefak": 1,
+   "arm": {
+    "sar_saja": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    },
+    "ais_saja": {
+     "status": "abstain",
+     "n_artefak": 0
+    },
+    "fusi_penuh": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    }
+   }
+  },
+  {
+   "inv_id": "inv-e5-f77492d9-02",
+   "n_artefak": 1,
+   "arm": {
+    "sar_saja": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    },
+    "ais_saja": {
+     "status": "abstain",
+     "n_artefak": 0
+    },
+    "fusi_penuh": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    }
+   }
+  },
+  {
+   "inv_id": "inv-e5-f9db277f-01",
+   "n_artefak": 1,
+   "arm": {
+    "sar_saja": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    },
+    "ais_saja": {
+     "status": "abstain",
+     "n_artefak": 0
+    },
+    "fusi_penuh": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    }
+   }
+  },
+  {
+   "inv_id": "inv-e5-f9db277f-02",
+   "n_artefak": 1,
+   "arm": {
+    "sar_saja": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    },
+    "ais_saja": {
+     "status": "abstain",
+     "n_artefak": 0
+    },
+    "fusi_penuh": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    }
+   }
+  },
+  {
+   "inv_id": "inv-e5-f9e403da-01",
+   "n_artefak": 1,
+   "arm": {
+    "sar_saja": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    },
+    "ais_saja": {
+     "status": "abstain",
+     "n_artefak": 0
+    },
+    "fusi_penuh": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    }
+   }
+  },
+  {
+   "inv_id": "inv-e5-f9e403da-02",
+   "n_artefak": 1,
+   "arm": {
+    "sar_saja": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    },
+    "ais_saja": {
+     "status": "abstain",
+     "n_artefak": 0
+    },
+    "fusi_penuh": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    }
+   }
+  },
+  {
+   "inv_id": "inv-e5-sint-01",
+   "n_artefak": 1,
+   "arm": {
+    "sar_saja": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    },
+    "ais_saja": {
+     "status": "abstain",
+     "n_artefak": 0
+    },
+    "fusi_penuh": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    }
+   }
+  },
+  {
+   "inv_id": "inv-e5-sint-02",
+   "n_artefak": 1,
+   "arm": {
+    "sar_saja": {
+     "status": "abstain",
+     "n_artefak": 0
+    },
+    "ais_saja": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    },
+    "fusi_penuh": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    }
+   }
+  },
+  {
+   "inv_id": "inv-e5-sint-03",
+   "n_artefak": 2,
+   "arm": {
+    "sar_saja": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    },
+    "ais_saja": {
+     "status": "terindikasi",
+     "n_artefak": 1
+    },
+    "fusi_penuh": {
+     "status": "abstain",
+     "n_artefak": 2
+    }
+   }
+  }
+ ]
+}

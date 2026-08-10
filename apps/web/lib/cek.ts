@@ -131,9 +131,14 @@ console.log("cek apps/web: lulus");
 // kalau indeks grounding rusak assert ini yang meledak, bukan UI yang diam.
 {
   const semua = await daftarInvestigasi();
-  if (semua.length === 0) {
-    console.log("cek apps/web: Evidence Store tak terjangkau dari cwd; grounding dilewati");
-  }
+  // Gerbang mutlak: Evidence Store kosong berarti gerbang grounding tak menegakkan
+  // apa pun. Golden set ter-commit di packages/core/golden, jadi di CI (cwd apps/web)
+  // ini selalu resolve; kalau kosong, itu cwd/env salah — merah, bukan lolos diam.
+  assert.notEqual(
+    semua.length,
+    0,
+    "Evidence Store kosong: golden tak ter-resolve dari cwd. Set VARUNA_GOLDEN_DIR atau jalankan dari root repo.",
+  );
   for (const inv of semua) {
     assert.equal(inv.berkas_ditolak, null, `${inv.inv_id}: berkas ditolak grounding`);
     assert.notEqual(inv.berkas, null, `${inv.inv_id}: berkas null tanpa alasan penolakan`);

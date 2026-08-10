@@ -61,6 +61,10 @@ export default async function Entry() {
           <span className="merek__glif" aria-hidden="true" />
           <span className="merek__nama">VARUNA</span>
         </span>
+        {/* Anchor penuh, bukan Link: /enter/[role] adalah route handler yang
+            memasang cookie peran lalu mengalihkan, jadi navigasi penuh yang
+            tepat. Rute ini bukan page, aturan no-html-link-for-pages meleset. */}
+        {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
         <a className="pita__cta" href="/enter/analis">
           Masuk sebagai analis <span aria-hidden="true">&rarr;</span>
         </a>
