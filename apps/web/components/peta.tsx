@@ -12,6 +12,7 @@
 import type { StatusServerZod } from "@varuna/core/schemas";
 
 import {
+  beririsan,
   bingkai,
   gabungKotak,
   jalurCincin,
@@ -61,7 +62,7 @@ const R_PILIH = 15;
  *  pun `lebar` (CSS px di dalam SVG = unit pengguna), jadi angkanya tetap dan
  *  tidak ikut diskalakan: ~11 unit per karakter, 150x26 memuat inv_id
  *  terpanjang golden set beserta napasnya.
- *  ponytail: satu kotak untuk semua label, bukan lebar per-teks; ukur per-label
+ *  catatan: satu kotak untuk semua label, bukan lebar per-teks; ukur per-label
  *  kalau nanti ada label yang jauh lebih panjang dari inv_id. */
 const LABEL_TABRAK = { lebar: 150, tinggi: 26 };
 
@@ -84,12 +85,20 @@ export function Peta({
   lebar?: number;
   catatan?: string;
 }) {
-  // Bingkai = gabungan SEMUA yang digambar. Zona ikut dihitung supaya peta tidak
-  // pernah memotong geometri yang jadi dasar putusan zona; pemanggil memilih
-  // lapisan zona mana yang relevan, jadi Patroli tetap dapat bingkai lokal.
-  let kotak = zona.map(kotakZona).reduce(gabungKotak);
-  for (const t of [kotakTitik(titik), ...area.map((a) => kotakCincin(a.cincin))])
-    if (t !== null) kotak = gabungKotak(kotak, t);
+  // Bingkai = gabungan SEMUA yang digambar, dikurangi lapisan zona yang tidak
+  // menyentuh isinya. Zona yang beririsan tetap ikut supaya peta tidak memotong
+  // geometri yang jadi dasar putusan zona — tapi paket Laut Utara di layar
+  // Patroli (zona natuna) dulu menarik bingkai dari Natuna sampai Skotlandia dan
+  // paketnya jadi setitik di pojok. Tanpa titik/area sama sekali, bingkainya
+  // tetap gabungan seluruh zona persis seperti sebelumnya.
+  const isi = [kotakTitik(titik), ...area.map((a) => kotakCincin(a.cincin))]
+    .filter((k): k is Kotak => k !== null)
+    .reduce<Kotak | null>((a, b) => (a === null ? b : gabungKotak(a, b)), null);
+  let kotak = isi ?? kotakZona(zona[0]);
+  for (const z of zona) {
+    const kz = kotakZona(z);
+    if (isi === null || beririsan(kz, isi)) kotak = gabungKotak(kotak, kz);
+  }
 
   const b = bingkai(kotak, { lebar });
   const p = proyeksi(b);

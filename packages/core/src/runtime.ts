@@ -216,7 +216,7 @@ export const RADIUS_MAKS_KM = 150;
 
 /** Lantai radius. Nol akan menyatakan posisi PASTI, dan label paket berbunyi
  *  persis sebaliknya ("area pencarian, bukan posisi pasti").
- *  ponytail: 1 km adalah angka tertib untuk galat geolokasi deteksi SAR plus
+ *  catatan: 1 km adalah angka tertib untuk galat geolokasi deteksi SAR plus
  *  panjang kapal — knob kalibrasi, bukan konstanta alam. Geser di sini kalau
  *  lapangan bilang lain. */
 export const RADIUS_MIN_KM = 1;
@@ -271,7 +271,7 @@ const jepit = (v: number, min: number, maks: number): number => Math.min(Math.ma
 
 /** Cincin GeoJSON (RFC 7946): TITIK_LINGKARAN simpul berlawanan arah jarum jam,
  *  ditutup dengan mengulang simpul pertama.
- *  ponytail: pemotongan bbox dilakukan dengan MENJEPIT tiap simpul, bukan
+ *  catatan: pemotongan bbox dilakukan dengan MENJEPIT tiap simpul, bukan
  *  memotong poligon secara geometris — hasilnya poligon sah bersisi rata di
  *  tepi zona, cukup untuk area pencarian. Kalau nanti perlu potongan sejati,
  *  ganti fungsi ini dengan Sutherland-Hodgman. Bujur ikut dijepit ke

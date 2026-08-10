@@ -126,7 +126,7 @@ if __name__ == "__main__":
     # S1 pass time ~22:31 UTC inferred from SAR detections' entry/exitTimestamp
     # (2026-05-02T22:31:10Z / 2026-06-19T22:31:08Z). +-2h = 20:31..00:31 UTC,
     # widened to whole hourly buckets 20:00 d .. 01:00 d+1.
-    # ponytail: hourly buckets, not per-position AIS; finest the public API gives.
+    # catatan: hourly buckets, not per-position AIS; finest the public API gives.
     from datetime import date, timedelta
     results["s1_hourly"] = {}
     for d in ["2026-06-07", "2026-06-19", "2026-07-20"]:

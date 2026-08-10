@@ -26,7 +26,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="id" className={`${display.variable} ${body.variable}`}>
+    <html lang="id" className={`${display.variable} ${body.variable}`} suppressHydrationWarning>
       <body>
         {/* Bendera gerak dipasang sinkron, sebelum parser menyentuh isi: kalau
             ia menunggu hidrasi, satu frame konten penuh sempat berkedip lalu

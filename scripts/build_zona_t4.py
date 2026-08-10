@@ -1,4 +1,4 @@
-#!/usr/bin/env python3.13
+#!/usr/bin/env python3
 """Build T4 zone artifacts from Indonesia EEZ shapefile (Marine Regions v12).
 
 Outputs:

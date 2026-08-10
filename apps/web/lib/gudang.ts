@@ -7,7 +7,7 @@
 // untuk pemanggil Node langsung (bin/gate.ts, harness python); yang berbeda di
 // jalur web hanyalah CARA menemukan akar. Skema — bagian yang membawa kontrak —
 // tetap satu, diimpor dari @varuna/core/schemas.
-// ponytail: kalau nanti core menerima akar suntikan (mis. bacaManifest(root)),
+// catatan: kalau nanti core menerima akar suntikan (mis. bacaManifest(root)),
 // empat pembaca di bawah ini dihapus dan diganti pemanggilan core lagi.
 
 import { access, appendFile, mkdir, readFile, readdir } from "node:fs/promises";
@@ -16,7 +16,7 @@ import { dirname, join, resolve, sep } from "node:path";
 import { neon } from "@neondatabase/serverless";
 
 import { periksaBerkas, resolverGrounding } from "@varuna/core/grounding";
-import { kunciArtefak, postgresRuntimeStore } from "@varuna/core/runtime";
+import { kunciArtefak, kunciGrounding, postgresRuntimeStore } from "@varuna/core/runtime";
 import type { RuntimeStore } from "@varuna/core/store";
 import {
   ArtIdSchema,
@@ -334,7 +334,7 @@ export const bacaRuntime = (kunci: string): Promise<unknown[]> => gudangRuntime(
  *  sekumpulan; keduanya bentuk yang sama sahnya untuk indeks append-only. */
 export async function indeksGroundingRuntime(inv_id: string): Promise<string[]> {
   if (!invSah(inv_id)) return [];
-  const baris = await bacaRuntime(`runtime/${inv_id}/grounding.jsonl`).catch(() => []);
+  const baris = await bacaRuntime(kunciGrounding(inv_id)).catch(() => []);
   return baris.flatMap((b) => {
     const r = b as { art_id?: unknown; art_ids?: unknown };
     if (typeof r.art_id === "string") return [r.art_id];

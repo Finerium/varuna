@@ -1,0 +1,47 @@
+{
+ "eksperimen": "E5.4",
+ "sub": "stabilitas-keputusan",
+ "mode": "rencana (nol biaya model)",
+ "protokol": "freeze-eval-v1 @0bc9af9, §E5.4",
+ "now": "2026-08-09T11:00:00Z",
+ "base": "https://varuna-gamma.vercel.app",
+ "k_replay_target": 5,
+ "sumber_inv": "goldenset-scan",
+ "seed": 20260809,
+ "kesiapan_live": {
+  "frac": "0/5",
+  "p": 0.0,
+  "wilson95": [
+   0.0,
+   0.4345
+  ]
+ },
+ "catatan": "Set pelaporan E5 (inv-e5-*) belum termuat di produk -> GET 404 sampai e5-goldenset.json dikunci & di-deploy. Setelah itu: --jalan-live --maks-inv N --k 5. Endpoint replay produksi sudah LIVE (diverifikasi pada inv demo).",
+ "target": [
+  {
+   "inv_id": "inv-e5-0bc18737-01",
+   "http_get": 404,
+   "live_siap": false
+  },
+  {
+   "inv_id": "inv-e5-0bc18737-02",
+   "http_get": 404,
+   "live_siap": false
+  },
+  {
+   "inv_id": "inv-e5-0e815a40-01",
+   "http_get": 404,
+   "live_siap": false
+  },
+  {
+   "inv_id": "inv-e5-0e815a40-02",
+   "http_get": 404,
+   "live_siap": false
+  },
+  {
+   "inv_id": "inv-e5-1c904ce3-01",
+   "http_get": 404,
+   "live_siap": false
+  }
+ ]
+}

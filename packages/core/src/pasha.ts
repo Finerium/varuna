@@ -128,7 +128,7 @@ export type Titik = {
 /** Posisi objek yang diklaim satu artefak, atau null kalau artefak itu tidak
  *  mengklaim posisi objek. `weather` punya lat/lon tetapi itu titik kueri
  *  cuaca, bukan posisi kapal — konteks, bukan klaim (Bagian 1).
- *  ponytail: hanya fix TERAKHIR ais_track_segment yang dipindai. Rekonsiliasi
+ *  catatan: hanya fix TERAKHIR ais_track_segment yang dipindai. Rekonsiliasi
  *  per-fix adalah pekerjaan artefak kinematic_feasibility/assoc_result (A4/A6);
  *  kalau nanti perlu, ganti map ini jadi flatMap seluruh points.
  *  Diekspor karena jalur tulis runtime (runtime.ts, pusat area pencarian)

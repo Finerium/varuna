@@ -7,7 +7,9 @@
  "is_private": "true",
  "enable_gpu": "true",
  "enable_internet": "true",
- "dataset_sources": [],
+ "dataset_sources": [
+  "ghaisank/varuna-natuna-s1-2026"
+ ],
  "competition_sources": [],
  "kernel_sources": []
 }

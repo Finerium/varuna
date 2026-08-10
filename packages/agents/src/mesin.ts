@@ -159,7 +159,7 @@ export function masukanA0(inv: Investigation, jumlahArtefak: number, trace_ref: 
 
 /** Model bawaan. Non-reasoning dan bersuhu — dua syarat agar temperature 0
  *  bermakna; ganti lewat env kalau armada model bergeser.
- *  ponytail: kalau VARUNA_MODEL diarahkan ke model reasoning, buang temperature
+ *  catatan: kalau VARUNA_MODEL diarahkan ke model reasoning, buang temperature
  *  di sini (API menolaknya). */
 export const modelBawaan = (): string => process.env.VARUNA_MODEL ?? "gpt-4.1-mini";
 

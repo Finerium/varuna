@@ -19,7 +19,7 @@ export type Resolver = { resolve(art_id: string): boolean };
 export type EnvelopeLike = Record<string, unknown>;
 
 /** Union, bukan fallback: tidak ada prioritas antara indeks statis golden dan
- *  indeks runtime Blob append-only. */
+ *  indeks runtime append-only (Postgres/Neon di produksi). */
 export function resolverGrounding(
   statis: Iterable<string>,
   runtime: Iterable<string>,

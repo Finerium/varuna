@@ -95,7 +95,10 @@ export default async function Entry() {
 
           <div className="masuk" data-gerak-masuk="">
             <KartuPeran />
-            <p className="masuk__nota">Akun uji untuk juri tersedia di tiap peran.</p>
+            <p className="masuk__nota">
+              Tanpa login — satu klik memasang peran (cookie 12 jam). Menulis hanya boleh oleh peran
+              yang berwenang.
+            </p>
           </div>
 
           <dl className="buktimini" data-gerak-masuk="">
@@ -106,6 +109,20 @@ export default async function Entry() {
               </div>
             ))}
           </dl>
+          <p className="buktimini__sumber">
+            Sumber:{" "}
+            <a href="https://github.com/Finerium/varuna/blob/main/manifests/e1-hasil.json">
+              e1-hasil.json
+            </a>{" "}
+            &middot;{" "}
+            <a href="https://github.com/Finerium/varuna/blob/main/manifests/e7-redteam.json">
+              e7-redteam.json
+            </a>{" "}
+            &middot;{" "}
+            <a href="https://github.com/Finerium/varuna/blob/main/manifests/e7-loo.json">
+              e7-loo.json
+            </a>
+          </p>
         </section>
 
         {/* Momen tanda tangan: piksel radar sungguhan, diberi konteks. */}

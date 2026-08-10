@@ -40,7 +40,7 @@ keberadaan mekanisme dan mekanismenya berlaku pada seluruh jalur produksi, `terp
 boleh diberikan walau demonstrasinya baru pada sebagian kasus — dengan syarat alasan
 menyebutkan berkas mekanismenya, bukan hanya kasus contohnya.
 
-Kelengkapan yang menunggu pekerjaan fleet lain (mis. berkas naratif dari agen live)
+Kelengkapan yang menunggu pekerjaan tim lain (mis. berkas naratif dari agen live)
 TIDAK dinilai `tidak` bila mekanismenya sudah ada; dinilai `parsial` dengan catatan
 "tertunda", supaya angka tidak menghukum urutan kerja dan tidak melebih-lebihkannya.
 

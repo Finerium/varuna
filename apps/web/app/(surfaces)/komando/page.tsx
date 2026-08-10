@@ -8,12 +8,13 @@
 
 import Link from "next/link";
 
+import { KUNCI_VALIDASI, overlayValidasi } from "@varuna/core/runtime";
 import type { InvestigationSummary } from "@varuna/core/schemas";
 
 import { AlasanAbstain, Keadaan, Kosong, Status } from "@/components/tampil";
 import { Cangkang } from "@/components/cangkang";
 import { Peta, type TitikKandidat } from "@/components/peta";
-import { ambilInvestigasi, daftarInvestigasi, ringkas } from "@/lib/gudang";
+import { ambilInvestigasi, bacaRuntime, daftarInvestigasi, ringkas } from "@/lib/gudang";
 
 import "./komando.css";
 
@@ -36,7 +37,12 @@ export default async function Komando({
 }) {
   const { inv: dipilih } = await searchParams;
   const semua = await daftarInvestigasi();
-  const antrean = semua.map(ringkas);
+  // Overlay validasi analis, sumber yang sama dengan /api/queue (baris
+  // append-only runtime/validasi.jsonl). Halaman ini hanya MEMBACA: aksi tetap
+  // ditulis lewat POST /api/validate, dan status_server tidak bergeser
+  // karenanya — keputusan manusia duduk DI ATAS putusan mesin, bukan di dalamnya.
+  const validasi = overlayValidasi(await bacaRuntime(KUNCI_VALIDASI).catch(() => []));
+  const antrean = semua.map((i) => ({ ...ringkas(i), validasi: validasi.get(i.inv_id) ?? null }));
   const terbuka = dipilih === undefined ? null : await ambilInvestigasi(dipilih);
 
   // Posisi peta datang dari `candidate` investigasi — sumber yang sama yang
@@ -56,6 +62,12 @@ export default async function Komando({
   // servernya sendiri, di sini hanya dijumlahkan berapa yang membawa putusan itu.
   const banyak = (s: InvestigationSummary["status"]) =>
     antrean.filter((a) => a.status === s).length;
+
+  // Sebagian besar golden set duduk di AOI xView3 (Laut Utara, Adriatik), bukan
+  // di ZEE Indonesia. Angkanya dari `zona` milik server — halaman ini tidak
+  // menguji geometri apa pun — supaya label petanya menyebutkan itu apa adanya
+  // alih-alih menjanjikan peta perairan Indonesia yang kandidatnya tidak di sana.
+  const luarZona = antrean.filter((a) => a.zona === null).length;
 
   const angka = [
     { nilai: antrean.length, ket: "investigasi", varian: "" },
@@ -113,7 +125,7 @@ export default async function Komando({
                   <p className="kmd-hitung">{titik.length} posisi</p>
                 </div>
                 <Peta
-                  label={`Peta kandidat: ${titik.length} posisi investigasi di atas geometri ZEE Indonesia. Tautan yang sama tersedia sebagai daftar Antrean di bawah peta.`}
+                  label={`Peta kandidat: ${titik.length} posisi investigasi, ${luarZona} di antaranya di luar perairan Indonesia (AOI xView3, tanpa zona), digambar di atas geometri ZEE Indonesia. Tautan yang sama tersedia sebagai daftar Antrean di bawah peta.`}
                   zona={["nasional", "natuna"]}
                   titik={titik}
                   dipilih={dipilih ?? null}
@@ -155,6 +167,14 @@ export default async function Komando({
                         <span className="kmd-kartu__sinyal">
                           <Status status={s.status} />
                           <Keadaan daftar={s.display_state} />
+                          {/* Overlay, bukan status: chip ini menyebut aksi
+                              analis yang tersimpan, warna dan suar di sebelahnya
+                              tetap milik status_server. */}
+                          {s.validasi !== null && (
+                            <span className="kmd-chip">
+                              Divalidasi {s.validasi.aksi} &middot; {waktu(s.validasi.at)} UTC
+                            </span>
+                          )}
                         </span>
                       </div>
                       <dl className="kmd-meta">
@@ -167,7 +187,7 @@ export default async function Komando({
                           <dd className="kmd-nilai">{s.zona ?? "tanpa zona"}</dd>
                         </div>
                         <div className="kmd-sel">
-                          <dt className="kmd-ket">Kasus</dt>
+                          <dt className="kmd-ket">Kelas kurasi (proksi GT)</dt>
                           <dd className="kmd-nilai">{s.kasus_label ?? "tanpa label"}</dd>
                         </div>
                         <div className="kmd-sel">
@@ -245,7 +265,7 @@ export default async function Komando({
                     </dd>
                   </div>
                   <div className="kmd-sel">
-                    <dt className="kmd-ket">Observasi terakhir (UTC)</dt>
+                    <dt className="kmd-ket">Kejadian/ingest terakhir (UTC)</dt>
                     <dd className="kmd-nilai">{waktu(terbuka.t_observasi_terakhir)}</dd>
                   </div>
                 </dl>

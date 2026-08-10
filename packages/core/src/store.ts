@@ -3,7 +3,7 @@
 //
 // Golden set = data plane STATIS: dibaca, tidak pernah ditulis. Tulisan runtime
 // (hasil patroli, aksi validasi, kalibrasi) append-only ke adapter runtime:
-// filesystem untuk dev lokal, Vercel Blob di produksi.
+// filesystem untuk dev lokal, penyimpanan runtime (Postgres/Neon) di produksi.
 
 import { readFile, readdir, mkdir, appendFile } from "node:fs/promises";
 import { dirname, join } from "node:path";

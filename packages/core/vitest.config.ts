@@ -1,6 +1,6 @@
 import { defineConfig } from "vitest/config";
 
-// ponytail: satu config, di sebelah tes yang dijalankannya. Config root menyusul
+// catatan: satu config, di sebelah tes yang dijalankannya. Config root menyusul
 // kalau apps/web nanti punya suite sendiri.
 export default defineConfig({
   test: {

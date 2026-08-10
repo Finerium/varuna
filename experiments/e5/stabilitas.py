@@ -91,6 +91,20 @@ def terjangkau(inv_id, base=BASE_DEFAULT, peran="analis"):
         return None
 
 
+def rata2_token(replays):
+    """Token rata-rata per replay satu inv (E10, dipakai §4.5 paper)."""
+    tok = [r["token_usage"] for r in replays if r.get("token_usage")]
+    if not tok:
+        return None
+    return {
+        "n_replay_terukur": len(tok),
+        "rata2_in": round(statistics.mean([t["in"] for t in tok]), 1),
+        "rata2_out": round(statistics.mean([t["out"] for t in tok]), 1),
+        "rata2_requests": round(statistics.mean([t["requests"] for t in tok]), 2),
+        "semua_konsisten": all(t.get("konsisten") for t in tok),
+    }
+
+
 def agregat_inv(inv_id, replays):
     """Ringkas k replay satu inv: agreement status/hash/artefak + varians latensi."""
     status = [r.get("pasha_status") for r in replays]
@@ -124,7 +138,9 @@ def agregat_inv(inv_id, replays):
             "min": round(min(lat_total), 1) if lat_total else None,
             "max": round(max(lat_total), 1) if lat_total else None,
         },
-        "token_usage": None,  # tak dipancarkan SSE; butuh instrumentasi server (E10)
+        # Terisi sejak SSE membawa usage (E10); null bila server yang dihubungi
+        # belum berinstrumentasi — tidak pernah ditaksir.
+        "token_usage": rata2_token(replays),
         "replays": replays,
     }
 

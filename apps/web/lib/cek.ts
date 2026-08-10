@@ -9,6 +9,8 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 
+import { bacaArtefak, bacaGrounding } from "@varuna/core/store";
+
 import { LIMIT_DEFAULT, LIMIT_MAX, bacaLimit, potong } from "./api.ts";
 import { BENDERA_GERAK, SKRIP_GERAK, bacaAngka, pecahKata } from "./gerak.ts";
 import { daftarInvestigasi, invDariArtId } from "./gudang.ts";
@@ -142,6 +144,18 @@ console.log("cek apps/web: lulus");
   for (const inv of semua) {
     assert.equal(inv.berkas_ditolak, null, `${inv.inv_id}: berkas ditolak grounding`);
     assert.notEqual(inv.berkas, null, `${inv.inv_id}: berkas null tanpa alasan penolakan`);
+
+    // "aturan hash sama" (Bagian 1): indeks grounding tidak cukup menyebut art_id,
+    // ia mencatat hash isinya. Kalau artefak bergeser tanpa indeksnya ikut, kutipan
+    // masih resolvable tapi menunjuk isi lain — grounding yang lolos secara palsu.
+    const { hash } = await bacaGrounding(inv.inv_id);
+    for (const a of await bacaArtefak(inv.inv_id)) {
+      assert.equal(
+        a.hash_sha256,
+        hash[a.art_id],
+        `${a.art_id}: hash artefak != hash grounding.json`,
+      );
+    }
   }
 }
 

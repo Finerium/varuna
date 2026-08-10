@@ -1,4 +1,4 @@
-#!/usr/bin/env python3.13
+#!/usr/bin/env python3
 """Point-in-zone util for T4 (uses prepared shapely geometry for fast repeated queries)."""
 import json
 from pathlib import Path

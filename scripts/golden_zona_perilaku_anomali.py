@@ -26,8 +26,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 GOLDEN = ROOT / "packages/core/golden"
-CACHE = Path("/private/tmp/claude-501/-Users-ghaisan-Documents-Datathon/"
-             "8aa7dc64-e926-4305-b5b6-5e4a3f3b577a/scratchpad")
+import os, tempfile
+CACHE = Path(os.environ.get("VARUNA_CACHE", tempfile.gettempdir()))
 SEED = 20260809
 SALT = "varuna-dev-salt-2026"  # dev; produksi via env
 SENSOR_OF = {"sar_detection": "SAR", "ais_track_segment": "AIS", "ais_gap": "AIS",

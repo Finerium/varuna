@@ -63,7 +63,7 @@ menjanjikan salt env, as-built belum. Audit ini menilai as-built.
 **Aturan pemutus: R1 (P2 benar secara fakta). Skor final: `parsial`.**
 Tindak lanjut: baca salt dari env pada jalur produksi dan putar ulang pseudonim golden;
 selama salt dev ada di repo, pseudonim dapat dibalik oleh pemegang repo + daftar MMSI.
-Catatan risiko ini dinaikkan ke Orchestrator terpisah dari nilai E8.
+Catatan risiko ini dinaikkan ke pemilik protokol terpisah dari nilai E8.
 
 ---
 

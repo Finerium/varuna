@@ -21,7 +21,7 @@ lons = np.arange(LON0, LON1, STEP)
 lon_g, lat_g = np.meshgrid(lons, lats)
 land = globe.is_land(lat_g, lon_g)
 # sampling km per sel; skala lon pakai cos(56 deg) (lintang tengah perairan DK);
-# ponytail: galat skala lon +-15% di tepi utara/selatan grid, cukup utk proxy 10 km — dicatat di manifest
+# catatan: galat skala lon +-15% di tepi utara/selatan grid, cukup utk proxy 10 km — dicatat di manifest
 km_lat = STEP * 111.32
 km_lon = STEP * 111.32 * np.cos(np.radians(56.0))
 dist_km = distance_transform_edt(~land, sampling=(km_lat, km_lon))

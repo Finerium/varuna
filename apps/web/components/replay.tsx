@@ -149,48 +149,60 @@ export function Replay({ inv }: { inv: string | null }) {
   const token = useRef<unknown>(null);
 
   const satuPermintaan = useCallback(async (): Promise<Penutup> => {
-    const mulai = token.current === null;
-    const res = await fetch(
-      mulai ? `/api/replay/${inv}` : `/api/replay/${inv}/step`,
-      mulai
-        ? { method: "POST" }
-        : {
-            method: "POST",
-            headers: { "content-type": "application/json" },
-            body: JSON.stringify({ resume_token: token.current }),
-          },
-    );
+    // Jaringan putus, DNS gagal, atau aliran robek di tengah: fetch dan pembaca
+    // SSE melempar, bukan menjawab. Dijadikan penutup "gagal" biasa supaya jalur
+    // tampilnya satu — pesan galat plus tombol Ulangi langkah, bukan run yang
+    // menggantung tanpa keterangan.
+    try {
+      const mulai = token.current === null;
+      const res = await fetch(
+        mulai ? `/api/replay/${inv}` : `/api/replay/${inv}/step`,
+        mulai
+          ? { method: "POST" }
+          : {
+              method: "POST",
+              headers: { "content-type": "application/json" },
+              body: JSON.stringify({ resume_token: token.current }),
+            },
+      );
 
-    if (!res.ok || !(res.headers.get("content-type") ?? "").includes("text/event-stream")) {
-      const badan = (await res.json().catch(() => null)) as { pesan?: string } | null;
+      if (!res.ok || !(res.headers.get("content-type") ?? "").includes("text/event-stream")) {
+        const badan = (await res.json().catch(() => null)) as { pesan?: string } | null;
+        return {
+          jenis: "gagal",
+          pesan: badan?.pesan ?? `Server menjawab ${res.status} tanpa aliran langkah.`,
+          dapat_diulang: true,
+        };
+      }
+
+      let penutup: Penutup = {
+        jenis: "gagal",
+        pesan: "Aliran langkah terputus sebelum server menutupnya.",
+        dapat_diulang: true,
+      };
+      for await (const { event, data } of peristiwa(res)) {
+        if (event === "agent_step") {
+          setLangkah((sebelumnya) => [...sebelumnya, data as Langkah]);
+          continue;
+        }
+        if (event === "lanjut") {
+          const d = data as { resume_token: unknown; agen_berikut: string | null };
+          penutup = { jenis: "lanjut", resume_token: d.resume_token, agen_berikut: d.agen_berikut };
+        } else if (event === "selesai") {
+          penutup = { jenis: "selesai" };
+        } else if (event === "gagal") {
+          const d = data as { pesan: string; dapat_diulang: boolean };
+          penutup = { jenis: "gagal", pesan: d.pesan, dapat_diulang: d.dapat_diulang };
+        }
+      }
+      return penutup;
+    } catch (e) {
       return {
         jenis: "gagal",
-        pesan: badan?.pesan ?? `Server menjawab ${res.status} tanpa aliran langkah.`,
+        pesan: `Permintaan langkah tidak sampai ke server (${e instanceof Error ? e.message : String(e)}). Tekan Ulangi langkah.`,
         dapat_diulang: true,
       };
     }
-
-    let penutup: Penutup = {
-      jenis: "gagal",
-      pesan: "Aliran langkah terputus sebelum server menutupnya.",
-      dapat_diulang: true,
-    };
-    for await (const { event, data } of peristiwa(res)) {
-      if (event === "agent_step") {
-        setLangkah((sebelumnya) => [...sebelumnya, data as Langkah]);
-        continue;
-      }
-      if (event === "lanjut") {
-        const d = data as { resume_token: unknown; agen_berikut: string | null };
-        penutup = { jenis: "lanjut", resume_token: d.resume_token, agen_berikut: d.agen_berikut };
-      } else if (event === "selesai") {
-        penutup = { jenis: "selesai" };
-      } else if (event === "gagal") {
-        const d = data as { pesan: string; dapat_diulang: boolean };
-        penutup = { jenis: "gagal", pesan: d.pesan, dapat_diulang: d.dapat_diulang };
-      }
-    }
-    return penutup;
   }, [inv]);
 
   const jalankan = useCallback(async () => {
@@ -199,19 +211,25 @@ export function Replay({ inv }: { inv: string | null }) {
     setGagal(null);
     // Batas atas: A0 plus sepuluh agen; lebih dari itu berarti ada yang salah
     // dan lebih baik berhenti daripada memutar permintaan tanpa akhir.
-    for (let i = 0; i < 14; i++) {
-      const penutup = await satuPermintaan();
-      if (penutup.jenis === "gagal") {
-        setGagal(penutup.pesan);
-        break;
+    // finally: apa pun yang terjadi di dalam, tombol tidak boleh terkunci di
+    // "Sedang berjalan..." — itu satu-satunya keadaan yang tidak bisa dipulihkan
+    // pengguna.
+    try {
+      for (let i = 0; i < 14; i++) {
+        const penutup = await satuPermintaan();
+        if (penutup.jenis === "gagal") {
+          setGagal(penutup.pesan);
+          break;
+        }
+        if (penutup.jenis === "selesai") {
+          setSelesai(true);
+          break;
+        }
+        token.current = penutup.resume_token;
       }
-      if (penutup.jenis === "selesai") {
-        setSelesai(true);
-        break;
-      }
-      token.current = penutup.resume_token;
+    } finally {
+      setBerjalan(false);
     }
-    setBerjalan(false);
   }, [berjalan, inv, satuPermintaan]);
 
   const ulangDariAwal = useCallback(() => {
@@ -263,7 +281,13 @@ export function Replay({ inv }: { inv: string | null }) {
                 <span className="kns-peran">{a.peran}</span>
               </span>
               <Fase
-                kata={l === undefined ? "belum dijalankan" : KATA_FASE[l.phase]}
+                kata={
+                  l === undefined
+                    ? selesai
+                      ? "tidak dipanggil"
+                      : "belum dijalankan"
+                    : KATA_FASE[l.phase]
+                }
                 kelas={l === undefined ? "kns-fase" : KELAS_FASE[l.phase]}
               />
               {l !== undefined && (

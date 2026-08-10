@@ -67,7 +67,7 @@ def points_from_gfw(raw):
 
 
 def match(a, b, radius):
-    # ponytail: O(n*m) brute force — cukup utk ratusan deteksi per scene
+    # catatan: O(n*m) brute force — cukup utk ratusan deteksi per scene
     return sum(1 for la, lo in a if any(haversine_m(la, lo, lb, lb2) <= radius for lb, lb2 in b))
 
 

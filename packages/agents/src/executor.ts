@@ -295,7 +295,7 @@ function periksa(id: IdAlat | "A0", inv_id: string, keluaran: unknown): Percobaa
     };
   }
 
-  const diksi = cekDiksi(JSON.stringify(keluaran));
+  const diksi = cekDiksi(JSON.stringify(keluaran) ?? "");
   if (!diksi.ok) {
     return {
       amplop: { ...amplop, status: "discarded" },
@@ -339,7 +339,7 @@ async function jalankanSubAgen(
       catatPakai(pakai, hasil.state.usage);
       return periksaGrounding(periksa(id, ktx.inv.inv_id, hasil.finalOutput), ktx.resolver);
     } catch (e) {
-      // ponytail: run yang melempar ModelBehaviorError tidak menyumbang token ke
+      // catatan: run yang melempar ModelBehaviorError tidak menyumbang token ke
       // tally — usage-nya tidak terjangkau lewat error. Ambangnya diketahui:
       // laporan biaya sedikit di bawah tagihan pada run yang keluarannya cacat
       // skema. Naikkan dengan membaca usage dari state parsial bila SDK

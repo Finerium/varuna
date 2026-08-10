@@ -40,10 +40,10 @@ CAP_KLAIM = 50            # <= 60 (batas biaya API, protocol E7-C); dicatat di m
 MODEL_DEFAULT = "gpt-4o-mini"
 NOW_FRAME = "2026-08-09T11:00:00Z"
 
-ROOT = Path("/Users/ghaisan/Documents/Datathon/varuna")
+ROOT = Path(__file__).resolve().parents[2]
 GOLDEN = ROOT / "experiments/e5/goldenset"
 MANIFEST_OUT = ROOT / "manifests/e7-verifier.json"
-# cache putusan di LUAR tree repo publik (CLAUDE.md: nol jejak tooling); rerun gratis
+# cache putusan di luar tree repo publik; rerun gratis
 CACHE = Path(os.environ.get("E7_JUDGE_CACHE", Path(tempfile.gettempdir()) / "e7_judge_cache.json"))
 ENV_CANDIDATES = [ROOT / ".env", ROOT.parent / ".env"]          # task menyebut varuna/.env; nyatanya di root
 
@@ -300,7 +300,7 @@ def compute_metrics(judged: list[dict]) -> dict:
 
 
 # ---------------------------------------------------------------------------
-# Self-check offline (logika kunci + presisi; tanpa API) — ponytail check
+# Self-check offline (logika kunci + presisi; tanpa API) — self-check
 # ---------------------------------------------------------------------------
 def selfcheck() -> None:
     # kunci: cited & resolvable -> didukung; kosong/dangling -> tidak

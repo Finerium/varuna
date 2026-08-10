@@ -75,13 +75,27 @@ def setup():
                          capture_output=True, text=True).stdout.strip()
     print("GPU terdeteksi:", gpu, flush=True)
     assert "torch" not in sys.modules, "torch terlanjur diimport sebelum swap"
-    if any(k in gpu for k in ("P100", "K80")):
+    pra_sm70 = any(k in gpu for k in ("P100", "K80"))
+    if pra_sm70:
         stage("GPU pra-sm70: swap torch ke cu118 (sm_60 didukung) SEBELUM import torch")
-        sh("pip install -q --force-reinstall torch==2.3.1 torchvision==0.18.1 --index-url https://download.pytorch.org/whl/cu118")
-    sh("pip install -q hydra-core rasterio tifffile omegaconf fire opencv-python-headless")
-    sh("pip install -q --no-deps timm==0.4.12 pytorch_toolbelt==0.5.2 albumentations==1.1.0 qudida==0.0.4")
+        sh("pip install -q --force-reinstall torch==2.4.1 torchvision==0.19.1 --index-url https://download.pytorch.org/whl/cu118")
+
+    # ---- Stack numpy-1 KOHEREN (biang 12 kegagalan). Image Kaggle kini bawa
+    # scipy 1.14+ yang memanggil numpy._core._multiarray_umath._blas_supports_fpe
+    # (hanya ada di numpy>=2.1), sementara dep lain menahan numpy 2.0.x -> mismatch,
+    # crash saat `import albumentations -> scipy.special`. Solusi: paksa SATU stack
+    # numpy 1.26 + scipy 1.13 (tak pernah memanggil _blas_supports_fpe) + cv2/rasterio/
+    # pandas/albumentations versi ber-wheel numpy-1. albumentations dipin --no-deps
+    # DULU supaya tak menyeret scipy 1.14; numpy dikunci PALING AKHIR.
+    stage("pin stack numpy-1 koheren")
+    sh("pip install -q --no-deps 'albumentations==1.3.1' 'qudida==0.0.4' "
+       "'timm==0.4.12' 'pytorch_toolbelt==0.5.2'")
+    sh("pip install -q 'numpy==1.26.4' 'scipy==1.13.1' 'pandas==2.1.4' "
+       "'opencv-python-headless==4.9.0.80' 'scikit-image==0.22.0' "
+       "'rasterio==1.3.10' PyYAML hydra-core omegaconf fire")
+    sh("pip install -q --no-deps --force-reinstall 'numpy==1.26.4'")
     sys.path.insert(0, str(REPO))
-    stage("setup selesai")
+    stage("setup selesai (numpy-1 koheren)")
 
 
 def _shim_legacy_imports():

@@ -38,6 +38,11 @@ export function gabungKotak(a: Kotak, b: Kotak): Kotak {
   };
 }
 
+/** Dua kotak geografis bersinggungan? Dipakai bingkai untuk membuang lapisan
+ *  zona yang tidak ada hubungannya dengan isi yang digambar. */
+export const beririsan = (a: Kotak, b: Kotak): boolean =>
+  a.lon0 <= b.lon1 && b.lon0 <= a.lon1 && a.lat0 <= b.lat1 && b.lat0 <= a.lat1;
+
 /** Kotak pembungkus sekumpulan titik; null kalau tidak ada titik sama sekali
  *  (pemanggil yang memutuskan kotak dasarnya, bukan fungsi ini yang mengarang). */
 export function kotakTitik(titik: readonly Titik[]): Kotak | null {
@@ -176,7 +181,7 @@ export function jalurCincin(b: Bingkai, cincin: readonly (readonly number[][])[]
  *  jauh lebih lebar daripada tinggi, jadi dua titik yang bertumpuk vertikal
  *  memang tidak bertabrakan dan tidak perlu dibungkam.
  *
- *  ponytail: O(n^2) atas label yang lolos; peta ini menggambar puluhan titik,
+ *  catatan: O(n^2) atas label yang lolos; peta ini menggambar puluhan titik,
  *  bukan ribuan. Kalau nanti ribuan, saring dulu per-sel grid. */
 export function saringLabel(
   posisi: readonly { x: number; y: number }[],

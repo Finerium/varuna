@@ -304,7 +304,7 @@
 
 /* Seluruh kartu jadi sasaran klik tanpa menyarangkan tautan: satu lapisan
    transparan milik tautan judul. Nama aksesibelnya tetap pendek (inv_id saja).
-   ponytail: konsekuensinya teks di dalam kartu tidak bisa diseleksi; id yang
+   catatan: konsekuensinya teks di dalam kartu tidak bisa diseleksi; id yang
    sama tersedia untuk disalin di panel berkas. */
 .kmd-kartu__id::before {
   content: "";

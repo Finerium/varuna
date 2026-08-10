@@ -16,7 +16,7 @@ import json, pathlib, subprocess, sys
 import numpy as np
 import pandas as pd
 
-BASE = pathlib.Path.home() / "Documents/Datathon/varuna"
+BASE = pathlib.Path(__file__).resolve().parents[2]
 METRIC_DIR = BASE / "models/xview3-reference/reference"
 TH_VESSEL, TH_FISHING = 0.338, 0.350
 SEED, B = 20260809, 1000

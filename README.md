@@ -3,9 +3,10 @@
 [![Lisensi MIT](https://img.shields.io/badge/lisensi-MIT-black)](LICENSE)
 [![Demo langsung](https://img.shields.io/badge/demo-langsung-2ea44f)](https://varuna-gamma.vercel.app)
 [![Paper](https://img.shields.io/badge/paper-12%20halaman-red)](paper.pdf)
+[![CI](https://github.com/Finerium/varuna/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/Finerium/varuna/actions/workflows/ci.yml)
 [![Next.js](https://img.shields.io/badge/Next.js-App%20Router-black)](https://nextjs.org)
 [![pnpm](https://img.shields.io/badge/pnpm-monorepo-f69220)](https://pnpm.io)
-[![Uji](https://img.shields.io/badge/uji-405%20hijau-success)](#status-dan-verifikasi)
+[![Uji](https://img.shields.io/badge/uji-406%20hijau-success)](#status-dan-verifikasi)
 [![Protokol](https://img.shields.io/badge/protokol-freeze--eval--v1-blue)](protocol/eval-protocol.md)
 
 > Kapal gelap mematikan AIS biar tak terlihat. Radar tetap melihat. VARUNA mengubahnya jadi berkas bukti yang bisa diperiksa.
@@ -69,7 +70,7 @@ Total ± 8 menit. Tiap langkah menyebut satu hal yang **harus terlihat** supaya 
 
 1. Buka **[halaman masuk](https://varuna-gamma.vercel.app)** — yang harus terlihat: chip SAR nyata (bukan ikon) dan strip bukti (F1 0,854 · red-team 24/24 · klaim tanpa artefak: 0).
 2. Klik **[Masuk cepat — Analis](https://varuna-gamma.vercel.app/enter/analis)** (satu klik memasang cookie peran dan mengalihkan ke Pusat Komando). Buka `inv-natuna-20260805-01` — yang harus terlihat: status **ABSTAIN** dengan enam alasan *rule* eksplisit dan usia bukti 100,5 jam; sistem menahan diri karena cakupan kurang, bukan karena ragu.
-3. Buka **[Konsol Skenario](https://varuna-gamma.vercel.app/konsol)**, jalankan replay — yang harus terlihat: tiap langkah memunculkan `agent_step` SSE baru dalam ~2–4 detik dari panggilan model sungguhan; tanpa `OPENAI_API_KEY` ia gagal terbuka, tidak memutar rekaman kalengan.
+3. Buka **[Konsol Skenario](https://varuna-gamma.vercel.app/konsol)**, jalankan replay — yang harus terlihat: tiap langkah memunculkan `agent_step` SSE baru dalam ~3–5 detik dari panggilan model sungguhan (replay penuh 9 langkah ~30 detik); tanpa `OPENAI_API_KEY` ia gagal terbuka, tidak memutar rekaman kalengan.
 4. Buka **[Portal Publik](https://varuna-gamma.vercel.app/portal)** — yang harus terlihat: nol identitas kapal; buka `/api/public/aggregate` dan cocokkan angkanya dengan yang di layar.
 5. Baca **[paper](paper.pdf)** untuk protokol beku, angka evaluasi, dan tabel deviasi yang mengakui setiap janji yang meleset atau tertunda.
 
@@ -111,7 +112,7 @@ Prinsip yang mengikat implementasi:
 - **Status hanya server-side.** `computeStatus` adalah fungsi murni di `packages/core`; endpoint produk, pembangun golden set, dan harness evaluasi memanggil fungsi yang sama, sehingga angka evaluasi mendeskripsikan persis gerbang yang dikirim ke produksi.
 - **Grounding wajib.** Setiap `art_id` pada keluaran agen harus resolvable di indeks bukti; yang tidak resolvable dibuang dan tercatat di *trace* — ditegakkan juga di jalur baca sebelum berkas sampai ke analis.
 - **ABSTAIN adalah keluaran sah.** Sistem menunggu lintasan berikutnya daripada menebak.
-- **Identitas dilindungi.** MMSI hanya hidup sebagai HMAC-SHA256 pseudonim; garam di *environment*, tidak pernah di repo.
+- **Identitas dilindungi.** MMSI hanya hidup sebagai HMAC-SHA256 pseudonim 16-hex; golden set demo memakai garam *dev* yang masih tertanam di kode (residual jujur, diakui paper §4.6 dan `manifests/e8-hasil.json`), belum dibaca dari *environment*.
 
 ## Cara kerja: PASHA Gate
 
@@ -199,7 +200,7 @@ Seluruh definisi metrik, ukuran sampel, dan *seed* dibekukan sebelum eksperimen 
 | Asosiasi lintas sensor (E4, Denmark) | — | **belum terukur** (kendala GPU) | tabel deviasi paper |
 | Pergeseran domain Natuna (E1b) | — | **belum terukur** (kendala GPU) | tabel deviasi paper |
 | Baseline manusia (E9) | — | **belum terukur** (menunggu penilai) | tabel deviasi paper |
-| Uji | hijau | core 340 · agents 22 · web 43 | `pnpm -r test` |
+| Uji | hijau | core 340 · agents 22 · web 44 | `pnpm -r test` |
 
 ## Residual yang jujur
 
@@ -209,6 +210,7 @@ Yang terkuat dari sistem ini bukan satu pun angka di atas, melainkan bahwa kami 
 2. **Laju ABSTAIN terukur 1,4%** — di bawah rentang pra-registrasi **10–25%**. Ini rentang yang **dilanggar, bukan disesuaikan**: set fase ini nyaris seluruhnya kasus satu-modalitas *going-dark* yang memang seharusnya TERINDIKASI, bukan ABSTAIN.
 3. **Determinisme server lintas replay LIVE belum tercapai:** *hash* `status_server` identik **0/6**, artefak dirujuk identik **3/6**, karena tiap replay membawa stempel waktu berbeda. Reprodusibilitas bit hanya berlaku pada masukan identik — pelanggaran §0.7 yang manifesnya sendiri **wajibkan dilaporkan**, bukan ditutup.
 4. **Tertunda oleh GPU / penilai:** asosiasi Denmark (E4), pergeseran domain Natuna (E1b), baseline manusia (E9). Ekspor berkas utuh untuk penyerahan formal ke penyidik masih manual.
+5. **Garam HMAC MMSI masih tertanam di kode** (garam *dev* golden set, belum dibaca dari *environment*), jadi pseudonim golden demo sengaja dapat dibalik — datanya memang AIS terbuka DMA. Migrasi garam ke *environment* ada di daftar perbaikan; diakui paper §4.6 dan audit `experiments/e8/adjudikasi.md`.
 
 Semua tercatat terbuka di tabel deviasi paper, bukan dilunakkan. Peta pemulihannya ada di [Roadmap](#roadmap).
 
@@ -239,7 +241,7 @@ Tiap keputusan ditulis sebagai *pilihan — alternatif yang ditolak — alasan*.
 
 | Pertanyaan | Jawaban | Bukti |
 |---|---|---|
-| Bocorkah identitas kapal? | MMSI hanya HMAC-SHA256 16-hex; garam dari *environment*, tak pernah di repo; Portal nol-identitas di level skema | `packages/core` (`mmsi_hash`) |
+| Bocorkah identitas kapal? | MMSI hanya HMAC-SHA256 16-hex; garam *dev* masih tertanam di kode (residual E8, diakui paper §4.6) — pseudonim golden demo karenanya dapat dibalik, datanya memang AIS terbuka DMA; Portal nol-identitas di level skema | `packages/core` (`mmsi_hash`), `experiments/e8/adjudikasi.md` |
 | Bisakah peran salah menulis? | Peran = pemilih register, bukan otentikasi; matriks *role-write* 403 sebelum 501 | route handler tulis |
 | Amankah token replay? | `resume_token` ber-HMAC, verifikasi *timing-safe* + allowlist kunci + containment path | `executor.ts`, `gudang.ts` |
 | Masuk data mentah ke git? | Tidak; GeoTIFF/AIS mentah tak pernah di-commit, hanya artefak turunan web-optimized | `.gitignore` + `packages/core/golden` |
@@ -251,9 +253,11 @@ Tiap keputusan ditulis sebagai *pilihan — alternatif yang ditolak — alasan*.
 ```
 apps/web/            Next.js — lima permukaan (komando|patroli|konsol|portal + entry) + API
 packages/core/       TS murni: skema Zod, pasha.ts (computeStatus), grounding.ts, diksi.ts, store.ts
-packages/core/golden/ golden set demo: investigasi + artefak + chip SAR web-optimized
+packages/core/golden/ subset demo 6 investigasi yang dilayani produk (artefak + chip SAR)
 packages/agents/     @openai/agents A0–A10 + executor replay pause-persist
 experiments/         E1-E3, E5-E8, E10-E11 (Python; E7 sebagian TS membungkus core)
+experiments/e5/goldenset/  golden set evaluasi LENGKAP: 73 investigasi (sumber semua angka "/73")
+scripts/             utilitas akuisisi & pembangun data (Python; bukan jalur runtime produk)
 manifests/           manifes hasil (append-only) — satu-satunya sumber angka yang boleh dikutip
 protocol/            eval-protocol.md (BEKU, freeze-eval-v1) + janji-audit.md
 contracts/           kontrak field & arsitektur (BEKU)
@@ -261,16 +265,25 @@ contracts/           kontrak field & arsitektur (BEKU)
 
 ## Menjalankan secara lokal
 
-Prasyarat: Node.js ≥ 22 dan pnpm (`corepack enable`).
+Prasyarat: Node.js 22–24 dan pnpm 10.33.2. Aktifkan lewat `corepack enable` (Node 22–24) atau, pada Node ≥ 25 yang tak lagi membundel corepack, `npm i -g pnpm@10.33.2`.
 
 ```bash
 pnpm install                        # dependensi seluruh workspace
-pnpm -r test                        # 340 core + 22 agents + 43 web, semua hijau
+pnpm -r test                        # 340 core + 22 agents + 44 web, semua hijau
 pnpm -r typecheck && pnpm -r lint    # tsc --noEmit semua workspace + eslint apps/web
 pnpm --filter web dev               # http://localhost:3000
 ```
 
 Permukaan baca dan golden set berjalan tanpa secret. Replay agen langsung membutuhkan `OPENAI_API_KEY` yang dipropagasi via `vercel env` — tidak ada secret di dalam repo.
+
+**Reproduksi angka PASHA (tanpa GPU, tanpa secret):**
+
+```bash
+python3 experiments/e7/loo.py   # tulis ulang manifests/e7-loo.json + e7-lengan.json
+git diff manifests/             # hanya run_id & commit yang berubah; angka /73 identik
+```
+
+Butuh Python 3.11+ (stdlib) dan `npx tsx`; driver membungkus fungsi core asli di `packages/core`, tidak memport logikanya — jadi ablasi PASHA di paper bereproduksi bit-identik dari clone segar.
 
 ## Protokol evaluasi (beku)
 

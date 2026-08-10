@@ -233,7 +233,7 @@ export const StatusServerSchema = z.object({
  *  parsial (dua rule) lewat StatusServerSchema, dan tes lama tidak boleh
  *  berubah. Jalur BACA tetap longgar (investigasi as-built ber-reasons parsial
  *  masih tampil apa adanya); jalur TULIS memakai skema ini.
- *  ponytail: gabungkan keduanya begitu fixture tes kontrak ikut diamandemen —
+ *  catatan: gabungkan keduanya begitu fixture tes kontrak ikut diamandemen —
  *  hapus varian ini dan pindahkan .refine() ke StatusServerSchema. */
 export const StatusServerKetatSchema = StatusServerSchema.refine(
   (s) => s.reasons.length === 6 && new Set(s.reasons.map((r) => r.rule)).size === 6,

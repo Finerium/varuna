@@ -1,4 +1,4 @@
-#!/usr/bin/env python3.13
+#!/usr/bin/env python3
 """Turunkan geometri zona untuk peta SVG apps/web.
 
 Kenapa perlu: data/processed/zona/ ada di .gitignore DAN .vercelignore, jadi

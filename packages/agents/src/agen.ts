@@ -24,6 +24,8 @@
 import { Agent, type Tool } from "@openai/agents";
 import { z } from "zod";
 
+import { KATA_TERLARANG } from "@varuna/core/diksi";
+
 export const ID_AGEN = ["A0", "A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8", "A9", "A10"] as const;
 export type IdAgen = (typeof ID_AGEN)[number];
 
@@ -114,7 +116,7 @@ const ATURAN_BERSAMA = [
   "Kutip artefak HANYA dengan art_id yang benar-benar tertulis di katalog. art_id yang tidak ada di katalog membuat seluruh keluaranmu dibuang server.",
   "Jangan mengarang artefak, angka, atau kejadian yang tidak ada di katalog. Kalau bukti tidak cukup, kembalikan daftar kosong.",
   "Jangan menyimpulkan status investigasi (terkonfirmasi/terindikasi/ABSTAIN). Status dihitung server, bukan olehmu.",
-  "Bahasa Indonesia. Nada deskriptif, bukan putusan: dilarang memakai kata bersalah, terbukti, vonis, pidana, pelaku, kriminal, hukuman, dakwaan, terdakwa, tersangka.",
+  `Bahasa Indonesia. Nada deskriptif, bukan putusan: dilarang memakai kata ${KATA_TERLARANG.join(", ")}.`,
 ].join(" ");
 
 const TUGAS: Record<IdAlat, string> = {

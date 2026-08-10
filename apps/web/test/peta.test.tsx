@@ -345,3 +345,36 @@ describe("komponen Peta dengan area pencarian", () => {
     expect(markup).toContain("peta__zona--fokus");
   });
 });
+
+describe("komponen Peta dengan isi di luar zonanya", () => {
+  // Paket Laut Utara pada layar Patroli, yang lapisan zonanya tetap natuna.
+  // Bingkai lama = bbox Natuna DIGABUNG paket: 110 derajat bujur, paketnya
+  // setitik di pojok. Zona yang tidak beririsan dengan isi tidak lagi ikut
+  // dihitung, jadi tidak satu pun cincin Natuna jatuh di dalam bingkai.
+  const markup = renderToStaticMarkup(
+    <Peta
+      label="Peta paket Laut Utara"
+      zona={["natuna"]}
+      area={[
+        {
+          id: "pkg-x3-570f8bf7-01",
+          cincin: [
+            [
+              [-0.5, 59.85],
+              [-0.35, 59.85],
+              [-0.35, 59.98],
+              [-0.5, 59.98],
+              [-0.5, 59.85],
+            ],
+          ],
+          judul: "pkg-x3-570f8bf7-01: area pencarian, bukan posisi pasti, radius 12.0 km",
+        },
+      ]}
+    />,
+  );
+
+  it("membingkai isinya, bukan bbox zona yang tak bersinggungan", () => {
+    expect(markup).toContain("peta__area");
+    expect(markup).toMatch(/peta__zona--fokus[^>]*d=""/);
+  });
+});

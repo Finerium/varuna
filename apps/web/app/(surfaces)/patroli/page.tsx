@@ -53,9 +53,9 @@ export default async function Patroli() {
             Penugasan yang dibawa <span className="ptr-judul__aksen">ke air.</span>
           </h2>
           <p className="ptr-lead">
-            Layar ini sama dengan yang dipegang kru di dek: area pencarian sebagai poligon, paket
-            sasaran beserta dasar hitungannya, dan tombol hasil pemeriksaan. Paket dicetak server
-            saat analis menerima sebuah berkas; halaman ini hanya membacanya.
+            Layar ini sama dengan yang dipegang kru di dek: area pencarian sebagai poligon, dan
+            paket sasaran beserta dasar hitungannya. Paket dicetak server saat analis menerima
+            sebuah berkas; halaman ini hanya membacanya.
           </p>
 
           <div className="ptr-angka">
@@ -194,21 +194,9 @@ export default async function Patroli() {
                   peran patroli, menyaring diksi, menolak pola identitas (MMSI, callsign, awalan
                   nama kapal), lalu menulis artefak <code>patrol_report</code> ber-hash ke rantai
                   bukti. Yang belum terpasang adalah formulir di layar ini; selama itu tombolnya
-                  ditutup daripada menampung ketukan yang tidak sampai ke mana-mana.
-                </p>
-              </section>
-
-              <section className="ptr-blok" aria-labelledby="ptr-antre">
-                <h3 className="ptr-tajuk" id="ptr-antre">
-                  Kiriman tertunda
-                </h3>
-                <p className="ptr-antre">
-                  <span className="ptr-antre__nilai">0</span>
-                  <span className="ptr-antre__ket">menunggu kirim</span>
-                </p>
-                <p className="ptr-nota">
-                  Tidak ada kiriman yang menunggu. Antrean offline baru punya arti setelah ada yang
-                  bisa dikirim; sampai saat itu hitungannya nol dan itu jujur.
+                  ditutup daripada menampung ketukan yang tidak sampai ke mana-mana. Buktinya:{" "}
+                  <code>POST /api/patrol/results</code> tanpa peran &rarr; 403, peran salah &rarr;
+                  403, paket tak dikenal &rarr; 404, catatan ber-diksi putusan &rarr; 422.
                 </p>
               </section>
             </div>

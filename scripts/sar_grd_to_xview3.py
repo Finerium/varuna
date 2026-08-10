@@ -420,7 +420,7 @@ def sapu_derau(notnr, derau, resmi, ks, geser=(0, 0), halus=HALUS_DERAU,
     --simpan-derau`), jadi satu kali rantai penuh cukup untuk menyapu banyak k.
     Beda dengan pipeline: rerata lokal dihitung sesudah geokoding, bukan sebelum;
     untuk medan selandai LUT derau selisihnya jauh di bawah 0.1 dB.
-    ponytail: sampel `n_pita` pita, bukan seluruh raster -- 4x10^7 piksel sudah jauh
+    catatan: sampel `n_pita` pita, bukan seluruh raster -- 4x10^7 piksel sudah jauh
     melewati kebutuhan presisi 0.01 dB; sapuan penuh hanya kalau k jadi angka paper.
     """
     hasil = {f"{k:g}": dict(n=0, sabs=0.0, sd=0.0, sdd=0.0, n1=0, neg=0) for k in ks}
@@ -460,7 +460,7 @@ def sapu_derau(notnr, derau, resmi, ks, geser=(0, 0), halus=HALUS_DERAU,
 
 def geseran_terbaik(punyaku, resmi, sisi=1024, cari=12):
     """Cari geseran integer (baris, kolom) yang memaksimalkan korelasi pada satu petak tengah.
-    ponytail: pencarian kasar +-`cari` piksel; cukup untuk membuktikan penyelarasan grid,
+    catatan: pencarian kasar +-`cari` piksel; cukup untuk membuktikan penyelarasan grid,
     naikkan ke korelasi fase sub-piksel bila residu >1 piksel."""
     with rasterio.open(punyaku) as a, rasterio.open(resmi) as b:
         r0 = a.height // 2 - sisi // 2

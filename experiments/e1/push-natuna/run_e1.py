@@ -75,13 +75,34 @@ def setup():
                          capture_output=True, text=True).stdout.strip()
     print("GPU terdeteksi:", gpu, flush=True)
     assert "torch" not in sys.modules, "torch terlanjur diimport sebelum swap"
-    if any(k in gpu for k in ("P100", "K80")):
+    pra_sm70 = any(k in gpu for k in ("P100", "K80"))
+    if pra_sm70:
         stage("GPU pra-sm70: swap torch ke cu118 (sm_60 didukung) SEBELUM import torch")
-        sh("pip install -q --force-reinstall torch==2.3.1 torchvision==0.18.1 --index-url https://download.pytorch.org/whl/cu118")
-    sh("pip install -q hydra-core rasterio tifffile omegaconf fire opencv-python-headless")
-    sh("pip install -q --no-deps timm==0.4.12 pytorch_toolbelt==0.5.2 albumentations==1.1.0 qudida==0.0.4")
+        sh("pip install -q --force-reinstall torch==2.4.1 torchvision==0.19.1 --index-url https://download.pytorch.org/whl/cu118")
+
+    # ---- Jangan lawan pin numpy image. Akar 12+ kegagalan sekarang jelas: image
+    # mengunci numpy==2.0.2 (PIP_CONSTRAINT Kaggle, upgrade tak nempel) TAPI membawa
+    # scipy 1.14 yang memanggil simbol numpy>=2.1 (_blas_supports_fpe, _center) yang
+    # tak ada di 2.0.2 -> crash import albumentations/skimage/scipy. Menurunkan numpy
+    # memicu ABI 'dtype size changed 96 vs 88' (opencv/skimage ter-compile numpy-2).
+    # Solusi bersih & minimal: BIARKAN numpy 2.0.2 (ABI cocok seluruh paket image),
+    # TURUNKAN scipy -> 1.13.1 (mendukung numpy 2.0, ABI numpy-2, tak pernah memanggil
+    # simbol numpy>=2.1). Bersihkan PIP_CONSTRAINT khusus langkah scipy.
+    # numpy image ternyata FRANKENSTEIN: core .so 2.0.2 tapi file .py 2.4.4 nyelip
+    # (numpy.testing/utils.py 2.4.4 memanggil _blas_supports_fpe yang tak ada di core
+    # 2.0.2). Force-reinstall numpy 2.0.2 utuh (py+core koheren) + scipy 1.13.1
+    # (tak memanggil simbol itu). Keduanya ABI numpy-2.0, cocok opencv/skimage image.
+    stage("koherenkan numpy 2.0.2 + scipy 1.13.1 (perbaiki frankenstein numpy)")
+    sh("PIP_CONSTRAINT= pip install -q --force-reinstall --no-deps 'numpy==2.0.2' 'scipy==1.13.1'")
+    # albumentations 1.3.1: champion impor _maybe_process_in_chunks dari
+    # albumentations.augmentations.functional, yang dihapus di 1.4.x bawaan image.
+    # 1.3.1 pure-python (ABI tak relevan) + masih punya fungsi itu; alias numpy-1 di
+    # build_runtime menutup np.float dst.
+    sh("PIP_CONSTRAINT= pip install -q --no-deps --force-reinstall 'albumentations==1.3.1' 'qudida==0.0.4' 'timm==0.4.12' 'pytorch_toolbelt==0.5.2'")
+    sh("pip install -q hydra-core omegaconf fire")
     sys.path.insert(0, str(REPO))
-    stage("setup selesai")
+    sh("python -c \"import numpy,scipy; print('VERSI numpy',numpy.__version__,'scipy',scipy.__version__)\"")
+    stage("setup selesai (scipy 1.13.1 / numpy 2.0.2)")
 
 
 def _shim_legacy_imports():
@@ -127,6 +148,12 @@ def _shim_legacy_imports():
 
 def build_runtime():
     stage("build runtime: import")
+    import numpy as _np  # kembalikan alias yang dihapus numpy-2 utk kode champion era numpy-1
+    for _a, _t in (("float", float), ("int", int), ("bool", bool), ("object", object),
+                   ("str", str), ("complex", complex), ("long", int), ("unicode", str)):
+        if not hasattr(_np, _a):
+            setattr(_np, _a, _t)
+    print("numpy", _np.__version__, "| alias numpy-1 dikembalikan", flush=True)
     _shim_legacy_imports()
     import albumentations  # noqa
     import torch
