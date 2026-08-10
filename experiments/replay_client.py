@@ -58,13 +58,47 @@ def parse_sse(teks):
     return keluar
 
 
+def _tambah(ke, u):
+    """Akumulasi satu objek usage SSE ({in,out,requests}) ke tally."""
+    if not isinstance(u, dict):
+        return
+    for k in ("in", "out", "requests"):
+        ke[k] += u.get(k) or 0
+
+
+def kumpulkan_token(langkah_agen, penutup_usage):
+    """Token satu run dari aliran SSE. Total = jumlah `usage` tiap peristiwa
+    PENUTUP (satu per invokasi HTTP); per-agen = `usage` tiap agent_step. Kedua
+    jalur dijumlahkan terpisah supaya ketidakcocokan tampak, bukan tertutup:
+    server menjanjikan keduanya sama."""
+    total = {"in": 0, "out": 0, "requests": 0}
+    for u in penutup_usage:
+        _tambah(total, u)
+    per_agen = {}
+    for s in langkah_agen:
+        u = s.get("usage")
+        if not isinstance(u, dict):
+            continue
+        _tambah(per_agen.setdefault(s.get("agent"), {"in": 0, "out": 0, "requests": 0}), u)
+    jumlah_agen = {"in": 0, "out": 0, "requests": 0}
+    for u in per_agen.values():
+        _tambah(jumlah_agen, u)
+    return {
+        **total,
+        "per_agen": per_agen,
+        # False = instrumentasi server bocor (ada panggilan model yang tidak
+        # terhitung ke agen mana pun). Dilaporkan, tidak ditambal.
+        "konsisten": jumlah_agen == total,
+    }
+
+
 def replay_once(inv_id, base=BASE_DEFAULT, peran="analis", maks_langkah=40):
     """Satu run replay penuh. Mengembalikan ringkasan yang dibutuhkan E5.4/E7:
     urutan langkah agen, PASHA final (status+hash lapisan server), himpunan
-    artefak yang benar-benar dirujuk (dari pasha.reasons[].art_ids), diff vs
-    tersimpan, dan latensi per panggilan HTTP. Token/usia model TIDAK ada di
-    aliran SSE — `token_usage` sengaja null dan ditandai perlu instrumentasi
-    server (bukan diarang)."""
+    artefak yang benar-benar dirujuk (dari pasha.reasons[].art_ids), latensi per
+    panggilan HTTP, dan cacah token dari usage yang dipulangkan Responses API
+    (E10). `token_usage` null hanya bila server yang dihubungi belum membawa
+    instrumentasi itu — angkanya tidak pernah ditaksir."""
     status_http, ctype, teks, ms = _post(f"{base}/api/replay/{inv_id}", peran, None)
     if ctype != "text/event-stream":
         # Keadaan jujur: 404 (inv tak ada di produk), 503 (tanpa kunci), dll.
@@ -75,12 +109,14 @@ def replay_once(inv_id, base=BASE_DEFAULT, peran="analis", maks_langkah=40):
         return {"ok": False, "inv_id": inv_id, "http_status": status_http, "badan": badan}
 
     langkah_agen, latensi, penutup, sebab = [], [ms], None, None
+    penutup_usage = []
     ev = parse_sse(teks)
     for nama, data in ev:
         if nama == "agent_step":
             langkah_agen.append(data)
         else:
             penutup = (nama, data)
+            penutup_usage.append((data or {}).get("usage"))
 
     n = 0
     while penutup and penutup[0] == "lanjut" and n < maks_langkah:
@@ -97,6 +133,7 @@ def replay_once(inv_id, base=BASE_DEFAULT, peran="analis", maks_langkah=40):
                 langkah_agen.append(data)
             else:
                 penutup = (nama, data)
+                penutup_usage.append((data or {}).get("usage"))
 
     if penutup and penutup[0] == "gagal":
         sebab = penutup[1]
@@ -117,12 +154,45 @@ def replay_once(inv_id, base=BASE_DEFAULT, peran="analis", maks_langkah=40):
         "artefak_dirujuk": dirujuk,
         "diff_vs_tersimpan": diff,
         "latensi_ms": [round(x, 1) for x in latensi],
-        "token_usage": None,  # tak dipancarkan SSE; butuh instrumentasi server (E10), bukan dikarang
+        # null hanya bila server belum memancarkan usage sama sekali; tidak pernah ditaksir.
+        "token_usage": (
+            kumpulkan_token(langkah_agen, penutup_usage)
+            if any(u is not None for u in penutup_usage)
+            else None
+        ),
         "sebab_gagal": sebab,
     }
 
 
+def _check():
+    """Self-check agregasi token (nol jaringan)."""
+    langkah = [
+        {"agent": "A2", "phase": "start", "usage": None},
+        {"agent": "A2", "phase": "output", "usage": {"in": 900, "out": 40, "requests": 1}},
+        {"agent": "A7", "phase": "output", "usage": {"in": 800, "out": 60, "requests": 2}},
+        {"agent": "A0", "phase": "done", "usage": {"in": 1200, "out": 90, "requests": 3}},
+    ]
+    # Penutup: tiga invokasi HTTP; jumlahnya = jumlah per-agen.
+    tok = kumpulkan_token(langkah, [
+        {"in": 1000, "out": 60, "requests": 2},
+        {"in": 900, "out": 70, "requests": 2},
+        {"in": 1000, "out": 60, "requests": 2},
+    ])
+    assert (tok["in"], tok["out"], tok["requests"]) == (2900, 190, 6), tok
+    assert tok["per_agen"]["A2"] == {"in": 900, "out": 40, "requests": 1}, tok["per_agen"]
+    assert tok["konsisten"] is True, "jumlah per-agen harus sama dengan total penutup"
+
+    # Server yang bocor (satu panggilan tak terhitung ke agen mana pun) WAJIB
+    # tampak sebagai konsisten=False, bukan diam-diam dibulatkan.
+    bocor = kumpulkan_token(langkah[:2], [{"in": 5000, "out": 400, "requests": 9}])
+    assert bocor["konsisten"] is False, "ketidakcocokan total vs per-agen harus terdeteksi"
+    print("OK self-check replay_client (token: total, per-agen, deteksi ketidakcocokan)")
+
+
 if __name__ == "__main__":
     import sys
-    inv = sys.argv[1] if len(sys.argv) > 1 else "inv-x3-570f8bf7-01"
-    print(json.dumps(replay_once(inv, maks_langkah=0), indent=1, ensure_ascii=False))
+    if "--check" in sys.argv:
+        _check()
+    else:
+        inv = sys.argv[1] if len(sys.argv) > 1 else "inv-x3-570f8bf7-01"
+        print(json.dumps(replay_once(inv, maks_langkah=0), indent=1, ensure_ascii=False))

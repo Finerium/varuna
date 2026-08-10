@@ -20,6 +20,7 @@ import {
   tool,
   type RunToolApprovalItem,
   type Tool,
+  type Usage,
 } from "@openai/agents";
 import { z } from "zod";
 
@@ -97,9 +98,7 @@ const rahasiaToken = (): string =>
 const tandaTanganToken = (t: Omit<ResumeToken, "sig">): string =>
   createHmac("sha256", rahasiaToken())
     .update(
-      JSON.stringify(
-        Object.fromEntries(Object.entries(t).sort(([a], [b]) => (a < b ? -1 : 1))),
-      ),
+      JSON.stringify(Object.fromEntries(Object.entries(t).sort(([a], [b]) => (a < b ? -1 : 1)))),
     )
     .digest("hex");
 
@@ -116,6 +115,10 @@ const sigCocok = (t: ResumeToken): boolean => {
 
 export type FaseAgen = "start" | "output" | "retry" | "discarded" | "done";
 
+/** Cacah token satu sumber panggilan model. Murni instrumentasi biaya: tidak
+ *  ada status, grounding, atau keputusan apa pun yang membacanya. */
+export type Pemakaian = { in: number; out: number; requests: number };
+
 export type PeristiwaAgen = {
   agent: string;
   phase: FaseAgen;
@@ -123,6 +126,11 @@ export type PeristiwaAgen = {
   trace_ref: string;
   diff: { status_sama: boolean; artefak_sama: boolean } | null;
   pasha: StatusServer | null;
+  /** Token yang dihabiskan agen INI pada langkah ini — sub-agen menghitung run
+   *  pertamanya plus run perbaikan; A0 pada fase `done` menghitung gilirannya
+   *  sendiri. Jumlah seluruh peristiwa satu langkah = `usage` peristiwa penutup.
+   *  null pada fase yang belum memanggil model (`start`). */
+  usage: Pemakaian | null;
 };
 
 export type Pemancar = (p: PeristiwaAgen) => void | Promise<void>;
@@ -135,7 +143,36 @@ export type HasilLangkah = {
   trace_ref: string;
   run_id: string;
   step_idx: number;
+  /** Token seluruh panggilan model pada invokasi HTTP ini: giliran A0 plus
+   *  setiap sub-agen yang dijalankan. Biaya satu investigasi = jumlah field ini
+   *  atas semua langkahnya. */
+  usage: Pemakaian;
 };
+
+const pakaiBaru = (): Pemakaian => ({ in: 0, out: 0, requests: 0 });
+
+const tambah = (ke: Pemakaian, dari: Pemakaian): void => {
+  ke.in += dari.in;
+  ke.out += dari.out;
+  ke.requests += dari.requests;
+};
+
+/** `sebelum` dipakai ketika run DILANJUTKAN dari RunState: agregat usage A0
+ *  ikut diserialisasi dan dipulihkan, jadi yang menjadi milik langkah ini
+ *  adalah selisihnya, bukan angka kumulatifnya. Sub-agen tidak butuh itu —
+ *  tiap run sub-agen punya RunContext sendiri yang lahir dari nol. */
+const catatPakai = (ke: Pemakaian, u: Usage, sebelum?: Pemakaian): void =>
+  tambah(ke, {
+    in: u.inputTokens - (sebelum?.in ?? 0),
+    out: u.outputTokens - (sebelum?.out ?? 0),
+    requests: u.requests - (sebelum?.requests ?? 0),
+  });
+
+const salinPakai = (u: Usage): Pemakaian => ({
+  in: u.inputTokens,
+  out: u.outputTokens,
+  requests: u.requests,
+});
 
 /** Kegagalan yang harus tampil sebagai keadaan jujur di klien, bukan sebagai
  *  langkah agen yang gagal. Dipakai route untuk membedakan "model menolak
@@ -163,6 +200,11 @@ type Konteks = {
   run_id: string;
   trace_ref: string;
   step_idx: number;
+  /** Akumulator token satu invokasi HTTP; ditambah di tempat oleh tiap run. */
+  pakai: Pemakaian;
+  /** Bagian A0 dari akumulator itu, supaya fase `done` bisa melaporkan giliran
+   *  A0 sendiri dan bukan total langkah. */
+  pakaiA0: Pemakaian;
 };
 
 const acak = (): string => Math.random().toString(36).slice(2, 10).padEnd(8, "0");
@@ -193,6 +235,8 @@ async function siapkan(
     run_id,
     trace_ref: kunciJejak(inv_id, run_id),
     step_idx,
+    pakai: pakaiBaru(),
+    pakaiA0: pakaiBaru(),
   };
 }
 
@@ -283,16 +327,23 @@ async function jalankanSubAgen(
   ktx: Konteks,
   id: IdAlat,
   fokus: string,
-): Promise<{ amplop: Amplop; diperbaiki: boolean; catatan: string | null }> {
+): Promise<{ amplop: Amplop; diperbaiki: boolean; catatan: string | null; pakai: Pemakaian }> {
   const sub = buatSubAgen(id);
+  const pakai = pakaiBaru();
 
   const sekali = async (perbaikan?: string): Promise<Percobaan> => {
     try {
       const hasil = await m.runner.run(sub, masukanSubAgen(ktx.inv, ktx.baris, fokus, perbaikan), {
         maxTurns: 2,
       });
+      catatPakai(pakai, hasil.state.usage);
       return periksaGrounding(periksa(id, ktx.inv.inv_id, hasil.finalOutput), ktx.resolver);
     } catch (e) {
+      // ponytail: run yang melempar ModelBehaviorError tidak menyumbang token ke
+      // tally — usage-nya tidak terjangkau lewat error. Ambangnya diketahui:
+      // laporan biaya sedikit di bawah tagihan pada run yang keluarannya cacat
+      // skema. Naikkan dengan membaca usage dari state parsial bila SDK
+      // memaparkannya.
       if (!(e instanceof ModelBehaviorError)) throw e;
       return {
         amplop: {
@@ -309,7 +360,8 @@ async function jalankanSubAgen(
   };
 
   const pertama = await sekali();
-  if (pertama.salah === null) return { amplop: pertama.amplop, diperbaiki: false, catatan: null };
+  if (pertama.salah === null)
+    return { amplop: pertama.amplop, diperbaiki: false, catatan: null, pakai };
 
   const kedua = await sekali(
     `Keluaran pertamamu ditolak server: ${pertama.salah}. Perbaiki tepat sekali. Kutip hanya art_id yang ada di katalog dan patuhi skema keluaran.`,
@@ -319,12 +371,14 @@ async function jalankanSubAgen(
       amplop: { ...kedua.amplop, status: "retry_fixed" },
       diperbaiki: true,
       catatan: pertama.salah,
+      pakai,
     };
   }
   return {
     amplop: { ...kedua.amplop, status: "discarded" },
     diperbaiki: true,
     catatan: `${pertama.salah}; setelah satu perbaikan: ${kedua.salah}`,
+    pakai,
   };
 }
 
@@ -349,9 +403,11 @@ function alatAgen(
         trace_ref: ktx.trace_ref,
         diff: null,
         pasha: null,
+        usage: null,
       });
 
-      const { amplop, diperbaiki, catatan } = await jalankanSubAgen(m, ktx, id, fokus);
+      const { amplop, diperbaiki, catatan, pakai } = await jalankanSubAgen(m, ktx, id, fokus);
+      tambah(ktx.pakai, pakai);
       const output_ref = kunciKeluaran(ktx.inv.inv_id, ktx.run_id, ktx.step_idx, id);
       await m.store.append(output_ref, amplop);
 
@@ -364,6 +420,9 @@ function alatAgen(
             trace_ref: ktx.trace_ref,
             diff: null,
             pasha: null,
+            // Token perbaikan tidak dipisah dari run pertama: keduanya milik
+            // satu keluaran agen, dan yang dibayar adalah keduanya.
+            usage: null,
           },
           { catatan },
         );
@@ -376,6 +435,7 @@ function alatAgen(
           trace_ref: ktx.trace_ref,
           diff: null,
           pasha: null,
+          usage: pakai,
         },
         { amplop, catatan },
       );
@@ -449,6 +509,7 @@ async function tutupRun(
       trace_ref: ktx.trace_ref,
       diff,
       pasha,
+      usage: ktx.pakaiA0,
     },
     { amplop: percobaan.amplop, dikutip, catatan: percobaan.salah },
   );
@@ -460,6 +521,7 @@ async function tutupRun(
     trace_ref: ktx.trace_ref,
     run_id: ktx.run_id,
     step_idx: ktx.step_idx,
+    usage: ktx.pakai,
   };
 }
 
@@ -498,6 +560,7 @@ async function jeda(
     trace_ref: ktx.trace_ref,
     run_id: ktx.run_id,
     step_idx: berikut,
+    usage: ktx.pakai,
   };
 }
 
@@ -519,12 +582,15 @@ export async function mulaiReplay(
     trace_ref: ktx.trace_ref,
     diff: null,
     pasha: null,
+    usage: null,
   });
 
   const a0 = bangunA0(m, ktx, catat);
   const hasil = await m.runner.run(a0, masukanA0(ktx.inv, ktx.artefak.length, ktx.trace_ref), {
     maxTurns: MAX_GILIRAN,
   });
+  catatPakai(ktx.pakaiA0, hasil.state.usage);
+  tambah(ktx.pakai, ktx.pakaiA0);
 
   const tertunda = hasil.interruptions;
   if (tertunda.length === 0) return tutupRun(m, ktx, hasil.finalOutput, catat);
@@ -543,7 +609,10 @@ export async function lanjutkanReplay(
     throw new GalatReplay("token", "resume_token tidak sah atau bukan milik protokol replay ini.");
   }
   if (!sigCocok(token.data)) {
-    throw new GalatReplay("token", "tanda tangan resume_token tidak cocok; token diubah atau berasal dari server lain.");
+    throw new GalatReplay(
+      "token",
+      "tanda tangan resume_token tidak cocok; token diubah atau berasal dari server lain.",
+    );
   }
   if (Date.parse(token.data.expires_at) <= Date.parse(m.sekarang())) {
     throw new GalatReplay(
@@ -572,7 +641,11 @@ export async function lanjutkanReplay(
   // sisanya tetap tertunda dan runner berhenti lagi tanpa memanggil model.
   state.approve(tertunda[0] as RunToolApprovalItem);
 
+  const sebelum = salinPakai(state.usage);
   const hasil = await m.runner.run(a0, state, { maxTurns: MAX_GILIRAN });
+  catatPakai(ktx.pakaiA0, hasil.state.usage, sebelum);
+  tambah(ktx.pakai, ktx.pakaiA0);
+
   const lagi = hasil.interruptions;
   if (lagi.length === 0) return tutupRun(m, ktx, hasil.finalOutput, catat);
   return jeda(m, ktx, hasil.state, lagi);

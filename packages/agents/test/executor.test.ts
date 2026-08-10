@@ -14,6 +14,7 @@ import {
   INVESTIGASI_UJI,
   INV_ID,
   NOW,
+  PAKAI_PALSU,
   modelPalsu,
   mesinPalsu,
   sumberPalsu,
@@ -204,6 +205,48 @@ describe("lanjutkanReplay — satu invokasi, satu langkah agen", () => {
     const done = r.peristiwa.at(-1) as PeristiwaAgen;
     expect(done.pasha?.status).toBe("terkonfirmasi");
     expect(done.diff).toEqual({ status_sama: true, artefak_sama: true });
+  });
+
+  // Instrumentasi biaya (§4.5 paper): angka token harus berasal dari usage yang
+  // dipulangkan API, bukan taksiran. Yang dikunci di sini adalah aritmetikanya —
+  // total langkah = jumlah peristiwa langkah itu, dan agregat A0 yang KUMULATIF
+  // lintas RunState tidak boleh dihitung ulang tiap langkah.
+  it("mencatat token tiap langkah tanpa menghitung ganda agregat A0", async () => {
+    const r = siapkan(naskahStandar());
+    const langkah: HasilLangkah[] = [await mulaiReplay(r.mesin, INV_ID, () => {})];
+    let token: unknown = langkah[0]?.resume_token;
+
+    for (let i = 0; i < 5 && token !== null; i++) {
+      const h = await lanjutkanReplay(r.mesin, token, (p) => void r.peristiwa.push(p));
+      langkah.push(h);
+      token = h.resume_token;
+    }
+
+    // Satu panggilan model = satu PAKAI_PALSU. Jumlah seluruh langkah harus
+    // sama dengan jumlah panggilan yang benar-benar terjadi ke model palsu.
+    const total = langkah.reduce(
+      (a, h) => ({
+        in: a.in + h.usage.in,
+        out: a.out + h.usage.out,
+        requests: a.requests + h.usage.requests,
+      }),
+      { in: 0, out: 0, requests: 0 },
+    );
+    expect(total).toEqual({
+      in: PAKAI_PALSU.in * r.model.permintaan.length,
+      out: PAKAI_PALSU.out * r.model.permintaan.length,
+      requests: r.model.permintaan.length,
+    });
+
+    // Langkah 1 = satu sub-agen (A2) + satu giliran A0: dua panggilan.
+    expect(langkah[1]?.usage).toEqual({ in: 200, out: 20, requests: 2 });
+    // A0 pada fase done melaporkan gilirannya SENDIRI di langkah itu, bukan
+    // agregat kumulatif tiga gilirannya.
+    const done = r.peristiwa.at(-1) as PeristiwaAgen;
+    expect(done.usage).toEqual({ in: 100, out: 10, requests: 1 });
+    // Per-agen: sub-agen membawa token run-nya sendiri, fase start belum ada.
+    const a2 = r.peristiwa.filter((p) => p.agent === "A2");
+    expect(a2.map((p) => p.usage)).toEqual([null, { in: 100, out: 10, requests: 1 }]);
   });
 });
 

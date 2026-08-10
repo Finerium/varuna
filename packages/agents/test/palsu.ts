@@ -182,7 +182,11 @@ export type Balasan =
   | { jawab: unknown }
   | { teksMentah: string };
 
-const usage = () => new Usage();
+/** Cacah token karangan, tetap per panggilan: instrumentasi biaya (executor
+ *  `Pemakaian`) baru bisa diuji kalau model palsu memulangkan angka, dan angka
+ *  tetap membuat totalnya bisa dihitung tangan di tes. */
+export const PAKAI_PALSU = { in: 100, out: 10, requests: 1 } as const;
+const usage = () => new Usage({ inputTokens: PAKAI_PALSU.in, outputTokens: PAKAI_PALSU.out });
 
 function balasanKeResponse(b: Balasan, n: number): ModelResponse {
   if ("alat" in b) {

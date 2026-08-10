@@ -89,6 +89,10 @@ export function alirkanReplay(
         trace_ref: hasil.trace_ref,
         run_id: hasil.run_id,
         step_idx: hasil.step_idx,
+        // Aditif: cacah token invokasi ini (in/out/requests). Tidak ada yang
+        // memutuskan apa pun darinya — ia ada supaya biaya bisa diukur, bukan
+        // ditaksir. Biaya satu investigasi = jumlahnya atas semua langkah.
+        usage: hasil.usage,
       });
     } catch (e) {
       const galat = e as Error;
