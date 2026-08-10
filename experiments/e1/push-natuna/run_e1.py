@@ -204,16 +204,27 @@ def main_dataset_flat(dataset_dir):
     import pandas as pd
     setup()
     model, box_coder, normalization = build_runtime()
-    scenes = sorted({p.name.split("__")[0] for p in dataset_dir.glob("*__V*_dB.tif")})
-    print("scene ditemukan:", scenes, flush=True)
+    # rglob (bukan glob rata) supaya tahan struktur mount Kaggle yang mungkin bersarang;
+    # bangun peta sid -> {pol: path nyata} dan symlink dari path yang benar-benar ada.
+    tifs = sorted(dataset_dir.rglob("*__V*_dB.tif")) or sorted(dataset_dir.rglob("*_dB.tif"))
+    if not tifs:
+        print("DEBUG isi dataset_dir:", [str(p) for p in dataset_dir.rglob("*")][:40], flush=True)
+    per_scene = {}
+    for p in tifs:
+        sid, _, rest = p.name.partition("__")
+        pol = rest.split("_")[0] if rest else "VH"      # "VH"/"VV"
+        per_scene.setdefault(sid, {})[pol] = p
+    scenes = sorted(per_scene)
+    print("scene ditemukan:", scenes, "| n_tif:", len(tifs), flush=True)
     hasil_meta = []
     for sid in scenes:
         sdir = SCENES_DIR / sid
         sdir.mkdir(parents=True, exist_ok=True)
         for pol in ("VH", "VV"):
             tautan = sdir / f"{pol}_dB.tif"
-            if not tautan.exists():
-                tautan.symlink_to(dataset_dir / f"{sid}__{pol}_dB.tif")
+            src = per_scene[sid].get(pol)
+            if src and not tautan.exists():
+                tautan.symlink_to(src)
         t0 = time.time()
         df = run_scene(model, box_coder, normalization, sdir)
         t_inf = time.time() - t0
@@ -231,4 +242,13 @@ def main_dataset_flat(dataset_dir):
 
 if __name__ == "__main__":
     PRED_DIR.mkdir(parents=True, exist_ok=True)
-    main_dataset_flat(pathlib.Path("/kaggle/input/varuna-natuna-s1-2026"))
+    root = pathlib.Path("/kaggle/input")
+    print("DEBUG /kaggle/input:", [p.name for p in root.iterdir()] if root.exists() else "TAK ADA", flush=True)
+    ds = pathlib.Path("/kaggle/input/varuna-natuna-s1-2026")
+    if root.exists() and not any(ds.rglob("*_dB.tif")):
+        for d in root.iterdir():                      # cari dir mana pun yg punya *_dB.tif
+            if d.is_dir() and any(d.rglob("*_dB.tif")):
+                ds = d
+                print("DEBUG dataset ditemukan di:", str(ds), flush=True)
+                break
+    main_dataset_flat(ds)
