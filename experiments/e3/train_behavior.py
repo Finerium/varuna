@@ -13,9 +13,9 @@ from sklearn.metrics import cohen_kappa_score, confusion_matrix
 
 SEED = 20260809
 R_EARTH = 6371.0
-DATA = "/Users/ghaisan/Documents/Datathon/varuna/data/processed/dma/trajectories.parquet"
-OUTDIR = "/Users/ghaisan/Documents/Datathon/varuna/experiments/e3"
-MANIFEST = "/Users/ghaisan/Documents/Datathon/varuna/manifests/e3-hasil.json"
+DATA = "data/processed/dma/trajectories.parquet"
+OUTDIR = "experiments/e3"
+MANIFEST = "manifests/e3-hasil.json"
 # wilayah plausibel DMA (buang fix rusak spt lat=0/lon=89); dicatat di manifest
 LAT_MIN, LAT_MAX, LON_MIN, LON_MAX = 50.0, 63.5, -12.0, 20.0
 MIN_PTS, MIN_SPAN_S = 30, 3600  # segmen valid: >=30 fix dan rentang >=1 jam (konservatif, dicatat)

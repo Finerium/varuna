@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Pull GFW data for Natuna AOI (108-110E, 4-6N), 2026-05-01..2026-08-08.
 
-Outputs to /Users/ghaisan/Documents/Datathon/varuna/data/raw/gfw/.
+Outputs to data/raw/gfw/.
 Token read from secrets file; never printed.
 """
 import json
@@ -13,8 +13,8 @@ import urllib.error
 from pathlib import Path
 
 BASE = "https://gateway.api.globalfishingwatch.org"
-OUT = Path("/Users/ghaisan/Documents/Datathon/varuna/data/raw/gfw")
-TOKEN_FILE = Path("/Users/ghaisan/Documents/Datathon/secrets/gfw-token")
+OUT = Path("data/raw/gfw")
+TOKEN_FILE = Path("secrets/gfw-token")
 START, END = "2026-05-01", "2026-08-08"
 POLY = {"type": "Polygon",
         "coordinates": [[[108, 4], [110, 4], [110, 6], [108, 6], [108, 4]]]}

@@ -12,8 +12,8 @@ from scipy.ndimage import distance_transform_edt
 from global_land_mask import globe
 from transshipment import detect
 
-DATA = "/Users/ghaisan/Documents/Datathon/varuna/data/processed/dma/trajectories.parquet"
-OUT = "/Users/ghaisan/Documents/Datathon/varuna/experiments/e3/transshipment_dma_events.json"
+DATA = "data/processed/dma/trajectories.parquet"
+OUT = "experiments/e3/transshipment_dma_events.json"
 LAT0, LAT1, LON0, LON1, STEP = 50.0, 63.5, -12.0, 20.0, 0.01
 
 lats = np.arange(LAT0, LAT1, STEP)

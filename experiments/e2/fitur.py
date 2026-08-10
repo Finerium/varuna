@@ -7,7 +7,7 @@ import os
 import numpy as np
 import pandas as pd
 
-BASE = "/Users/ghaisan/Documents/Datathon/varuna"
+BASE = "."
 DMA = f"{BASE}/data/processed/dma"
 OUT = f"{BASE}/experiments/e2/out"
 SEED = 20260809

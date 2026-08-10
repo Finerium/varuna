@@ -10,7 +10,7 @@ import pandas as pd
 from sklearn.ensemble import HistGradientBoostingClassifier
 from sklearn.metrics import cohen_kappa_score
 
-BASE = "/Users/ghaisan/Documents/Datathon/varuna"
+BASE = "."
 OUT = f"{BASE}/experiments/e2/out"
 SEED = 20260809
 Z = 1.959963984540054

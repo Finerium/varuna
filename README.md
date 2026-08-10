@@ -133,12 +133,12 @@ Gerbang itu lima lapis, tiap lapis satu penjaga yang bisa ditunjuk ke file:
 | Lapis | Mekanisme | File | Menahan |
 |---|---|---|---|
 | Pemisahan persepsi/penalaran | agen mengusulkan, tak pernah memutus; status milik server | `packages/agents` executor + `pasha.ts` | vonis fabrikasi |
-| Indeks grounding | tiap `art_id` harus resolvable; sisanya dibuang + dicatat di *trace* | `packages/core/grounding.ts` | klaim tanpa artefak |
-| Perhitungan status server | `computeStatus` murni memutuskan status dari artefak | `packages/core/pasha.ts` | vonis fabrikasi |
+| Indeks grounding | tiap `art_id` harus resolvable; sisanya dibuang + dicatat di *trace* | `packages/core/src/grounding.ts` | klaim tanpa artefak |
+| Perhitungan status server | `computeStatus` murni memutuskan status dari artefak | `packages/core/src/pasha.ts` | vonis fabrikasi |
 | Peluruhan usia bukti | bukti kedaluwarsa menurunkan status, tidak dibiarkan | `pasha.ts` (`usia_max_h`) | keputusan atas bukti basi |
-| Penyaring diksi + pemeriksa A8 | kata putusan hukum ditolak sebelum tayang | `packages/core/diksi.ts` + A8 | diksi putusan bocor |
+| Penyaring diksi + pemeriksa A8 | kata putusan hukum ditolak sebelum tayang | `packages/core/src/diksi.ts` + A8 | diksi putusan bocor |
 
-Bagi kapal yang mematikan AIS, deteksi SAR yang berimpit jeda transmisi jejak historisnya dihitung dua sensor independen, dihubungkan uji kelayakan kinematik dari titik hilang sinyal ke posisi deteksi — dan barulah `computeStatus` menaikkannya ke TERINDIKASI atau TERKONFIRMASI.
+Bagi kapal yang mematikan AIS, deteksi SAR yang berimpit jeda transmisi jejak historisnya dihitung dua sensor independen, dihubungkan uji kelayakan kinematik dari titik hilang sinyal ke posisi deteksi — dan barulah `computeStatus` menaikkannya ke TERKONFIRMASI; satu modalitas tanpa pasangan berhenti di TERINDIKASI.
 
 ## Lapisan mana yang menanggung beban
 
@@ -252,7 +252,7 @@ Tiap keputusan ditulis sebagai *pilihan — alternatif yang ditolak — alasan*.
 
 ```
 apps/web/            Next.js — lima permukaan (komando|patroli|konsol|portal + entry) + API
-packages/core/       TS murni: skema Zod, pasha.ts (computeStatus), grounding.ts, diksi.ts, store.ts
+packages/core/src/   TS murni: skema Zod, pasha.ts (computeStatus), grounding.ts, diksi.ts, store.ts
 packages/core/golden/ subset demo 6 investigasi yang dilayani produk (artefak + chip SAR)
 packages/agents/     @openai/agents A0–A10 + executor replay pause-persist
 experiments/         E1-E3, E5-E8, E10-E11 (Python; E7 sebagian TS membungkus core)

@@ -12,7 +12,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-OUT = Path("/Users/ghaisan/Documents/Datathon/varuna/data/processed/dma")
+OUT = Path("data/processed/dma")
 USECOLS = ["# Timestamp", "Type of mobile", "MMSI", "Latitude", "Longitude", "SOG", "Ship type"]
 TS_FMT = "%d/%m/%Y %H:%M:%S"
 
